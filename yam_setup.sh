@@ -367,8 +367,8 @@ EOF
 # /nginx/default_server.conf
 
 server {
-	listen	80 default_server;
-	listen	[::]:80 default_server;
+    listen	80 default_server;
+    listen	[::]:80 default_server;
 
     # stop favicon generating 404
     location = /favicon.ico {
@@ -584,8 +584,8 @@ location = / {
 
 # add password directory
 location /phpmyadmin {
-	auth_basic "Private";
-	auth_basic_user_file /home/${USER}/.htpasswd;
+    auth_basic "Private";
+    auth_basic_user_file /home/${USER}/.htpasswd;
 }
 
 # custom cache file loads here if included
@@ -2089,7 +2089,7 @@ location ~ /\.ht {
 
 # protect configuration folder
 location ^~ /core {
-	return 404;
+    return 404;
 }
 
 # stop favicon generating 404
@@ -2405,7 +2405,7 @@ location ~ /\.ht {
 
 # protect configuration folder
 location ^~ /core {
-	return 404;
+    return 404;
 }
 
 # stop favicon generating 404
@@ -2758,7 +2758,7 @@ server {
 # redirect live domain http www to non www
 server {
     server_name www.${ADD_DOMAIN};
-	return 301 https://\$host\$request_uri;
+    return 301 https://\$host\$request_uri;
 
     listen 80;
     listen [::]:80;
@@ -2768,7 +2768,7 @@ server {
 # redirect live domain http to https
 server {
     server_name ${ADD_DOMAIN};
-	return 301 https://\$host\$request_uri;
+    return 301 https://\$host\$request_uri;
 
     listen 80;
     listen [::]:80;
