@@ -949,10 +949,10 @@ EOF
 
             #install yam utilities
             echo "${WHITE}>> installing yam server utilities...${RESTORE}"
-            wget -N https://www.dropbox.com/s/dkru3ssm8pg3rev/yam_backup_local.sh
-            wget -N https://www.dropbox.com/s/qlk9i6ft7457uhd/yam_backup_s3.sh
-            wget -N https://www.dropbox.com/s/21ttnwbj38mm7lg/yam_sync_s3.sh
-            wget -N https://www.dropbox.com/s/jf7ae8axyrp6cs7/yam_backup_system.sh
+            wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_local.sh
+            wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_s3.sh
+            wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_sync_s3.sh
+            wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_system.sh
             chmod -R 700 /root/yam_backup_local.sh
             chmod -R 700 /root/yam_backup_s3.sh
             chmod -R 700 /root/yam_sync_s3.sh
