@@ -229,38 +229,38 @@ pid /run/nginx.pid;
 events {
     use epoll;
     #in the terminal type "ulimit -n" to find out the number of worker connections
-	worker_connections 1024;
+    worker_connections 1024;
 }
 
 http {
 
-	##
-	# Basic Settings
-	##
+    ##
+    # Basic Settings
+    ##
 
     # copies data between one FD and other from within the kernel
     # faster then read() + write()
     sendfile on;
 
     # send headers in one peace, its better then sending them one by one
-	tcp_nopush on;
+    tcp_nopush on;
 
     # don't buffer data sent, good for small data bursts in real time
-	tcp_nodelay on;
+    tcp_nodelay on;
 
-	types_hash_max_size 2048;
+    types_hash_max_size 2048;
 
     # hide what version of NGINX the server is running
-	server_tokens off;
+    server_tokens off;
 
-	server_names_hash_bucket_size 64;
+    server_names_hash_bucket_size 64;
 
-	include /etc/nginx/mime.types;
-	default_type application/octet-stream;
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
 
     ##
-	# Buffers
-	##
+    # Buffers
+    ##
 
     client_body_buffer_size 128K;
     client_header_buffer_size 1k;
@@ -269,75 +269,75 @@ http {
     client_body_temp_path /tmp/client_body_temp;
 
     ##
-	# Timeouts
-	##
+    # Timeouts
+    ##
 
     client_body_timeout 3000;
     client_header_timeout 3000;
     keepalive_timeout 3000;
     send_timeout 3000;
 
-	##
-	# SSL Settings
-	##
+    ##
+    # SSL Settings
+    ##
 
-	ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
-	ssl_prefer_server_ciphers on;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+    ssl_prefer_server_ciphers on;
 
-	##
-	# Logging Settings
-	##
+    ##
+    # Logging Settings
+    ##
 
     # to boost I/O on HDD we can disable access logs
     access_log off;
 
     # default error log
-	error_log /var/log/nginx/error.log;
+    error_log /var/log/nginx/error.log;
 
-	##
-	# Gzip Settings
-	##
+    ##
+    # Gzip Settings
+    ##
 
     gzip on;
-	gzip_vary on;
-	gzip_comp_level 5;
-	gzip_min_length  256;
-	gzip_disable "msie6";
-	gzip_proxied expired no-cache no-store private auth;
+    gzip_vary on;
+    gzip_comp_level 5;
+    gzip_min_length  256;
+    gzip_disable "msie6";
+    gzip_proxied expired no-cache no-store private auth;
 
-	gzip_types
-	application/atom+xml
-	application/javascript
-	application/json
-	application/ld+json
-	application/manifest+json
-	application/rss+xml
-	application/vnd.geo+json
-	application/vnd.ms-fontobject
-	application/x-font-ttf
-	application/x-web-app-manifest+json
-	application/xhtml+xml
-	application/xml
-	font/opentype
-	image/bmp
-	image/svg+xml
-	image/x-icon
-	text/cache-manifest
-	text/css
-	text/plain
-	text/vcard
-	text/vnd.rim.location.xloc
-	text/vtt
-	text/x-component
-	text/x-cross-domain-policy;
+    gzip_types
+    application/atom+xml
+    application/javascript
+    application/json
+    application/ld+json
+    application/manifest+json
+    application/rss+xml
+    application/vnd.geo+json
+    application/vnd.ms-fontobject
+    application/x-font-ttf
+    application/x-web-app-manifest+json
+    application/xhtml+xml
+    application/xml
+    font/opentype
+    image/bmp
+    image/svg+xml
+    image/x-icon
+    text/cache-manifest
+    text/css
+    text/plain
+    text/vcard
+    text/vnd.rim.location.xloc
+    text/vtt
+    text/x-component
+    text/x-cross-domain-policy;
 
-	##
-	# Virtual Host Configs
-	##
+    ##
+    # Virtual Host Configs
+    ##
 
     include /etc/nginx/default_server.conf;
-	include /etc/nginx/conf.d/*.conf;
-	include /etc/nginx/main_extra.conf;
+    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/main_extra.conf;
 }
 EOF
 
