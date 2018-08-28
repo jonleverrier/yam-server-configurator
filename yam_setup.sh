@@ -35,7 +35,7 @@ YAM_PATH_BASESITE=$(echo -en '/home/yam/public/alphasite/')
 YAM_DB_BASESITE=$(echo -en 'yam_db_yam_alphasite')
 
 # generic password for password protected directories
-PASSWORD_DIR_GENERIC=$(echo -en '1q2w3e4r')
+YAM_PASSWORD_GENERIC=$(echo -en '1q2w3e4r')
 
 # S3 backup settings
 YAM_SERVER_NAME=$(echo -en 'yam-avalon-ams3-01')
@@ -1531,10 +1531,10 @@ EOF
         #password protect directory by default
         if [ -f "/home/$USER/.htpasswd" ]; then
             echo "${CYAN}-- .htpassword file exists. adding user.${RESTORE}"
-            htpasswd -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${PASSWORD_DIR_GENERIC}
+            htpasswd -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
         else
             echo "${CYAN}-- .htpassword does not exist. creating file and adding user.${RESTORE}"
-            htpasswd -c -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${PASSWORD_DIR_GENERIC}
+            htpasswd -c -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
         fi
 
         # create log files
@@ -1999,10 +1999,10 @@ EOF
         echo "${CYAN}-- password protecting directory...${RESTORE}"
         if [ -f "/home/$USER/.htpasswd" ]; then
             echo "${CYAN}-- .htpassword file exists. adding user.${RESTORE}"
-            htpasswd -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${PASSWORD_DIR_GENERIC}
+            htpasswd -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
         else
             echo "${CYAN}-- .htpassword file does not exist. creating file and adding user.${RESTORE}"
-            htpasswd -c -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${PASSWORD_DIR_GENERIC}
+            htpasswd -c -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
         fi
 
         # create log files
@@ -2323,10 +2323,10 @@ EOF
         echo "${WHITE}>> password protecting directory...${RESTORE}"
         if [ -f "/home/${NEW_USER}/.htpasswd" ]; then
             echo "${CYAN}-- .htpassword file exists. adding user.${RESTORE}"
-            htpasswd -b /home/${NEW_USER}/.htpasswd ${NEW_PROJECT} ${PASSWORD_DIR_GENERIC}
+            htpasswd -b /home/${NEW_USER}/.htpasswd ${NEW_PROJECT} ${YAM_PASSWORD_GENERIC}
         else
             echo "${CYAN}-- .htpassword file does not exist. creating file and adding user.${RESTORE}"
-            htpasswd -c -b /home/${NEW_USER}/.htpasswd ${NEW_PROJECT} $PASSWORD_DIR_GENERIC
+            htpasswd -c -b /home/${NEW_USER}/.htpasswd ${NEW_PROJECT} ${YAM_PASSWORD_GENERIC}
         fi
 
         #configure SSL
