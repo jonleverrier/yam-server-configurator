@@ -55,7 +55,7 @@ COLOUR_LRED=$(echo -en '\033[01;31m')
 COLOUR_LGREEN=$(echo -en '\033[01;32m')
 COLOUR_LYELLOW=$(echo -en '\033[01;33m')
 COLOUR_LMAGENTA=$(echo -en '\033[01;35m')
-LPURPLE=$(echo -en '\033[01;35m')
+COLOUR_LPURPLE=$(echo -en '\033[01;35m')
 LCYAN=$(echo -en '\033[01;36m')
 WHITE=$(echo -en '\033[01;37m')
 
