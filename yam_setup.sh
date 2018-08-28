@@ -31,7 +31,7 @@ YAM_EMAIL_BUG=$(echo -en 'bugs@youandme.digital')
 YAM_EMAIL_SSL=$(echo -en 'jon@youandme.digital')
 
 # if you have a MODX basesite that you work from enter the details below
-URL_ALPHASITE_BASE=$(echo -en '/home/yam/public/alphasite/')
+YAM_PATH_BASESITE=$(echo -en '/home/yam/public/alphasite/')
 ALPHASITE_DB=$(echo -en 'yam_db_yam_alphasite')
 
 # generic password for password protected directories
@@ -1820,7 +1820,7 @@ EOF
         echo "${WHITE}>> installing AlphaSite ${USER}...${RESTORE}"
 
         echo "${CYAN}-- copying Alphasite from base to ${PROJECT_NAME} ${RESTORE}"
-        cp -R ${URL_ALPHASITE_BASE}. /home/${USER}/public/${PROJECT_NAME}
+        cp -R ${YAM_PATH_BASESITE}. /home/${USER}/public/${PROJECT_NAME}
 
         echo "${CYAN}-- deleting existing config files in core, manager and connectors... ${RESTORE}"
         rm /home/${USER}/public/${PROJECT_NAME}/core/config/config.inc.php
