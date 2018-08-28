@@ -1732,7 +1732,7 @@ addVirtualhostAlphasite() {
     if ask "Are you sure you want to setup a new Virtual Host with Alphasite installed?"; then
         read -p "Name of project (all one word, no spaces)  : " PROJECT_NAME
         read -p "Enter owner (user) of project  : " USER
-        read -p "Enter user password  : " USER_PASSWORD
+        read -p "Enter user password  : " PASSWORD_USER
         read -p "Enter test domain name  : " DOMAIN_TEST
         read -p "Enter MYSQL password  : " DB_PASSWORD
         read -p "Enter MYSQL root password  : " DB_PASSWORD_ROOT
@@ -1746,7 +1746,7 @@ addVirtualhostAlphasite() {
               echo "-- The user already exists. Skipping..."
         else
             useradd -m ${USER}
-            PASSWORD=$(mkpasswd ${USER_PASSWORD})
+            PASSWORD=$(mkpasswd ${PASSWORD_USER})
             usermod --password ${PASSWORD} ${USER}
 
             chown root:root /home/${USER}
