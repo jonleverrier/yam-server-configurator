@@ -105,7 +105,7 @@ setupServer() {
         read -p "Enter a sudo password  : " USER_SUDO_PASSWORD
         read -p "Enter a MYSQL password for sudo user  : " PASSWORD_MYSQL_SUDO
         read -p "Enter a MYSQL password for root user  : " PASSWORD_MYSQL_ROOT
-        read -p "Enter a password for phpMyAdmin directory : " PMA_DIR_PASSWORD
+        read -p "Enter a password for phpMyAdmin directory : " PASSWORD_PMA_DIR
         read -p "Enter domain name for the default website  : " SERVER_NAME
         read -p "Enter domain name for phpMyAdmin  : " SERVER_NAME_PMA
         echo '------------------------------------------------------------------------'
@@ -833,7 +833,7 @@ EOF
             chown -R ${USER_SUDO}:${USER_SUDO} /usr/share/phpmyadmin
 
             #password protect phpmyadmin directory
-            htpasswd -b -c /home/${USER_SUDO}/.htpasswd phpmyadmin ${PMA_DIR_PASSWORD}
+            htpasswd -b -c /home/${USER_SUDO}/.htpasswd phpmyadmin ${PASSWORD_PMA_DIR}
 
             # add user folder and create a system link to the public folder
             chown root:root /home/${USER_SUDO}
