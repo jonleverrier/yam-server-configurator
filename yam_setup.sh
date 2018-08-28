@@ -103,7 +103,7 @@ setupServer() {
     if ask "Are you sure you want to setup a new server?"; then
         read -p "Enter a sudo user  : " USER_SUDO
         read -p "Enter a sudo password  : " USER_SUDO_PASSWORD
-        read -p "Enter a MYSQL password for sudo user  : " MYSQL_SUDO_PASSWORD
+        read -p "Enter a MYSQL password for sudo user  : " PASSWORD_MYSQL_SUDO
         read -p "Enter a MYSQL password for root user  : " MYSQL_ROOT_PASSWORD
         read -p "Enter a password for phpMyAdmin directory : " PMA_DIR_PASSWORD
         read -p "Enter domain name for the default website  : " SERVER_NAME
@@ -744,7 +744,7 @@ DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
 
-CREATE USER '${USER_SUDO}'@'localhost' IDENTIFIED BY '${MYSQL_SUDO_PASSWORD}';
+CREATE USER '${USER_SUDO}'@'localhost' IDENTIFIED BY '${PASSWORD_MYSQL_SUDO}';
 GRANT ALL PRIVILEGES ON *.* TO '${USER_SUDO}'@'localhost' WITH GRANT OPTION;
 
 FLUSH PRIVILEGES;
