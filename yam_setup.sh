@@ -32,7 +32,7 @@ YAM_EMAIL_SSL=$(echo -en 'jon@youandme.digital')
 
 # if you have a MODX basesite that you work from enter the details below
 YAM_PATH_BASESITE=$(echo -en '/home/yam/public/alphasite/')
-ALPHASITE_DB=$(echo -en 'yam_db_yam_alphasite')
+YAM_DB_BASESITE=$(echo -en 'yam_db_yam_alphasite')
 
 # generic password for password protected directories
 PASSWORD_DIR_GENERIC=$(echo -en '1q2w3e4r')
@@ -2179,7 +2179,7 @@ EOF
         #copy alphasite db and import into new project
         echo "${CYAN}-- injecting AlphaSite into database...${RESTORE}"
         #export
-        mysqldump -u root ${ALPHASITE_DB} > /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
+        mysqldump -u root ${YAM_DB_BASESITE} > /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
         #import
         mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p${DB_PASSWORD} yam_db_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
 
