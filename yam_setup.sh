@@ -101,7 +101,7 @@ ask() {
 # load setup server function
 setupServer() {
     if ask "Are you sure you want to setup a new server?"; then
-        read -p "Enter a sudo user  : " USER
+        read -p "Enter a sudo user  : " USER_SUDO
         read -p "Enter a sudo password  : " SUDO_PASSWORD
         read -p "Enter a MYSQL password for sudo user  : " MYSQL_SUDO_PASSWORD
         read -p "Enter a MYSQL password for root user  : " MYSQL_ROOT_PASSWORD
@@ -138,13 +138,13 @@ setupServer() {
 
                 # adding a sudo user and setting password
                 echo "${COLOUR_CYAN}-- adding sudo user and changing password${COLOUR_RESTORE}"
-                useradd -m ${USER}
-                adduser ${USER} sudo
-                usermod --password ${SUDO_PASSWORD} ${USER}
+                useradd -m ${USER_SUDO}
+                adduser ${USER_SUDO} sudo
+                usermod --password ${SUDO_PASSWORD} ${USER_SUDO}
 
                 # adding a sudo user and setting password
-                echo "${COLOUR_CYAN}-- setting up log rotation for ${USER} ${COLOUR_RESTORE}"
-                cat > /etc/logrotate.d/${USER} << EOF
+                echo "${COLOUR_CYAN}-- setting up log rotation for ${USER_SUDO} ${COLOUR_RESTORE}"
+                cat > /etc/logrotate.d/${USER_SUDO} << EOF
 /home/$USER/logs/nginx/*.log {
     daily
     missingok
@@ -548,13 +548,13 @@ EOF
 
 # /nginx/conf.d/phpmyadmin.d/main.conf
 
-error_log           /home/${USER}/logs/nginx/phpmyadmin_error.log;
+error_log           /home/${USER_SUDO}/logs/nginx/phpmyadmin_error.log;
 
 # custom headers file loads here if included
 include /etc/nginx/custom.d/phpmyadmin.d/phpmyadmin.location.header.*.conf;
 
 # location of web root
-root /home/${USER}/public/phpmyadmin;
+root /home/${USER_SUDO}/public/phpmyadmin;
 index index.php index.htm index.html;
 
 # setup php to use FPM
@@ -584,7 +584,7 @@ location = / {
 # add password directory
 location /phpmyadmin {
     auth_basic "Private";
-    auth_basic_user_file /home/${USER}/.htpasswd;
+    auth_basic_user_file /home/${USER_SUDO}/.htpasswd;
 }
 
 # custom cache file loads here if included
@@ -744,8 +744,8 @@ DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
 
-CREATE USER '${USER}'@'localhost' IDENTIFIED BY '${MYSQL_SUDO_PASSWORD}';
-GRANT ALL PRIVILEGES ON *.* TO '${USER}'@'localhost' WITH GRANT OPTION;
+CREATE USER '${USER_SUDO}'@'localhost' IDENTIFIED BY '${MYSQL_SUDO_PASSWORD}';
+GRANT ALL PRIVILEGES ON *.* TO '${USER_SUDO}'@'localhost' WITH GRANT OPTION;
 
 FLUSH PRIVILEGES;
 EOF
@@ -778,8 +778,8 @@ EOF
             else
                 cat > /etc/php/7.1/fpm/pool.d/phpmyadmin.conf << EOF
 [phpmyadmin]
-user = ${USER}
-group = ${USER}
+user = ${USER_SUDO}
+group = ${USER_SUDO}
 listen = /var/run/php/php7.1-fpm-phpmyadmin.sock
 listen.owner = www-data
 listen.group = www-data
@@ -796,8 +796,8 @@ EOF
             else
                 cat > /etc/php/7.1/fpm/pool.d/default.conf << EOF
 [default]
-user = ${USER}
-group = ${USER}
+user = ${USER_SUDO}
+group = ${USER_SUDO}
 listen = /var/run/php/php7.1-fpm-default.sock
 listen.owner = www-data
 listen.group = www-data
@@ -821,26 +821,26 @@ EOF
 
             #configuring phpMyAdmin
             echo "${COLOUR_WHITE}>> configuring phpMyAdmin...${COLOUR_RESTORE}"
-            touch /home/${USER}/logs/nginx/phpmyadmin_error.log
-            mkdir -p /home/${USER}/public/phpmyadmin
+            touch /home/${USER_SUDO}/logs/nginx/phpmyadmin_error.log
+            mkdir -p /home/${USER_SUDO}/public/phpmyadmin
 
             #stop phpmyadmin from being backedup
-            touch /home/${USER}/public/phpmyadmin/.nobackup
+            touch /home/${USER_SUDO}/public/phpmyadmin/.nobackup
 
             #set permissions on phpmyadmin folders to prevent errors
-            chown -R ${USER}:${USER} /var/lib/phpmyadmin
-            chown -R ${USER}:${USER} /etc/phpmyadmin
-            chown -R ${USER}:${USER} /usr/share/phpmyadmin
+            chown -R ${USER_SUDO}:${USER_SUDO} /var/lib/phpmyadmin
+            chown -R ${USER_SUDO}:${USER_SUDO} /etc/phpmyadmin
+            chown -R ${USER_SUDO}:${USER_SUDO} /usr/share/phpmyadmin
 
             #password protect phpmyadmin directory
-            htpasswd -b -c /home/${USER}/.htpasswd phpmyadmin ${PMA_DIR_PASSWORD}
+            htpasswd -b -c /home/${USER_SUDO}/.htpasswd phpmyadmin ${PMA_DIR_PASSWORD}
 
             # add user folder and create a system link to the public folder
-            chown root:root /home/${USER}
-            chown -R ${USER}:${USER} /home/${USER}/public
-            chmod -R 755 /home/${USER}
-            chmod -R 755 /home/${USER}/public
-            sudo ln -s /usr/share/phpmyadmin /home/${USER}/public/phpmyadmin
+            chown root:root /home/${USER_SUDO}
+            chown -R ${USER_SUDO}:${USER_SUDO} /home/${USER_SUDO}/public
+            chmod -R 755 /home/${USER_SUDO}
+            chmod -R 755 /home/${USER_SUDO}/public
+            sudo ln -s /usr/share/phpmyadmin /home/${USER_SUDO}/public/phpmyadmin
             echo ">> Done."
 
             #install firewall
@@ -888,14 +888,14 @@ EOF
             echo "${COLOUR_CYAN}>> setting up SFTP${COLOUR_RESTORE}"
 
             # if setup is run again, check to make sure there config doesn't already exist
-            if grep -Fxq "Match User ${USER}" /etc/ssh/sshd_config
+            if grep -Fxq "Match User ${USER_SUDO}" /etc/ssh/sshd_config
             then
                 echo "${COLOUR_CYAN}-- SFTP user found. Skipping...${COLOUR_RESTORE}"
             else
                 echo "${COLOUR_CYAN}-- No SFTP user found. Adding new user...${COLOUR_RESTORE}"
             cat >> /etc/ssh/sshd_config << EOF
 
-Match User ${USER}
+Match User ${USER_SUDO}
     ChrootDirectory %h
     PasswordAuthentication yes
     ForceCommand internal-sftp
