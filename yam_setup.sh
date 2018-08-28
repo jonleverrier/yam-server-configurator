@@ -1110,8 +1110,8 @@ EOF
     fi
 }
 
-#load install alphasite function
-installAlphaSite() {
+#load install basesite function
+installBasesite() {
     if ask "Are you sure you want to inject a MODX website from an external source?"; then
         read -p "Which project do you want to install MODX? : " PROJECT_NAME
         read -p "Who owns the project? : " PROJECT_OWNER
@@ -1345,7 +1345,7 @@ EOF
         cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
         wget -N ${URL_DATABASE}
 
-        # import alphasite database
+        # import basesite database
         echo "${COLOUR_CYAN}-- importing ${URL_DATABASE##*/}...${COLOUR_RESTORE}"
         mysql -uyam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} yam_db_${PROJECT_OWNER}_${PROJECT_NAME} < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
 
@@ -1387,7 +1387,7 @@ EOF
     fi
 }
 
-#load install alphasite function
+#load package basesite function
 packageWebsite() {
     if ask "Are you sure you want to package up a website?"; then
         read -p "Which project do you want to package? : " PROJECT_NAME
@@ -1726,9 +1726,9 @@ EOF
     fi
 }
 
-#load add virtual host with alpha site function
-addVirtualhostAlphasite() {
-    if ask "Are you sure you want to setup a new Virtual Host with Alphasite installed?"; then
+#load add virtual host with basesite function
+addVirtualhostBasesite() {
+    if ask "Are you sure you want to setup a new Virtual Host with Basesite installed?"; then
         read -p "Name of project (all one word, no spaces)  : " PROJECT_NAME
         read -p "Enter owner (user) of project  : " USER
         read -p "Enter user password  : " PASSWORD_USER
@@ -1736,7 +1736,7 @@ addVirtualhostAlphasite() {
         read -p "Enter MYSQL password  : " PASSWORD_MYSQL_USER
         read -p "Enter MYSQL root password  : " PASSWORD_MYSQL_ROOT
         echo '------------------------------------------------------------------------'
-        echo 'Setting up virtual host with AlphaSite'
+        echo 'Setting up virtual host with Basesite'
         echo '------------------------------------------------------------------------'
 
         # add user to server
@@ -1824,10 +1824,10 @@ EOF
         mkdir -p /home/${USER}/tmp/${PROJECT_NAME}
         chown -R ${USER}:${USER} /home/${USER}/tmp
 
-        # installing AlphaSite
-        echo "${COLOUR_WHITE}>> installing AlphaSite ${USER}...${COLOUR_RESTORE}"
+        # installing Basesite
+        echo "${COLOUR_WHITE}>> installing Basesite ${USER}...${COLOUR_RESTORE}"
 
-        echo "${COLOUR_CYAN}-- copying Alphasite from base to ${PROJECT_NAME} ${COLOUR_RESTORE}"
+        echo "${COLOUR_CYAN}-- copying Basesite from base to ${PROJECT_NAME} ${COLOUR_RESTORE}"
         cp -R ${YAM_BASESITE_PATH}. /home/${USER}/public/${PROJECT_NAME}
 
         echo "${COLOUR_CYAN}-- deleting existing config files in core, manager and connectors... ${COLOUR_RESTORE}"
@@ -2184,12 +2184,12 @@ CREATE USER 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIED BY '${PA
 GRANT ALL PRIVILEGES ON yam_db_${USER}_${PROJECT_NAME}.* TO 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
-        #copy alphasite db and import into new project
-        echo "${COLOUR_CYAN}-- injecting AlphaSite into database...${COLOUR_RESTORE}"
+        #copy Basesite db and import into new project
+        echo "${COLOUR_CYAN}-- injecting Basesite into database...${COLOUR_RESTORE}"
         #export
-        mysqldump -u root ${YAM_BASESITE_DB} > /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
+        mysqldump -u root ${YAM_BASESITE_DB} > /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
         #import
-        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} yam_db_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
+        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} yam_db_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
 
         #changing paths in db
         echo "${COLOUR_CYAN}-- exporting db_changepaths.sql...${COLOUR_RESTORE}"
@@ -2216,7 +2216,7 @@ EOF
         # clean up database
         echo "${COLOUR_CYAN}-- removing database installation files...${COLOUR_RESTORE}"
         rm /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
-        rm /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
+        rm /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
 
         echo "Installation complete."
 
@@ -2501,7 +2501,7 @@ GRANT ALL PRIVILEGES ON yam_db_${NEW_USER}_${NEW_PROJECT}.* TO 'yam_dbuser_${NEW
 FLUSH PRIVILEGES;
 EOF
 
-        # copy alphasite db and import into new project
+        # copy basesite db and import into new project
         echo "${COLOUR_WHITE}>> installing database...${COLOUR_RESTORE}"
         # export
         mysqldump -u root yam_db_${COPY_USER}_${COPY_PROJECT} > /home/${NEW_USER}/public/${NEW_PROJECT}/yam_db_${COPY_USER}_${COPY_PROJECT}.sql
@@ -2943,7 +2943,7 @@ options=(
     "Inject a MODX website from an external source"
     "Package MODX website for injection"
     "Add new development website"
-    "Add new development website with Alphasite"
+    "Add new development website with Basesite"
     "Copy development website"
     "Map domain to website"
     "Add user to password directory"
@@ -2958,10 +2958,10 @@ select option in "${options[@]}"; do
         1) setupServer ;;
         2) secureServer ;;
         3) securePasswords ;;
-        4) installAlphaSite ;;
+        4) installBasesite ;;
         5) packageWebsite ;;
         6) addVirtualhost ;;
-        7) addVirtualhostAlphasite ;;
+        7) addVirtualhostBasesite ;;
         8) copyVirtualhost ;;
         9) addDomain ;;
         10) addUserPasswordDirectory ;;
