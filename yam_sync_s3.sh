@@ -9,11 +9,6 @@
 
 # Script requires s3cmd package to be installed and configured
 
-# COLOURS
-RESTORE=$(echo -en '\033[0m')
-CYAN=$(echo -en '\033[00;36m')
-WHITE=$(echo -en '\033[01;37m')
-
 # DEFAULT SETTINGS
 BUCKET='yamdigital'
 
