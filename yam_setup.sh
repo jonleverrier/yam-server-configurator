@@ -1734,7 +1734,7 @@ addVirtualhostAlphasite() {
         read -p "Enter owner (user) of project  : " USER
         read -p "Enter user password  : " PASSWORD_USER
         read -p "Enter test domain name  : " DOMAIN_TEST
-        read -p "Enter MYSQL password  : " DB_PASSWORD
+        read -p "Enter MYSQL password  : " PASSWORD_MYSQL_USER
         read -p "Enter MYSQL root password  : " DB_PASSWORD_ROOT
         echo '------------------------------------------------------------------------'
         echo 'Setting up virtual host with AlphaSite'
@@ -1854,7 +1854,7 @@ EOF
 \$database_type = 'mysql';
 \$database_server = '127.0.0.1';
 \$database_user = 'yam_dbuser_${USER}_${PROJECT_NAME}';
-\$database_password = '${DB_PASSWORD}';
+\$database_password = '${PASSWORD_MYSQL_USER}';
 \$database_connection_charset = 'utf8';
 \$dbase = 'yam_db_${USER}_${PROJECT_NAME}';
 \$table_prefix = 'modx_';
@@ -2181,7 +2181,7 @@ EOF
         echo "${COLOUR_WHITE}>> setting up database...${COLOUR_RESTORE}"
         mysql --user=root --password=${DB_PASSWORD_ROOT} << EOF
 CREATE DATABASE IF NOT EXISTS yam_db_${USER}_${PROJECT_NAME};
-CREATE USER 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';
+CREATE USER 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIED BY '${PASSWORD_MYSQL_USER}';
 GRANT ALL PRIVILEGES ON yam_db_${USER}_${PROJECT_NAME}.* TO 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
@@ -2190,7 +2190,7 @@ EOF
         #export
         mysqldump -u root ${YAM_DB_BASESITE} > /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
         #import
-        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p${DB_PASSWORD} yam_db_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
+        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} yam_db_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
 
         #changing paths in db
         echo "${COLOUR_CYAN}-- exporting db_changepaths.sql...${COLOUR_RESTORE}"
@@ -2207,10 +2207,10 @@ UPDATE \`modx_context_setting\` SET \`value\`='https://${DOMAIN_TEST}/pdf/' WHER
 EOF
 
         echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
-        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p$DB_PASSWORD yam_db_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
+        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p$PASSWORD_MYSQL_USER yam_db_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
 
         # delete any session data from previous database
-        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p${DB_PASSWORD} yam_db_${USER}_${PROJECT_NAME} << EOF
+        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} yam_db_${USER}_${PROJECT_NAME} << EOF
 truncate modx_session;
 EOF
 
