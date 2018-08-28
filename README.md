@@ -35,3 +35,43 @@ The script also configures ssh keys, root and sudo users, time zone for server a
 log rotation, ssl auto renewal, UFW, default error pages, local backup of core system folders, local backup of user web folders, S3 backup of core system folders, sessions, securing MODX, S3 backup of user web folders
 
 Whilst this script installs Amazon s3cmd, you'll have to run setup yourself. Was very quick todo, hence not adding it to the build script (s3cmd powers backups to AWS).
+
+### yam_backup_local.sh
+
+To be used with cron, or run manually from the command line.
+
+Example usage; backup websites that live in /home/jamesbond/:
+```
+/bin/bash yam_backup_local.sh jamesbond
+```
+
+This scripts presumes your user directory is organised like the following;
+```
+/home/user/public/website1
+/home/user/public/website2
+/home/user/public/website3
+```
+
+### yam_backup_s3.sh
+
+Example usage:
+```
+/bin/bash yam_backup_s3.sh user s3_server_folder_name
+```
+There is also a global variable `PATH_BACKUP` that can be edited to build any
+S3 URL.
+
+### yam_backup_system.sh
+
+To be used with cron, or run manually from the command line.
+
+Example usage;
+```
+/bin/bash yam_backup_system.sh
+```
+
+### yam_sync_s3.sh
+Example usage:
+```
+/bin/bash yam_sync_s3.sh /local/path/ /s3/path/
+```
