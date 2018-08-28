@@ -1042,7 +1042,7 @@ secureServer() {
     if ask "Are you sure you want to setup a sudo user?"; then
         read -p "Enter a sudo user  : " USER_SUDO
         read -p "Enter a sudo password  : " USER_SUDO_PASSWORD
-        read -p "Paste SSH Keys  : " PUBLIC_SSH_KEYS
+        read -p "Paste SSH Keys  : " KEY_SSH_PUBLIC
         echo '------------------------------------------------------------------------'
         echo 'Securing server'
         echo '------------------------------------------------------------------------'
@@ -1077,7 +1077,7 @@ secureServer() {
         # Add keys to root and user folders
         echo "${COLOUR_WHITE}>> setting up keys for root and ${USER_SUDO}...${COLOUR_RESTORE}"
         cat > /root/.ssh/authorized_keys << EOF
-$PUBLIC_SSH_KEYS
+$KEY_SSH_PUBLIC
 EOF
         if [ -f "/home/$USER_SUDO/.ssh" ]; then
             echo "A .ssh folder already exists in the home folder for ${USER_SUDO}. Skipping..."
