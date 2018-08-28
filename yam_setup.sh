@@ -102,7 +102,7 @@ ask() {
 setupServer() {
     if ask "Are you sure you want to setup a new server?"; then
         read -p "Enter a sudo user  : " USER_SUDO
-        read -p "Enter a sudo password  : " SUDO_PASSWORD
+        read -p "Enter a sudo password  : " USER_SUDO_PASSWORD
         read -p "Enter a MYSQL password for sudo user  : " MYSQL_SUDO_PASSWORD
         read -p "Enter a MYSQL password for root user  : " MYSQL_ROOT_PASSWORD
         read -p "Enter a password for phpMyAdmin directory : " PMA_DIR_PASSWORD
@@ -140,7 +140,7 @@ setupServer() {
                 echo "${COLOUR_CYAN}-- adding sudo user and changing password${COLOUR_RESTORE}"
                 useradd -m ${USER_SUDO}
                 adduser ${USER_SUDO} sudo
-                usermod --password ${SUDO_PASSWORD} ${USER_SUDO}
+                usermod --password ${USER_SUDO_PASSWORD} ${USER_SUDO}
 
                 # adding a sudo user and setting password
                 echo "${COLOUR_CYAN}-- setting up log rotation for ${USER_SUDO} ${COLOUR_RESTORE}"
