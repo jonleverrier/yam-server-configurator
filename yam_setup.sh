@@ -1115,7 +1115,6 @@ installAlphaSite() {
     if ask "Are you sure you want to inject a MODX website from an external source?"; then
         read -p "Which project do you want to install MODX? : " PROJECT_NAME
         read -p "Who owns the project? : " PROJECT_OWNER
-        read -p "Owner password : " PASSWORD_OWNER
         read -p "Project mysql password : " PASSWORD_MYSQL
         read -p "Project test url : " PROJECT_DOMAIN
         read -p "Name of MODX folder (without zip) : " FOLDER_MODX_ZIP
