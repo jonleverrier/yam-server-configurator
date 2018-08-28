@@ -1118,7 +1118,7 @@ installAlphaSite() {
         read -p "Owner password : " PASSWORD_OWNER
         read -p "Project mysql password : " PASSWORD_MYSQL
         read -p "Project test url : " PROJECT_DOMAIN
-        read -p "Name of MODX folder (without zip) : " MODX_FOLDER_NAME
+        read -p "Name of MODX folder (without zip) : " FOLDER_MODX_ZIP
         read -p "URL to MODX zip : " URL_MODX
         read -p "URL to database dump : " URL_DATABASE
         read -p "URL to assets zip : " URL_ASSETS
@@ -1146,14 +1146,14 @@ installAlphaSite() {
         wget -N ${URL_MODX}
 
         # unzip folder
-        unzip ${MODX_FOLDER_NAME}.zip
+        unzip ${FOLDER_MODX_ZIP}.zip
 
         # move files inside modx folder up a level
-        mv /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${MODX_FOLDER_NAME}/{.,}* /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/
+        mv /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${FOLDER_MODX_ZIP}/{.,}* /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/
 
         # clean up installation
-        rm -rf ${MODX_FOLDER_NAME}
-        rm ${MODX_FOLDER_NAME}.zip
+        rm -rf ${FOLDER_MODX_ZIP}
+        rm ${FOLDER_MODX_ZIP}.zip
 
         echo "${COLOUR_WHITE}>> installing assets...${COLOUR_RESTORE}"
         # install assets folder
