@@ -43,7 +43,7 @@ YAM_DATEFORMAT_FULL=`date '+%Y-%m-%d'`
 
 # Colour options
 COLOUR_RESTORE=$(echo -en '\033[0m')
-RED=$(echo -en '\033[00;31m')
+COLOUR_RED=$(echo -en '\033[00;31m')
 GREEN=$(echo -en '\033[00;32m')
 YELLOW=$(echo -en '\033[00;33m')
 BLUE=$(echo -en '\033[00;34m')
