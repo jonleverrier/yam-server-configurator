@@ -104,7 +104,7 @@ setupServer() {
         read -p "Enter a sudo user  : " USER_SUDO
         read -p "Enter a sudo password  : " USER_SUDO_PASSWORD
         read -p "Enter a MYSQL password for sudo user  : " PASSWORD_MYSQL_SUDO
-        read -p "Enter a MYSQL password for root user  : " MYSQL_ROOT_PASSWORD
+        read -p "Enter a MYSQL password for root user  : " PASSWORD_MYSQL_ROOT
         read -p "Enter a password for phpMyAdmin directory : " PMA_DIR_PASSWORD
         read -p "Enter domain name for the default website  : " SERVER_NAME
         read -p "Enter domain name for phpMyAdmin  : " SERVER_NAME_PMA
@@ -738,8 +738,8 @@ EOF
             echo "${COLOUR_WHITE}>> configuring MariaDB...${COLOUR_RESTORE}"
 
             #do a manual mysql_secure_installation
-            mysql --user=root --password=$MYSQL_ROOT_PASSWORD << EOF
-SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${MYSQL_ROOT_PASSWORD}');
+            mysql --user=root --password=$PASSWORD_MYSQL_ROOT << EOF
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${PASSWORD_MYSQL_ROOT}');
 DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 DELETE FROM mysql.user WHERE User='';
 DELETE FROM mysql.db WHERE Db='test' OR Db='test_%';
