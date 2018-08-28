@@ -1735,7 +1735,7 @@ addVirtualhostAlphasite() {
         read -p "Enter user password  : " PASSWORD_USER
         read -p "Enter test domain name  : " DOMAIN_TEST
         read -p "Enter MYSQL password  : " PASSWORD_MYSQL_USER
-        read -p "Enter MYSQL root password  : " DB_PASSWORD_ROOT
+        read -p "Enter MYSQL root password  : " PASSWORD_MYSQL_ROOT
         echo '------------------------------------------------------------------------'
         echo 'Setting up virtual host with AlphaSite'
         echo '------------------------------------------------------------------------'
@@ -2179,7 +2179,7 @@ EOF
 
         #create database and user
         echo "${COLOUR_WHITE}>> setting up database...${COLOUR_RESTORE}"
-        mysql --user=root --password=${DB_PASSWORD_ROOT} << EOF
+        mysql --user=root --password=${PASSWORD_MYSQL_ROOT} << EOF
 CREATE DATABASE IF NOT EXISTS yam_db_${USER}_${PROJECT_NAME};
 CREATE USER 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIED BY '${PASSWORD_MYSQL_USER}';
 GRANT ALL PRIVILEGES ON yam_db_${USER}_${PROJECT_NAME}.* TO 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost';
