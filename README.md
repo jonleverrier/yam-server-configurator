@@ -13,3 +13,18 @@ Then run as root user:
 ```
 /bin/bash yam_setup.sh
 ```
+You will then be prompted to choose from the following options:
+* Setup a fresh Ubuntu server
+* Add sudo user and SSH keys
+* Enable or disable SSH password authentication
+* Inject a MODX website from an external source
+* Package MODX website for injection
+* Add new development website
+* Add new development website with Basesite
+* Copy development website
+* Map domain to website
+* Add user to password directory
+* Toggle password directory
+* Delete user
+* Delete website
+* Quit
