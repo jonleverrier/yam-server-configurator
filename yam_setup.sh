@@ -2,7 +2,7 @@
 
 # YAM server configurator for Ubuntu 16.0.4
 # by Jon Leverrier (jon@youandme.digital)
-# Version 0.5
+# Version 0.6
 
 # USE AT YOUR OWN RISK!
 
