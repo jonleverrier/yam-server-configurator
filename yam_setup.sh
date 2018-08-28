@@ -1446,7 +1446,7 @@ addVirtualhost() {
         read -p "Name of project (all one word, no spaces)  : " PROJECT_NAME
         read -p "Enter owner (user) of project  : " USER
         read -p "Enter user password  : " USER_PASSWORD
-        read -p "Enter test domain name  : " DOMAIN_TEST
+        read -p "Enter test domain name  : " PROJECT_DOMAIN
         read -p "Enter MYSQL password  : " DB_PASSWORD
         read -p "Enter MYSQL root password  : " DB_PASSWORD_ROOT
         echo '------------------------------------------------------------------------'
@@ -1556,7 +1556,7 @@ EOF
 
         #configure SSL
         echo "${COLOUR_WHITE}>> configuring SSL...${COLOUR_RESTORE}"
-        certbot -n --nginx certonly -d ${DOMAIN_TEST}
+        certbot -n --nginx certonly -d ${PROJECT_DOMAIN}
         echo "Done."
 
         echo "${COLOUR_WHITE}>> configuring NGINX${COLOUR_RESTORE}"
@@ -1571,14 +1571,14 @@ EOF
 
 # dev url https
 server {
-    server_name ${DOMAIN_TEST};
+    server_name ${PROJECT_DOMAIN};
     include /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.d/main.conf;
     include /etc/nginx/default_error_messages.conf;
 
     listen [::]:443 http2 ssl;
     listen 443 http2 ssl;
-    ssl_certificate /etc/letsencrypt/live/${DOMAIN_TEST}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/${DOMAIN_TEST}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${PROJECT_DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${PROJECT_DOMAIN}/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
@@ -1586,7 +1586,7 @@ server {
 
 # dev url redirect http to https
 server {
-    server_name ${DOMAIN_TEST};
+    server_name ${PROJECT_DOMAIN};
     return 301 https://\$host\$request_uri;
 
     listen 80;
