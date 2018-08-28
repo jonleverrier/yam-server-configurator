@@ -106,7 +106,7 @@ setupServer() {
         read -p "Enter a MYSQL password for sudo user  : " PASSWORD_MYSQL_SUDO
         read -p "Enter a MYSQL password for root user  : " PASSWORD_MYSQL_ROOT
         read -p "Enter a password for phpMyAdmin directory : " PASSWORD_PMA_DIR
-        read -p "Enter domain name for the default website  : " SERVER_NAME
+        read -p "Enter domain name for the default website  : " URL_SERVER_DEFAULT
         read -p "Enter domain name for phpMyAdmin  : " SERVER_NAME_PMA
         echo '------------------------------------------------------------------------'
         echo 'Setting up a new Ubuntu server'
@@ -190,7 +190,7 @@ EOF
 
             #configure SSL
             echo "${COLOUR_WHITE}>> configuring SSL...${COLOUR_RESTORE}"
-            certbot -n --nginx certonly --agree-tos --email ${YAM_EMAIL_SSL} -d ${SERVER_NAME} -d ${SERVER_NAME_PMA}
+            certbot -n --nginx certonly --agree-tos --email ${YAM_EMAIL_SSL} -d ${URL_SERVER_DEFAULT} -d ${SERVER_NAME_PMA}
             echo ">> Done."
 
             # install NGINX
@@ -443,14 +443,14 @@ EOF
 
 # dev url https
 server {
-    server_name ${SERVER_NAME};
+    server_name ${URL_SERVER_DEFAULT};
     include /etc/nginx/conf.d/_default.d/main.conf;
     include /etc/nginx/default_error_messages.conf;
 
     listen [::]:443 http2 ssl;
     listen 443 http2 ssl;
-    ssl_certificate /etc/letsencrypt/live/${SERVER_NAME}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/${SERVER_NAME}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
@@ -458,7 +458,7 @@ server {
 
 # dev url redirect http to https
 server {
-    server_name ${SERVER_NAME};
+    server_name ${URL_SERVER_DEFAULT};
     return 301 https://\$host\$request_uri;
 
     listen 80;
@@ -485,8 +485,8 @@ server {
 
     listen [::]:443 http2 ssl;
     listen 443 http2 ssl;
-    ssl_certificate /etc/letsencrypt/live/${SERVER_NAME}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/${SERVER_NAME}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
