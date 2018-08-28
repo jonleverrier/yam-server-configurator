@@ -107,7 +107,7 @@ setupServer() {
         read -p "Enter a MYSQL password for root user  : " PASSWORD_MYSQL_ROOT
         read -p "Enter a password for phpMyAdmin directory : " PASSWORD_PMA_DIR
         read -p "Enter domain name for the default website  : " URL_SERVER_DEFAULT
-        read -p "Enter domain name for phpMyAdmin  : " SERVER_NAME_PMA
+        read -p "Enter domain name for phpMyAdmin  : " URL_SERVER_PMA
         echo '------------------------------------------------------------------------'
         echo 'Setting up a new Ubuntu server'
         echo '------------------------------------------------------------------------'
@@ -190,7 +190,7 @@ EOF
 
             #configure SSL
             echo "${COLOUR_WHITE}>> configuring SSL...${COLOUR_RESTORE}"
-            certbot -n --nginx certonly --agree-tos --email ${YAM_EMAIL_SSL} -d ${URL_SERVER_DEFAULT} -d ${SERVER_NAME_PMA}
+            certbot -n --nginx certonly --agree-tos --email ${YAM_EMAIL_SSL} -d ${URL_SERVER_DEFAULT} -d ${URL_SERVER_PMA}
             echo ">> Done."
 
             # install NGINX
@@ -479,7 +479,7 @@ EOF
 
 # dev url https
 server {
-    server_name ${SERVER_NAME_PMA};
+    server_name ${URL_SERVER_PMA};
     include /etc/nginx/conf.d/phpmyadmin.d/main.conf;
     include /etc/nginx/default_error_messages.conf;
 
@@ -494,7 +494,7 @@ server {
 
 # dev url redirect http to https
 server {
-    server_name ${SERVER_NAME_PMA};
+    server_name ${URL_SERVER_PMA};
     return 301 https://\$host\$request_uri;
 
     listen 80;
