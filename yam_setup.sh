@@ -1116,7 +1116,7 @@ installAlphaSite() {
         read -p "Which project do you want to install MODX? : " PROJECT_NAME
         read -p "Who owns the project? : " PROJECT_OWNER
         read -p "Owner password : " PASSWORD_OWNER
-        read -p "Project mysql password : " MYSQL_PASSWORD
+        read -p "Project mysql password : " PASSWORD_MYSQL
         read -p "Project test url : " PROJECT_DOMAIN
         read -p "Name of MODX folder (without zip) : " MODX_FOLDER_NAME
         read -p "URL to MODX zip : " URL_MODX
@@ -1194,7 +1194,7 @@ installAlphaSite() {
 \$database_type = 'mysql';
 \$database_server = '127.0.0.1';
 \$database_user = 'yam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME}';
-\$database_password = '${MYSQL_PASSWORD}';
+\$database_password = '${PASSWORD_MYSQL}';
 \$database_connection_charset = 'utf8';
 \$dbase = 'yam_db_${PROJECT_OWNER}_${PROJECT_NAME}';
 \$table_prefix = 'modx_';
@@ -1348,7 +1348,7 @@ EOF
 
         # import alphasite database
         echo "${COLOUR_CYAN}-- importing ${URL_DATABASE##*/}...${COLOUR_RESTORE}"
-        mysql -uyam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME} -p${MYSQL_PASSWORD} yam_db_${PROJECT_OWNER}_${PROJECT_NAME} < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
+        mysql -uyam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} yam_db_${PROJECT_OWNER}_${PROJECT_NAME} < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
 
         echo "${COLOUR_CYAN}-- adding db_changepaths.sql...${COLOUR_RESTORE}"
         cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql << EOF
@@ -1366,10 +1366,10 @@ EOF
 
 
         echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
-        mysql -uyam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME} -p${MYSQL_PASSWORD} yam_db_${PROJECT_OWNER}_$PROJECT_NAME < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
+        mysql -uyam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} yam_db_${PROJECT_OWNER}_$PROJECT_NAME < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
 
         # delete any session data from previous database
-        mysql -uyam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME} -p${MYSQL_PASSWORD} yam_db_${PROJECT_OWNER}_${PROJECT_NAME} << EOF
+        mysql -uyam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} yam_db_${PROJECT_OWNER}_${PROJECT_NAME} << EOF
 truncate modx_session;
 EOF
 
