@@ -31,8 +31,8 @@ YAM_EMAIL_BUG=$(echo -en 'bugs@youandme.digital')
 YAM_EMAIL_SSL=$(echo -en 'jon@youandme.digital')
 
 # if you have a MODX basesite that you work from enter the details below
-YAM_PATH_BASESITE=$(echo -en '/home/yam/public/alphasite/')
-YAM_DB_BASESITE=$(echo -en 'yam_db_yam_alphasite')
+YAM_BASESITE_PATH=$(echo -en '/home/yam/public/alphasite/')
+YAM_BASESITE_DB=$(echo -en 'yam_db_yam_alphasite')
 
 # generic password for password protected directories
 YAM_PASSWORD_GENERIC=$(echo -en '1q2w3e4r')
@@ -1829,7 +1829,7 @@ EOF
         echo "${COLOUR_WHITE}>> installing AlphaSite ${USER}...${COLOUR_RESTORE}"
 
         echo "${COLOUR_CYAN}-- copying Alphasite from base to ${PROJECT_NAME} ${COLOUR_RESTORE}"
-        cp -R ${YAM_PATH_BASESITE}. /home/${USER}/public/${PROJECT_NAME}
+        cp -R ${YAM_BASESITE_PATH}. /home/${USER}/public/${PROJECT_NAME}
 
         echo "${COLOUR_CYAN}-- deleting existing config files in core, manager and connectors... ${COLOUR_RESTORE}"
         rm /home/${USER}/public/${PROJECT_NAME}/core/config/config.inc.php
@@ -2188,7 +2188,7 @@ EOF
         #copy alphasite db and import into new project
         echo "${COLOUR_CYAN}-- injecting AlphaSite into database...${COLOUR_RESTORE}"
         #export
-        mysqldump -u root ${YAM_DB_BASESITE} > /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
+        mysqldump -u root ${YAM_BASESITE_DB} > /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
         #import
         mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} yam_db_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_alphasite.sql
 
