@@ -1037,63 +1037,73 @@ EOF
     fi
 }
 
-#load secure passwords
-securePasswords() {
-    if ask "Are you sure you want to enable or disable SSH password authentication?"; then
+# load secure server function
+secureServer() {
+    if ask "Are you sure you want to setup a sudo user?"; then
+        read -p "Enter a sudo user  : " USER_SUDO
+        read -p "Enter a sudo password  : " USER_SUDO_PASSWORD
+        read -p "Paste SSH Keys  : " PUBLIC_SSH_KEYS
+        echo '------------------------------------------------------------------------'
+        echo 'Securing server'
+        echo '------------------------------------------------------------------------'
 
-        securePasswordsAllDisable () {
-            echo "${COLOUR_WHITE}>> removing SSH password authentication...${COLOUR_RESTORE}"
-            sed -i "s/PasswordAuthentication yes/PasswordAuthentication no/" /etc/ssh/sshd_config
-            sed -i "s/PubkeyAuthentication no/PubkeyAuthentication yes/" /etc/ssh/sshd_config
-            sed -i "s/ChallengeResponseAuthentication yes/ChallengeResponseAuthentication no/" /etc/ssh/sshd_config
-            ssh-keygen -A
-            service ssh restart
+        #check to see if whois is installed on the server
+        echo "${COLOUR_WHITE}>> checking to see if package whois is installed...${COLOUR_RESTORE}"
+        if [ $(dpkg-query -W -f='${Status}' whois 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
+            apt-get install whois;
+        else
+            echo "Done. The whois package is already installed."
+        fi
+
+        #setting up new sudo user
+        echo "${COLOUR_WHITE}>> setting up new sudo user and password for ${USER_SUDO}...${COLOUR_RESTORE}"
+
+        if id "$USER_SUDO" >/dev/null 2>&1; then
+              echo "The user already exists. Skipping..."
+        else
+            useradd -m ${USER_SUDO}
+            adduser ${USER_SUDO} sudo
+
+            PASSWORD=$(mkpasswd ${USER_SUDO_PASSWORD})
+            usermod --password ${PASSWORD} ${USER_SUDO}
             echo "Done."
-        }
+        fi
 
-        securePasswordsAllEnable () {
-            echo "${COLOUR_WHITE}>> enabling SSH password authentication...${COLOUR_RESTORE}"
-            sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
-            sed -i "s/PubkeyAuthentication yes/PubkeyAuthentication no/" /etc/ssh/sshd_config
-            sed -i "s/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/" /etc/ssh/sshd_config
-            ssh-keygen -A
-            service ssh restart
+        # Setup Bash For User
+        echo "${COLOUR_WHITE}>> setting up bash for ${USER_SUDO}...${COLOUR_RESTORE}"
+        chsh -s /bin/bash ${USER_SUDO}
+        echo "Done."
+
+        # Add keys to root and user folders
+        echo "${COLOUR_WHITE}>> setting up keys for root and ${USER_SUDO}...${COLOUR_RESTORE}"
+        cat > /root/.ssh/authorized_keys << EOF
+$PUBLIC_SSH_KEYS
+EOF
+        if [ -f "/home/$USER_SUDO/.ssh" ]; then
+            echo "A .ssh folder already exists in the home folder for ${USER_SUDO}. Skipping..."
+        else
+            mkdir -p /home/${USER_SUDO}/.ssh
+            cp /root/.ssh/authorized_keys /home/${USER_SUDO}/.ssh/authorized_keys
             echo "Done."
-        }
 
-        securePasswordsRootEnable () {
-            echo "${COLOUR_WHITE}>> enabling SSH root password authentication...${COLOUR_RESTORE}"
-            sed -i "s/PermitRootLogin no/PermitRootLogin yes/" /etc/ssh/sshd_config
-            ssh-keygen -A
-            service ssh restart
+            # Create The Server SSH Key
+            ssh-keygen -f /home/${USER_SUDO}/.ssh/id_rsa -t rsa -N ''
+            chmod 700 /home/${USER_SUDO}/.ssh/id_rsa
+            chmod 600 /home/${USER_SUDO}/.ssh/authorized_keys
+        fi
+
+        # Setup Site Directory Permissions
+        echo "${COLOUR_WHITE}>> adjusting user permissions...${COLOUR_RESTORE}"
+        if [ -d "/home/$USER_SUDO" ]; then
+            echo "A home folder already exists. Skipping..."
+        else
+            chown -R ${USER_SUDO}:${USER_SUDO} /home/${USER_SUDO}
+            chmod -R 755 /home/${USER_SUDO}
+            chown root:root /home/${USER_SUDO}
             echo "Done."
-        }
+        fi
 
-        securePasswordsRootDisable () {
-            echo "${COLOUR_WHITE}>> removing SSH root password authentication...${COLOUR_RESTORE}"
-            sed -i "s/PermitRootLogin yes/PermitRootLogin no/" /etc/ssh/sshd_config
-            ssh-keygen -A
-            service ssh restart
-            echo "Done."
-        }
 
-        passwordOptions=(
-            "Disable password login"
-            "Enable password login"
-            "Disable root login"
-            "Enable root login"
-            "Quit"
-        )
-
-        select option in "${passwordOptions[@]}"; do
-            case "$REPLY" in
-                1) securePasswordsAllDisable ;;
-                2) securePasswordsAllEnable ;;
-                3) securePasswordsRootDisable ;;
-                4) securePasswordsRootEnable ;;
-                5) break ;;
-            esac
-        done
 
     else
         break
