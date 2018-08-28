@@ -34,7 +34,8 @@ YAM_EMAIL_SSL=$(echo -en 'jon@youandme.digital')
 YAM_BASESITE_PATH=$(echo -en '/home/yam/public/alphasite/')
 YAM_BASESITE_DB=$(echo -en 'yam_db_yam_alphasite')
 
-# generic password for password protected directories
+# initial generic password for protected directories. this will be overriden
+# after setup 
 YAM_PASSWORD_GENERIC=$(echo -en '1q2w3e4r')
 
 # S3 backup settings
