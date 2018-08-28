@@ -2842,7 +2842,7 @@ securePasswordDirectory() {
 deleteUser() {
     if ask "Are you sure you want to delete a user? This will delete the users home folder and MYSQL access"; then
         read -p "Enter the system user to delete  : " USER
-        read -p "Confirm root MYSQL password  : " DB_PASSWORD_ROOT
+        read -p "Confirm root MYSQL password  : " PASSWORD_MYSQL_ROOT
         echo '------------------------------------------------------------------------'
         echo 'Deleting user and all associated files'
         echo '------------------------------------------------------------------------'
@@ -2851,7 +2851,7 @@ deleteUser() {
         userdel -f ${USER}
 
         echo "${COLOUR_CYAN}-- removing access to MYSQL ${COLOUR_RESTORE}"
-        mysql --user=root --password=${DB_PASSWORD_ROOT} << EOF
+        mysql --user=root --password=${PASSWORD_MYSQL_ROOT} << EOF
 DROP USER '${USER}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
