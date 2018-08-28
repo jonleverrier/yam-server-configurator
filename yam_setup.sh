@@ -39,7 +39,7 @@ YAM_PASSWORD_GENERIC=$(echo -en '1q2w3e4r')
 
 # S3 backup settings
 YAM_SERVER_NAME=$(echo -en 'yam-avalon-ams3-01')
-DATE_FULL=`date '+%Y-%m-%d'`
+YAM_DATEFORMAT_FULL=`date '+%Y-%m-%d'`
 
 # Colour options
 RESTORE=$(echo -en '\033[0m')
@@ -1418,12 +1418,12 @@ packageWebsite() {
 
         echo "${WHITE}>> creating final package...${RESTORE}"
         cd /home/${PROJECT_OWNER}/backup/temp
-        zip -r /home/${PROJECT_OWNER}/backup/${PROJECT_NAME}/${PROJECT_OWNER}-${PROJECT_NAME}-package-${DATE_FULL}.zip .
+        zip -r /home/${PROJECT_OWNER}/backup/${PROJECT_NAME}/${PROJECT_OWNER}-${PROJECT_NAME}-package-${YAM_DATEFORMAT_FULL}.zip .
 
         rm -rf /home/${PROJECT_OWNER}/backup/temp
 
         echo "${WHITE}Package complete: ${RESTORE}"
-        echo "${WHITE}/home/${PROJECT_OWNER}/backup/${PROJECT_NAME}/${PROJECT_OWNER}-${PROJECT_NAME}-package-${DATE_FULL}.zip ${RESTORE}"
+        echo "${WHITE}/home/${PROJECT_OWNER}/backup/${PROJECT_NAME}/${PROJECT_OWNER}-${PROJECT_NAME}-package-${YAM_DATEFORMAT_FULL}.zip ${RESTORE}"
 
 
     else
