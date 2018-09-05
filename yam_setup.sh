@@ -29,6 +29,7 @@
 # Change these settings below before running the script for the first time
 YAM_EMAIL_BUG=$(echo -en 'bugs@youandme.digital')
 YAM_EMAIL_SSL=$(echo -en 'jon@youandme.digital')
+YAM_DATEFORMAT_TIMEZONE=$(echo -en 'Europe/Paris')
 
 # if you have a MODX basesite that you work from enter the details below
 YAM_BASESITE_PATH=$(echo -en '/home/yam/public/alphasite/')
@@ -766,6 +767,7 @@ EOF
             cp /etc/php/7.1/fpm/php.ini /etc/php/7.1/fpm/php.ini.bak
 
             #make changes to php.ini
+            #these changes may be overwritten, so they're also included on a user level
             sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.1/fpm/php.ini
             sed -i "s/memory_limit = .*/memory_limit = 256M/" /etc/php/7.1/fpm/php.ini
             sed -i "s/;date.timezone.*/date.timezone = Europe\/Paris/" /etc/php/7.1/fpm/php.ini
@@ -797,6 +799,14 @@ pm.max_children = 20
 pm.process_idle_timeout = 10s
 pm.max_requests = 200
 chdir = /
+php_value[date.timezone] = ${YAM_DATEFORMAT_TIMEZONE}
+php_value[cgi.fix_pathinfo] = 0
+php_value[memory_limit] = 256M
+php_value[upload_max_filesize] = 100M
+php_value[default_socket_timeout] = 120
+php_value[session.cookie_secure] = 1
+php_value[session.cookie_httponly] = 1
+
 EOF
             fi
             if [ -f /etc/php/7.1/fpm/pool.d/default.conf ]; then
@@ -815,6 +825,13 @@ pm.max_children = 20
 pm.process_idle_timeout = 10s
 pm.max_requests = 200
 chdir = /
+php_value[date.timezone] = ${YAM_DATEFORMAT_TIMEZONE}
+php_value[cgi.fix_pathinfo] = 0
+php_value[memory_limit] = 256M
+php_value[upload_max_filesize] = 100M
+php_value[default_socket_timeout] = 120
+php_value[session.cookie_secure] = 1
+php_value[session.cookie_httponly] = 1
 EOF
             fi
 
@@ -1712,6 +1729,13 @@ pm.process_idle_timeout = 10s
 pm.max_requests = 200
 chdir = /
 php_value[session.save_path] = /home/${USER}/tmp/${PROJECT_NAME}
+php_value[date.timezone] = ${YAM_DATEFORMAT_TIMEZONE}
+php_value[cgi.fix_pathinfo] = 0
+php_value[memory_limit] = 256M
+php_value[upload_max_filesize] = 100M
+php_value[default_socket_timeout] = 120
+php_value[session.cookie_secure] = 1
+php_value[session.cookie_httponly] = 1
 EOF
             systemctl restart php7.1-fpm
             echo "-- Added php worker for ${USER}-${PROJECT_NAME}."
@@ -2179,6 +2203,13 @@ pm.process_idle_timeout = 10s
 pm.max_requests = 200
 chdir = /
 php_value[session.save_path] = /home/${USER}/tmp/${PROJECT_NAME}
+php_value[date.timezone] = ${YAM_DATEFORMAT_TIMEZONE}
+php_value[cgi.fix_pathinfo] = 0
+php_value[memory_limit] = 256M
+php_value[upload_max_filesize] = 100M
+php_value[default_socket_timeout] = 120
+php_value[session.cookie_secure] = 1
+php_value[session.cookie_httponly] = 1
 EOF
             systemctl restart php7.1-fpm
             echo "${COLOUR_CYAN}-- Added php worker for ${USER}-${PROJECT_NAME}.${COLOUR_RESTORE}"
@@ -2495,6 +2526,13 @@ pm.process_idle_timeout = 10s
 pm.max_requests = 200
 chdir = /
 php_value[session.save_path] = /home/${NEW_USER}/tmp/${NEW_PROJECT}
+php_value[date.timezone] = ${YAM_DATEFORMAT_TIMEZONE}
+php_value[cgi.fix_pathinfo] = 0
+php_value[memory_limit] = 256M
+php_value[upload_max_filesize] = 100M
+php_value[default_socket_timeout] = 120
+php_value[session.cookie_secure] = 1
+php_value[session.cookie_httponly] = 1
 EOF
             systemctl restart php7.1-fpm
             echo "${COLOUR_CYAN}-- Added php worker for ${NEW_USER}-${NEW_PROJECT}.${COLOUR_RESTORE}"
