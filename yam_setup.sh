@@ -567,8 +567,8 @@ location ~ \.php$ {
 # custom body file loads here if included
 include /etc/nginx/custom.d/phpmyadmin.d/phpmyadmin.location.body.*.conf;
 
-# deny access to any directories with .htaccess
-location ~ /\.ht {
+# prevent access to hidden files
+location ~ /\. {
     deny all;
 }
 
@@ -1628,8 +1628,8 @@ location ~ \.php$ {
 # custom body file loads here if included
 include /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d/$PROJECT_NAME.location.body.*.conf;
 
-# deny access to any directories with .htaccess
-location ~ /\.ht {
+# prevent access to hidden files
+location ~ /\. {
     deny all;
 }
 
@@ -2095,8 +2095,8 @@ location ~ \.php$ {
 # custom body file loads here if included
 include /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d/${PROJECT_NAME}.location.body.*.conf;
 
-# deny access to any directories with .htaccess
-location ~ /\.ht {
+# prevent access to hidden files
+location ~ /\. {
     deny all;
 }
 
@@ -2411,8 +2411,8 @@ location ~ \.php$ {
 # custom body file loads here if included
 include /etc/nginx/custom.d/${NEW_USER}-${NEW_PROJECT}.d/${NEW_PROJECT}.location.body.*.conf;
 
-# deny access to any directories with .htaccess
-location ~ /\.ht {
+# prevent access to hidden files
+location ~ /\. {
     deny all;
 }
 
