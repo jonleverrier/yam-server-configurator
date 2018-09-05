@@ -777,6 +777,9 @@ EOF
             sed -i 's#;session.save_path = "/var/lib/php/sessions"#session.save_path = "/var/lib/php/sessions"#' /etc/php/7.1/fpm/php.ini
 
             echo "${COLOUR_CYAN}-- adding php workers for default site and phpmyadmin${COLOUR_RESTORE}"
+            # delete default www.conf file
+            rm -rf /etc/php/7.1/fpm/pool.d/www.conf
+
             # add php pools for default website and phpmyadmin
             if [ -f /etc/php/7.1/fpm/pool.d/phpmyadmin.conf ]; then
                 echo "${COLOUR_CYAN}-- pool configuration for phpmyadmin already exists. Skipping...${COLOUR_RESTORE}"
