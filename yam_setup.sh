@@ -124,27 +124,27 @@ setupServer() {
             # Adjusting server settings ...
             echo "${COLOUR_WHITE}>> adjusting server settings...${COLOUR_RESTORE}"
 
-                # adding log files
+                # Adding log files
                 touch /var/log/cron.log
 
-                # setting timezone
+                # Setting timezone
                 echo "${COLOUR_CYAN}-- setting timezone to Europe Paris${COLOUR_RESTORE}"
                 ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
 
-                # setting up skeleton directory
+                # Setting up skeleton directory
                 echo "${COLOUR_CYAN}-- setting up skeleton directory${COLOUR_RESTORE}"
                 mkdir -p /etc/skel/tmp
                 mkdir -p /etc/skel/logs
                 mkdir -p /etc/skel/logs/nginx
                 mkdir -p /etc/skel/public
 
-                # adding a sudo user and setting password
+                # Adding a sudo user and setting password
                 echo "${COLOUR_CYAN}-- adding sudo user and changing password${COLOUR_RESTORE}"
                 useradd -m ${USER_SUDO}
                 adduser ${USER_SUDO} sudo
                 usermod --password ${USER_SUDO_PASSWORD} ${USER_SUDO}
 
-                # adding a sudo user and setting password
+                # Adding a sudo user and setting password
                 echo "${COLOUR_CYAN}-- setting up log rotation for ${USER_SUDO} ${COLOUR_RESTORE}"
                 cat > /etc/logrotate.d/${USER_SUDO} << EOF
 /home/$USER/logs/nginx/*.log {
