@@ -35,7 +35,7 @@ YAM_BASESITE_PATH=$(echo -en '/home/yam/public/alphasite/')
 YAM_BASESITE_DB=$(echo -en 'yam_db_yam_alphasite')
 
 # initial generic password for protected directories. this will be overriden
-# after setup 
+# after setup
 YAM_PASSWORD_GENERIC=$(echo -en '1q2w3e4r')
 
 # S3 backup settings
@@ -762,6 +762,10 @@ EOF
 
             #configure PHP.7.1
             echo "${COLOUR_WHITE}>> configuring PHP7.1...${COLOUR_RESTORE}"
+            #first backup original php.ini file
+            cp /etc/php/7.1/fpm/php.ini /etc/php/7.1/fpm/php.ini.bak
+
+            #make changes to php.ini
             sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.1/fpm/php.ini
             sed -i "s/memory_limit = .*/memory_limit = 256M/" /etc/php/7.1/fpm/php.ini
             sed -i "s/;date.timezone.*/date.timezone = Europe\/Paris/" /etc/php/7.1/fpm/php.ini
