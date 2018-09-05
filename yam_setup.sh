@@ -128,8 +128,8 @@ setupServer() {
                 touch /var/log/cron.log
 
                 # Setting timezone
-                echo "${COLOUR_CYAN}-- setting timezone to Europe Paris${COLOUR_RESTORE}"
-                ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
+                echo "${COLOUR_CYAN}-- setting timezone to ${YAM_DATEFORMAT_TIMEZONE}${COLOUR_RESTORE}"
+                ln -sf /usr/share/zoneinfo/${YAM_DATEFORMAT_TIMEZONE} /etc/localtime
 
                 # Setting up skeleton directory
                 echo "${COLOUR_CYAN}-- setting up skeleton directory${COLOUR_RESTORE}"
