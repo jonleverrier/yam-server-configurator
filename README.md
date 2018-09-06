@@ -39,7 +39,9 @@ _Whilst this script installs Amazon s3cmd, you'll have to run setup yourself. Wa
 
 ## yam_manage.sh
 
-When you are finished with setup, you can logout and login as your new sudo user. Customise the variables at the top of the yam_manage.sh script by typing the following into the command line :
+When you are finished with setup, you can logout and login as your new sudo user. To run the script, you will need to `su` before running it.
+
+Like yam_setup.sh, customise the variables at the top of the yam_manage.sh script by typing the following into the command line:
 ```
 nano /usr/local/bin/yam_manage.sh
 ```
