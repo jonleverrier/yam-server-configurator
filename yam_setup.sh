@@ -909,7 +909,7 @@ EOF
             ufw --force enable
             echo ">> Done."
 
-            echo "${COLOUR_CYAN}>> setting up SFTP${COLOUR_RESTORE}"
+            echo "${COLOUR_WHITE}>> setting up SFTP${COLOUR_RESTORE}"
 
             # If setup is run again, check to make sure there config doesn't already exist
             if grep -Fxq "Match User ${USER_SUDO}" /etc/ssh/sshd_config
@@ -931,7 +931,7 @@ EOF
             service ssh restart
             fi
 
-            echo "${COLOUR_CYAN}>> setting up system backup${COLOUR_RESTORE}"
+            echo "${COLOUR_WHITE}>> setting up system backup${COLOUR_RESTORE}"
             cat > /etc/cron.d/backup_server_local << EOF
 30 2    * * *   root    /root/yam_backup_system.sh >> /var/log/cron.log 2>&1
 
