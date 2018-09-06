@@ -909,26 +909,6 @@ EOF
             ufw --force enable
             echo ">> Done."
 
-            echo "${COLOUR_WHITE}>> setting up SFTP${COLOUR_RESTORE}"
-
-            # If setup is run again, check to make sure there config doesn't already exist
-            if grep -Fxq "Match User ${USER_SUDO}" /etc/ssh/sshd_config
-            then
-                echo "${COLOUR_CYAN}-- SFTP user found. Skipping...${COLOUR_RESTORE}"
-            else
-                echo "${COLOUR_CYAN}-- No SFTP user found. Adding new user...${COLOUR_RESTORE}"
-            cat >> /etc/ssh/sshd_config << EOF
-
-Match User ${USER_SUDO}
-    ChrootDirectory %h
-    PasswordAuthentication yes
-    ForceCommand internal-sftp
-    PermitTunnel no
-    AllowAgentForwarding no
-    AllowTcpForwarding no
-    X11Forwarding no
-EOF
-            service ssh restart
             fi
 
             echo "${COLOUR_WHITE}>> setting up system backup${COLOUR_RESTORE}"
