@@ -2189,7 +2189,7 @@ EOF
     fi
 }
 
-# Map domain to website function
+# Load copy virtual host fucnction
 copyVirtualhost() {
     if ask "Are you sure you want to copy a development website?"; then
         read -p "Copy: Project  : " COPY_PROJECT
@@ -2782,6 +2782,7 @@ addUserPasswordDirectory() {
     fi
 }
 
+# Load toggle password directory function
 securePasswordDirectory() {
     if ask "Are you sure you want to toggle password directory?"; then
         read -p "Project name  : " PROJECT
@@ -2885,6 +2886,7 @@ EOF
     fi
 }
 
+# Display menu
 
 echo ''
 echo ' .----------------.  .----------------.  .----------------.'
