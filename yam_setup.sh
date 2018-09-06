@@ -147,7 +147,7 @@ EOF
         usermod --password ${USER_SUDO_PASSWORD} ${USER_SUDO}
 
         # disable bash history
-        echo 'set +o history' >> ~/yam/.bashrc
+        echo 'set +o history' >> ~/.bashrc
 
         # Adding a sudo user and setting password
         echo "${COLOUR_CYAN}-- setting up log rotation for ${USER_SUDO} ${COLOUR_RESTORE}"
@@ -1046,6 +1046,9 @@ EOF
         echo "${COLOUR_WHITE}>> setting up bash for user ${USER_SUDO}...${COLOUR_RESTORE}"
         chsh -s /bin/bash ${USER_SUDO}
         echo "Done."
+
+        # disable bash history
+        echo 'set +o history' >> ~/.bashrc
 
         # Add keys to root and user folders
         echo "${COLOUR_WHITE}>> setting up keys for user root and ${USER_SUDO}...${COLOUR_RESTORE}"
