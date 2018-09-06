@@ -959,13 +959,16 @@ EOF
         echo "${COLOUR_WHITE}>> installing yam server utilities...${COLOUR_RESTORE}"
         wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_local.sh
         wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_s3.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_sync_s3.sh
         wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_system.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_sync_s3.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_manage.sh
+
         chmod -R 700 /usr/local/bin/yam_backup_local.sh
         chmod -R 700 /usr/local/bin/yam_backup_s3.sh
         chmod -R 700 /usr/local/bin/yam_sync_s3.sh
         chmod -R 700 /usr/local/bin/yam_backup_system.sh
         chmod -R 700 /usr/local/bin/yam_setup.sh
+        chmod -R 700 /usr/local/bin/yam_manage.sh
         echo ">> Done."
 
     else
