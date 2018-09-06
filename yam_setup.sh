@@ -909,8 +909,6 @@ EOF
             ufw --force enable
             echo ">> Done."
 
-            fi
-
             echo "${COLOUR_WHITE}>> setting up system backup${COLOUR_RESTORE}"
             cat > /etc/cron.d/backup_server_local << EOF
 30 2    * * *   root    /root/yam_backup_system.sh >> /var/log/cron.log 2>&1
