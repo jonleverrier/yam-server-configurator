@@ -3,12 +3,12 @@ Work in progress; setup and manage a VPS to host multiple MODX websites running 
 
 ## yam_setup.sh
 
-Example usage:
-Once you have logged into your server via SSH as the root user, type the following into the command line:
+To run the setup script, you will need to login to your server as the root user via SSH. Once you're logged in, type the following into the command line:
+
 ```
 cd /usr/local/bin
 ```
-followed by:
+Followed by:
 
 ```
 wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_setup.sh
