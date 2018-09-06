@@ -2894,7 +2894,7 @@ echo '| |              | || |              | || |              | |'
 echo '| .--------------. || .--------------. || .--------------. |'
 echo ' .----------------.  .----------------.  .----------------. '
 echo ''
-echo 'WELCOME TO THE YAM SERVER CONFIGURATOR'
+echo 'YAM SERVER CONFIGURATOR'
 
 
 echo ''
