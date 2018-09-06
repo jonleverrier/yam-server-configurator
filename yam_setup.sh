@@ -1036,7 +1036,7 @@ EOF
             echo "Done."
 
             # Create The Server SSH Key
-            ssh-keygen -f /home/${USER_SUDO}/.ssh/id_rsa -t rsa -N ''
+            yes y |ssh-keygen -f /home/${USER_SUDO}/.ssh/id_rsa -q -t rsa -N '' >/dev/null
             chmod 700 /home/${USER_SUDO}/.ssh/id_rsa
             chmod 600 /home/${USER_SUDO}/.ssh/authorized_keys
         fi
