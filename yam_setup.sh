@@ -1023,7 +1023,7 @@ secureServer() {
             usermod --password ${PASSWORD} ${USER_SUDO}
         fi
 
-        # adds sudo user to sudoers file to stop password prompt
+        # Adds sudo user to sudoers file to stop password prompt
         echo "${COLOUR_WHITE}>> adding user ${USER_SUDO} to sudoers file...${COLOUR_RESTORE}"
         if [ -d "/etc/sudoers.d/${USER_SUDO}" ]; then
             echo "user already added to sudoers file. skipping..."
