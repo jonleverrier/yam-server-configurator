@@ -1,15 +1,20 @@
 # yam-server-configurator
 Work in progress; setup and manage a VPS to host multiple MODX websites running off a LEMP stack on Ubutnu 16.04.4 x64 from Digital Ocean.
 
-### yam_setup.sh
+## yam_setup.sh
 
 Example usage:
-Once you have logged into your server via SSH, type the following into the command line
+Once you have logged into your server via SSH as the root user, type the following into the command line:
+```
+cd /usr/local/bin
+```
+followed by:
+
 ```
 wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_setup.sh
 ```
 
-Then run as root user:
+Then type the following command to load the script:
 ```
 /bin/bash yam_setup.sh
 ```
@@ -36,7 +41,7 @@ log rotation, ssl auto renewal, UFW, default error pages, local backup of core s
 
 Whilst this script installs Amazon s3cmd, you'll have to run setup yourself. Was very quick todo, hence not adding it to the build script (s3cmd powers backups to AWS).
 
-### yam_backup_local.sh
+## yam_backup_local.sh
 
 To be used with cron, or run manually from the command line.
 
@@ -52,7 +57,7 @@ This scripts presumes your user directory is organised like the following;
 /home/user/public/website3
 ```
 
-### yam_backup_s3.sh
+## yam_backup_s3.sh
 
 Example usage:
 ```
@@ -61,7 +66,7 @@ Example usage:
 There is also a global variable `PATH_BACKUP` that can be edited to build any
 S3 URL.
 
-### yam_backup_system.sh
+## yam_backup_system.sh
 
 To be used with cron, or run manually from the command line.
 
@@ -70,7 +75,7 @@ Example usage;
 /bin/bash yam_backup_system.sh
 ```
 
-### yam_sync_s3.sh
+## yam_sync_s3.sh
 Example usage:
 ```
 /bin/bash yam_sync_s3.sh /local/path/ /s3/path/
