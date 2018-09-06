@@ -965,8 +965,8 @@ EOF
 
         chmod -R 700 /usr/local/bin/yam_backup_local.sh
         chmod -R 700 /usr/local/bin/yam_backup_s3.sh
-        chmod -R 700 /usr/local/bin/yam_sync_s3.sh
         chmod -R 700 /usr/local/bin/yam_backup_system.sh
+        chmod -R 700 /usr/local/bin/yam_sync_s3.sh
         chmod -R 700 /usr/local/bin/yam_setup.sh
         chmod -R 700 /usr/local/bin/yam_manage.sh
         echo ">> Done."
