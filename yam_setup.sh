@@ -1012,6 +1012,21 @@ secureServer() {
         if id "$USER_SUDO" >/dev/null 2>&1; then
               echo "The user already exists. Skipping..."
         else
+            # Setting up skeleton directory
+            echo "${COLOUR_WHITE}>> setting up skeleton directory${COLOUR_RESTORE}"
+            # if the user has setup a server first, the skeleton directory
+            # will be setup. if a user runs the secureServer function first,
+            # the skeleton directory wont be setup. check to see if it exists
+            # or not...
+            if [ -d "/etc/skel/logs" ]; then
+                echo "skeleton directory already setup. skipping..."
+            else
+                mkdir -p /etc/skel/tmp
+                mkdir -p /etc/skel/logs
+                mkdir -p /etc/skel/logs/nginx
+                mkdir -p /etc/skel/public
+            fi
+
             # Create new user including home directory
             adduser --disabled-password --gecos "" ${USER_SUDO}
             # Add user to sudo user group
