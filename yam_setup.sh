@@ -1004,7 +1004,7 @@ secureServer() {
         fi
 
         # Setting up new sudo user
-        echo "${COLOUR_WHITE}>> setting up new sudo user and password for ${USER_SUDO}...${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> setting up new sudo user and password for user ${USER_SUDO}...${COLOUR_RESTORE}"
 
         if id "$USER_SUDO" >/dev/null 2>&1; then
               echo "The user already exists. Skipping..."
@@ -1019,12 +1019,12 @@ secureServer() {
         fi
 
         # Setup Bash For User
-        echo "${COLOUR_WHITE}>> setting up bash for ${USER_SUDO}...${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> setting up bash for user ${USER_SUDO}...${COLOUR_RESTORE}"
         chsh -s /bin/bash ${USER_SUDO}
         echo "Done."
 
         # Add keys to root and user folders
-        echo "${COLOUR_WHITE}>> setting up keys for root and ${USER_SUDO}...${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> setting up keys for user root and ${USER_SUDO}...${COLOUR_RESTORE}"
         cat > /root/.ssh/authorized_keys << EOF
 $KEY_SSH_PUBLIC
 EOF
