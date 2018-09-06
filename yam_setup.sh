@@ -135,7 +135,7 @@ setupServer() {
 
                 # Adding a sudo user and setting password
                 echo "${COLOUR_CYAN}-- adding sudo user and changing password${COLOUR_RESTORE}"
-                useradd -m ${USER_SUDO}
+                adduser --disabled-password --gecos "" ${USER_SUDO}
                 adduser ${USER_SUDO} sudo
                 usermod --password ${USER_SUDO_PASSWORD} ${USER_SUDO}
 
@@ -1403,7 +1403,7 @@ addVirtualhost() {
               echo "The user already exists. Skipping..."
         else
             echo "${COLOUR_CYAN}-- adding user${COLOUR_RESTORE}"
-            useradd -m ${USER}
+            adduser --disabled-password --gecos "" ${USER}
             PASSWORD=$(mkpasswd ${USER_PASSWORD})
             usermod --password ${PASSWORD} ${USER}
 
@@ -1696,7 +1696,7 @@ addVirtualhostBasesite() {
         if id "$USER" >/dev/null 2>&1; then
               echo "-- The user already exists. Skipping..."
         else
-            useradd -m ${USER}
+            adduser --disabled-password --gecos "" ${USER}
             PASSWORD=$(mkpasswd ${PASSWORD_USER})
             usermod --password ${PASSWORD} ${USER}
 
@@ -2205,7 +2205,7 @@ copyVirtualhost() {
         if id "${NEW_USER}" >/dev/null 2>&1; then
               echo "-- The user already exists. Skipping..."
         else
-            useradd -m ${NEW_USER}
+            adduser --disabled-password --gecos "" ${NEW_USER}
             PASSWORD=$(mkpasswd ${NEW_PASSWORD_OWNER})
             usermod --password ${PASSWORD} ${NEW_USER}
 
