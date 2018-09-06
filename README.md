@@ -14,7 +14,6 @@ Followed by:
 
 ```
 wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_setup.sh
-
 ```
 At this point you will want to customise the variables at the top of the script before running it. Type the following into the command line to edit the script:
 ```
@@ -40,9 +39,9 @@ _Whilst this script installs Amazon s3cmd, you'll have to run setup yourself. Wa
 
 ## yam_manage.sh
 
-When you are finished with setup, you can logout and login as your sudo user. Customise the variables at the top of the yam_manage.sh script by typing the following into the command line :
+When you are finished with setup, you can logout and login as your new sudo user. Customise the variables at the top of the yam_manage.sh script by typing the following into the command line :
 ```
-nano /usr/local/bin/yam_setup.sh
+nano /usr/local/bin/yam_manage.sh
 ```
 Once you're ready, type the following to load the script:
 
@@ -60,6 +59,10 @@ You will then be prompted to choose from the following options:
 8. Toggle password directory
 9. Delete user
 10. Delete website
+
+## Utility Scripts
+
+Make sure you check these files for variables that may need customising.
 
 ### yam_backup_local.sh
 
