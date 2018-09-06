@@ -35,9 +35,8 @@ _Whilst this script installs Amazon s3cmd, you'll have to run setup yourself. Wa
 
 ## yam_manage.sh
 
-After setup, type the following command to load the script:
+After setup, you can logout and login as your sudo user. Type the following command to load the script:
 
-Then type the following command to load the script:
 ```
 /bin/bash yam_manage.sh
 ```
