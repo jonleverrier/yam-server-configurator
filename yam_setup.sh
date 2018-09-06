@@ -1009,7 +1009,9 @@ secureServer() {
         if id "$USER_SUDO" >/dev/null 2>&1; then
               echo "The user already exists. Skipping..."
         else
-            useradd -m ${USER_SUDO}
+            # Create new user including home directory
+            adduser --disabled-password --gecos "" ${USER_SUDO}
+            # Add user to sudo user group
             adduser ${USER_SUDO} sudo
 
             PASSWORD=$(mkpasswd ${USER_SUDO_PASSWORD})
