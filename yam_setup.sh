@@ -1081,7 +1081,7 @@ securePasswords() {
     if ask "Are you sure you want to enter password authentication?"; then
 
         securePasswordsAllDisable () {
-            echo "${WHITE}>> removing SSH password authentication...${RESTORE}"
+            echo "${COLOUR_WHITE}>> removing SSH password authentication...${COLOUR_RESTORE}"
             sed -i "s/PasswordAuthentication yes/PasswordAuthentication no/" /etc/ssh/sshd_config
             sed -i "s/PubkeyAuthentication no/PubkeyAuthentication yes/" /etc/ssh/sshd_config
             sed -i "s/ChallengeResponseAuthentication yes/ChallengeResponseAuthentication no/" /etc/ssh/sshd_config
@@ -1091,7 +1091,7 @@ securePasswords() {
         }
 
         securePasswordsAllEnable () {
-            echo "${WHITE}>> enabling SSH password authentication...${RESTORE}"
+            echo "${COLOUR_WHITE}>> enabling SSH password authentication...${COLOUR_RESTORE}"
             sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
             sed -i "s/PubkeyAuthentication yes/PubkeyAuthentication no/" /etc/ssh/sshd_config
             sed -i "s/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/" /etc/ssh/sshd_config
@@ -1101,7 +1101,7 @@ securePasswords() {
         }
 
         securePasswordsRootEnable () {
-            echo "${WHITE}>> enabling SSH root password authentication...${RESTORE}"
+            echo "${COLOUR_WHITE}>> enabling SSH root password authentication...${COLOUR_RESTORE}"
             sed -i "s/PermitRootLogin no/PermitRootLogin yes/" /etc/ssh/sshd_config
             ssh-keygen -A
             service ssh restart
@@ -1109,7 +1109,7 @@ securePasswords() {
         }
 
         securePasswordsRootDisable () {
-            echo "${WHITE}>> removing SSH root password authentication...${RESTORE}"
+            echo "${COLOUR_WHITE}>> removing SSH root password authentication...${COLOUR_RESTORE}"
             sed -i "s/PermitRootLogin yes/PermitRootLogin no/" /etc/ssh/sshd_config
             ssh-keygen -A
             service ssh restart
