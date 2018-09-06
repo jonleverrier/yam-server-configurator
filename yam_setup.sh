@@ -1043,14 +1043,10 @@ EOF
 
         # Setup Site Directory Permissions
         echo "${COLOUR_WHITE}>> adjusting user permissions...${COLOUR_RESTORE}"
-        if [ -d "/home/$USER_SUDO" ]; then
-            echo "A home folder already exists. Skipping..."
-        else
-            chown -R ${USER_SUDO}:${USER_SUDO} /home/${USER_SUDO}
-            chmod -R 755 /home/${USER_SUDO}
-            chown root:root /home/${USER_SUDO}
-            echo "Done."
-        fi
+        chown -R ${USER_SUDO}:${USER_SUDO} /home/${USER_SUDO}
+        chmod -R 755 /home/${USER_SUDO}
+        chown root:root /home/${USER_SUDO}
+        echo "Done."
 
 
 
