@@ -175,11 +175,11 @@ EOF
 
             # Setup PPA
             echo "${COLOUR_WHITE}>> installing repositories...${COLOUR_RESTORE}"
-            apt-get install -y --force-yes software-properties-common
+            apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages software-properties-common
             add-apt-repository -y ppa:ondrej/php
             add-apt-repository -y ppa:nijel/phpmyadmin
             add-apt-repository -y ppa:certbot/certbot
-            apt-get -y --force-yes install apache2-utils
+            apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install apache2-utils
             apt-get update
             echo ">> Done."
 
@@ -195,7 +195,7 @@ EOF
 
             # Install NGINX
             echo "${COLOUR_WHITE}>> installing NGINX...${COLOUR_RESTORE}"
-            apt-get install -y --force-yes nginx
+            apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages nginx
             echo ">> Done."
 
             # Configure NGINX
@@ -731,7 +731,7 @@ EOF
 
             # Install MYSQL
             echo "${COLOUR_WHITE}>> installing MariaDB...${COLOUR_RESTORE}"
-            apt-get install -y --force-yes mariadb-server
+            apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages mariadb-server
             echo ">> Done."
 
             # Configure MYSQL
