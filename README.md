@@ -31,7 +31,7 @@ If you choose to setup a fresh server, the script will installs and configure NG
 The script also configures ssh keys, root and sudo users, time zone for server and mysql, skeleton directory,
 log rotation, ssl auto renewal, UFW, default error pages, local backup of core system folders, local backup of user web folders, S3 backup of core system folders, sessions, securing MODX, S3 backup of user web folders
 
-Whilst this script installs Amazon s3cmd, you'll have to run setup yourself. Was very quick todo, hence not adding it to the build script (s3cmd powers backups to AWS).
+_Whilst this script installs Amazon s3cmd, you'll have to run setup yourself. Was very quick todo, hence not adding it to the build script (s3cmd powers backups to AWS)._
 
 ## yam_manage.sh
 
