@@ -126,9 +126,6 @@ setupServer() {
 ${USER_SUDO} ALL=(ALL) NOPASSWD:ALL
 EOF
 
-        # disable bash history
-        echo 'set +o history' >> ~/yam/.bashrc
-
         # Adding log files
         touch /var/log/cron.log
 
@@ -148,6 +145,9 @@ EOF
         adduser --disabled-password --gecos "" ${USER_SUDO}
         adduser ${USER_SUDO} sudo
         usermod --password ${USER_SUDO_PASSWORD} ${USER_SUDO}
+
+        # disable bash history
+        echo 'set +o history' >> ~/yam/.bashrc
 
         # Adding a sudo user and setting password
         echo "${COLOUR_CYAN}-- setting up log rotation for ${USER_SUDO} ${COLOUR_RESTORE}"
