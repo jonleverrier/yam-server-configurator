@@ -167,7 +167,11 @@ EOF
             # Upgrade system and base packages
             echo "${COLOUR_WHITE}>> upgrading system and packages...${COLOUR_RESTORE}"
             apt-get update
-            apt-get upgrade -y
+            apt-get upgrade;
+            DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o
+                Dpkg::Options::="--force-confdef" --allow-downgrades
+                --allow-remove-essential --allow-change-held-packages 
+                --allow-change-held-packages --allow-unauthenticated;
             echo ">> Done."
 
             # Setup PPA
