@@ -980,6 +980,7 @@ EOF
             chmod -R 700 /root/yam_backup_s3.sh
             chmod -R 700 /root/yam_sync_s3.sh
             chmod -R 700 /root/yam_backup_system.sh
+            chmod -R 700 /root/yam_setup.sh
             echo ">> Done."
 
         fi
