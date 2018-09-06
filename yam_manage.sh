@@ -1867,6 +1867,7 @@ EOF
 deleteWebsite() {
     if ask "Are you sure you want to delete a website? This will delete the website from the users home folder, including the MYSQL database and NGINX conf files"; then
         read -p "Project name to delete  : " DEL_PROJECT_NAME
+        read -p "Project URL  : " DEL_PROJECT_URL
         read -p "Which user owns the website?  : " USER
         echo '------------------------------------------------------------------------'
         echo 'Deleting website and all associated files'
@@ -1899,6 +1900,25 @@ EOF
             rm -rf /etc/php/7.1/fpm/pool.d/${USER}-${DEL_PROJECT_NAME}.conf
             systemctl reload php7.1-fpm
             echo "Website removed."
+
+            echo "${COLOUR_CYAN}-- deleting SSL certificates ${COLOUR_RESTORE}"
+            if [ -f "/etc/letsencrypt/renewal/${DEL_PROJECT_URL}.conf" ]; then
+                rm -rf /etc/letsencrypt/renewal/${DEL_PROJECT_URL}.conf
+            else
+                echo "no renewal cert to delete. skipping..."
+            fi
+
+            if [ -f "/etc/letsencrypt/live/${DEL_PROJECT_URL}" ]; then
+                rm -rf /etc/letsencrypt/archive/${DEL_PROJECT_URL}
+            else
+                echo "no live cert to delete. skipping..."
+            fi
+
+            if [ -f "/etc/letsencrypt/archive/${DEL_PROJECT_URL}" ]; then
+                rm -rf /etc/letsencrypt/archive/${DEL_PROJECT_URL}
+            else
+                echo "no archive cert to delete. skipping..."
+            fi
 
 
         else
