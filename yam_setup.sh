@@ -7,24 +7,18 @@
 # USE AT YOUR OWN RISK!
 
 # Installs and configures NGINX, MariaDB, PHP7.1 FPM, Cerbot (Let's Encrypt),
-# PhpMyAdmin, Fail2Ban with UFW, php-imagick, htop, zip, unzip, Digital Ocean agent, s3cmd,
-# nmap, yam_backup_local.sh, yam_backup_s3.sh, yam_sync_s3.sh and yam_backup_system.sh
+# PhpMyAdmin, Fail2Ban with UFW, php-imagick, htop, zip, unzip, Digital Ocean
+# agent, s3cmd, nmap, yam_backup_local.sh, yam_backup_s3.sh, yam_sync_s3.sh and
+# yam_backup_system.sh
 
-# Also configures ssh keys, root and sudo users, time zone for server and mysql, skeleton directory,
-# log rotation, ssl auto renewal, UFW, default error pages, local backup of core system folders,
-# local backup of user web folders, S3 backup of core system folders, sessions, securing MODX, S3 backup
-# of user web folders
+# Also configures ssh keys, root and sudo users, time zone for server and mysql,
+# skeleton directory, log rotation, ssl auto renewal, UFW, default error pages,
+# local backup of core system folders,local backup of user web folders, S3
+# backup of core system folders, sessions, securing MODX, S3 backup of user
+# web folders
 
-# Whilst this script installs Amazon s3cmd, you'll have to run setup yourself. Was very
-# quick todo, hence not adding it to the build script (s3cmd powers backups to AWS)
-
-# Example usage:
-# To install use wget -N https://example.com/yam_setup.sh
-# Then run:
-# /bin/bash yam_setup.sh as root user
-
-# This script puts your websites in the following location:
-# /home/user/public/website
+# See https://github.com/jonleverrier/yam-server-configurator for further
+# information
 
 # Change these settings below before running the script for the first time
 YAM_EMAIL_BUG=$(echo -en 'bugs@youandme.digital')
@@ -83,7 +77,8 @@ ask() {
         # Ask the question (not using "read -p" as it uses stderr not stdout)
         echo -n "$1 [$prompt] "
 
-        # Read the answer (use /dev/tty in case stdin is redirected from somewhere else)
+        # Read the answer (use /dev/tty in case stdin is redirected from
+        # somewhere else)
         read reply </dev/tty
 
         # Default?
