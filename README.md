@@ -14,9 +14,14 @@ Followed by:
 
 ```
 wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_setup.sh
+
+```
+At this point you will want to customise the variables at the top of the script before running it. Type the following into the command line to edit the script:
+```
+nano /usr/local/bin/yam_setup.sh
 ```
 
-Then type the following command to load the script:
+Then type the following command to load it:
 ```
 /bin/bash yam_setup.sh
 ```
@@ -35,7 +40,11 @@ _Whilst this script installs Amazon s3cmd, you'll have to run setup yourself. Wa
 
 ## yam_manage.sh
 
-After setup, you can logout and login as your sudo user. Type the following command to load the script:
+When you are finished with setup, you can logout and login as your sudo user. Customise the variables at the top of the yam_manage.sh script by typing the following into the command line :
+```
+nano /usr/local/bin/yam_setup.sh
+```
+Once you're ready, type the following to load the script:
 
 ```
 /bin/bash yam_manage.sh
@@ -61,7 +70,7 @@ Example usage; backup websites that live in /home/jamesbond/:
 /bin/bash yam_backup_local.sh jamesbond
 ```
 
-This scripts presumes your user directory is organised like the following;
+This scripts presumes yam_setup.sh setup your server. Therefore your user directory is organised like the following;
 ```
 /home/user/public/website1
 /home/user/public/website2
