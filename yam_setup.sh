@@ -1013,7 +1013,6 @@ secureServer() {
               echo "The user already exists. Skipping..."
         else
             # Setting up skeleton directory
-            echo "${COLOUR_WHITE}>> setting up skeleton directory${COLOUR_RESTORE}"
             # if the user has setup a server first, the skeleton directory
             # will be setup. if a user runs the secureServer function first,
             # the skeleton directory wont be setup. check to see if it exists
