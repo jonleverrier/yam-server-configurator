@@ -918,6 +918,9 @@ EOF
 
         echo "${COLOUR_WHITE}>> setting up system backup${COLOUR_RESTORE}"
         cat > /etc/cron.d/backup_server_local << EOF
+
+            echo "${COLOUR_WHITE}>> setting up system backup${COLOUR_RESTORE}"
+            cat > /etc/cron.d/backup_server_local << EOF
 30 2    * * *   root    /root/yam_backup_system.sh >> /var/log/cron.log 2>&1
 
 EOF
@@ -1155,7 +1158,7 @@ echo '| |              | || |              | || |              | |'
 echo '| .--------------. || .--------------. || .--------------. |'
 echo ' .----------------.  .----------------.  .----------------. '
 echo ''
-echo 'WELCOME TO THE YAM SERVER CONFIGURATOR'
+echo 'YAM SERVER CONFIGURATOR'
 
 
 echo ''
