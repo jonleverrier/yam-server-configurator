@@ -66,6 +66,8 @@ You will then be prompted to choose from the following options:
 
 Make sure you check these files for variables that may need customising.
 
+Whilst yam_setup.sh installs Amazon s3cmd, you'll have to run s3cmd setup yourself before using the utility scripts. It's very quick todo, hence not adding it to the build script.
+
 ### yam_backup_local.sh
 
 To be used with cron, or run manually from the command line.
