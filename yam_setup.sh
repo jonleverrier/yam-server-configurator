@@ -1030,7 +1030,7 @@ secureServer() {
             # Create new user including home directory
             adduser --disabled-password --gecos "" ${USER_SUDO}
             # Add user to sudo user group
-            adduser ${USER_SUDO} sudo
+            usermod -aG sudo ${USER_SUDO}
             # Generate and set password
             PASSWORD=$(mkpasswd ${USER_SUDO_PASSWORD})
             usermod --password ${PASSWORD} ${USER_SUDO}
