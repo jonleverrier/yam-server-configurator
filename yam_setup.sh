@@ -126,6 +126,9 @@ setupServer() {
 ${USER_SUDO} ALL=(ALL) NOPASSWD:ALL
 EOF
 
+        # disable bash history
+        echo 'set +o history' >> ~/yam/.bashrc
+
         # Adding log files
         touch /var/log/cron.log
 
