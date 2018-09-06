@@ -1073,6 +1073,69 @@ EOF
     fi
 }
 
+# Load secure passwords
+securePasswords() {
+    if ask "Are you sure you want to enter password authentication?"; then
+
+        securePasswordsAllDisable () {
+            echo "${WHITE}>> removing SSH password authentication...${RESTORE}"
+            sed -i "s/PasswordAuthentication yes/PasswordAuthentication no/" /etc/ssh/sshd_config
+            sed -i "s/PubkeyAuthentication no/PubkeyAuthentication yes/" /etc/ssh/sshd_config
+            sed -i "s/ChallengeResponseAuthentication yes/ChallengeResponseAuthentication no/" /etc/ssh/sshd_config
+            ssh-keygen -A
+            service ssh restart
+            echo "Done."
+        }
+
+        securePasswordsAllEnable () {
+            echo "${WHITE}>> enabling SSH password authentication...${RESTORE}"
+            sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/" /etc/ssh/sshd_config
+            sed -i "s/PubkeyAuthentication yes/PubkeyAuthentication no/" /etc/ssh/sshd_config
+            sed -i "s/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/" /etc/ssh/sshd_config
+            ssh-keygen -A
+            service ssh restart
+            echo "Done."
+        }
+
+        securePasswordsRootEnable () {
+            echo "${WHITE}>> enabling SSH root password authentication...${RESTORE}"
+            sed -i "s/PermitRootLogin no/PermitRootLogin yes/" /etc/ssh/sshd_config
+            ssh-keygen -A
+            service ssh restart
+            echo "Done."
+        }
+
+        securePasswordsRootDisable () {
+            echo "${WHITE}>> removing SSH root password authentication...${RESTORE}"
+            sed -i "s/PermitRootLogin yes/PermitRootLogin no/" /etc/ssh/sshd_config
+            ssh-keygen -A
+            service ssh restart
+            echo "Done."
+        }
+
+        passwordOptions=(
+            "Disable password login"
+            "Enable password login"
+            "Disable root login"
+            "Enable root login"
+            "Quit"
+        )
+
+        select option in "${passwordOptions[@]}"; do
+            case "$REPLY" in
+                1) securePasswordsAllDisable ;;
+                2) securePasswordsAllEnable ;;
+                3) securePasswordsRootDisable ;;
+                4) securePasswordsRootEnable ;;
+                5) break ;;
+            esac
+        done
+
+    else
+        break
+    fi
+}
+
 
 # Display menu
 
@@ -1098,6 +1161,7 @@ echo ''
 options=(
     "Setup a fresh Ubuntu server"
     "Add sudo user and SSH keys"
+    "Configure SSH password authentication"
     "Quit"
 )
 
@@ -1105,6 +1169,7 @@ select option in "${options[@]}"; do
     case "$REPLY" in
         1) setupServer ;;
         2) secureServer ;;
-        3) break ;;
+        3) securePasswords ;;
+        4) break ;;
     esac
 done
