@@ -1119,10 +1119,29 @@ securePasswords() {
             echo "Done."
         }
 
+        passwordOptions=(
+            "Disable password login"
+            "Enable password login"
+            "Disable root login"
+            "Enable root login"
+            "Quit"
+        )
+
+        select password in "${passwordOptions[@]}"; do
+            case "$REPLY" in
+                1) securePasswordsAllDisable ;;
+                2) securePasswordsAllEnable ;;
+                3) securePasswordsRootDisable ;;
+                4) securePasswordsRootEnable ;;
+                5) break ;;
+            esac
+        done
+
     else
         break
     fi
 }
+
 
 # Display menu
 
@@ -1158,23 +1177,5 @@ select option in "${options[@]}"; do
         2) secureServer ;;
         3) securePasswords ;;
         4) break ;;
-    esac
-done
-
-passwordOptions=(
-    "Disable password login"
-    "Enable password login"
-    "Disable root login"
-    "Enable root login"
-    "Quit"
-)
-
-select option in "${passwordOptions[@]}"; do
-    case "$REPLY" in
-        1) securePasswordsAllDisable ;;
-        2) securePasswordsAllEnable ;;
-        3) securePasswordsRootDisable ;;
-        4) securePasswordsRootEnable ;;
-        5) break ;;
     esac
 done
