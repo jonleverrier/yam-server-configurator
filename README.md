@@ -9,18 +9,15 @@ To run the setup script, you will need to login to your server as the root user 
 
 ```
 cd /usr/local/bin
-```
-Followed by:
-
-```
 wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_setup.sh
 ```
+
 At this point you will want to customise the variables at the top of the script before running it. Type the following into the command line to edit the script:
 ```
 nano /usr/local/bin/yam_setup.sh
 ```
 
-Then type the following command to load it:
+Then once you are done, type the following command to load the script:
 ```
 /bin/bash yam_setup.sh
 ```
