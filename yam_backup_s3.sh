@@ -1,10 +1,16 @@
 #!/bin/bash
 
-# YAM backup to Amazon S3
-# by Jon Leverrier (jon@youandme.digital)
-# Version 0.1
-
-# /bin/bash yam_backup_s3.sh yam yam-avalon-ams3-01
+#+----------------------------------------------------------------------------+
+#+ YAM Backup S3
+#+----------------------------------------------------------------------------+
+#+ Author:      Jon Leverrier (jon@youandme.digital)
+#+ Copyright:   2018 You & Me Digital SARL
+#+ GitHub:      https://github.com/jonleverrier/yam-server-configurator
+#+ Issues:      https://github.com/jonleverrier/yam-server-configurator/issues
+#+ License:     GPL v3.0
+#+ OS:          Ubuntu 16.0.4,
+#+ Release:     0.0.1
+#+----------------------------------------------------------------------------+
 
 PATH_BACKUP='yamdigital/servers/backups'
 

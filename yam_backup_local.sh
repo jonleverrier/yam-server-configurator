@@ -1,8 +1,16 @@
 #!/bin/bash
 
-# YAM BACKUP LOCAL
-# by Jon Leverrier (jon@youandmedigital.com)
-# Version 0.2
+#+----------------------------------------------------------------------------+
+#+ YAM Backup Local 
+#+----------------------------------------------------------------------------+
+#+ Author:      Jon Leverrier (jon@youandme.digital)
+#+ Copyright:   2018 You & Me Digital SARL
+#+ GitHub:      https://github.com/jonleverrier/yam-server-configurator
+#+ Issues:      https://github.com/jonleverrier/yam-server-configurator/issues
+#+ License:     GPL v3.0
+#+ OS:          Ubuntu 16.0.4,
+#+ Release:     0.0.2
+#+----------------------------------------------------------------------------+
 
 # To be used with cron, or run manually from the command line.
 

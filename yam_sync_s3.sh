@@ -1,8 +1,16 @@
 #!/bin/bash
 
-# YAM SNYC to Amazon S3
-# by Jon Leverrier (jon@youandme.digital)
-# Version 0.1
+#+----------------------------------------------------------------------------+
+#+ YAM Sync S3
+#+----------------------------------------------------------------------------+
+#+ Author:      Jon Leverrier (jon@youandme.digital)
+#+ Copyright:   2018 You & Me Digital SARL
+#+ GitHub:      https://github.com/jonleverrier/yam-server-configurator
+#+ Issues:      https://github.com/jonleverrier/yam-server-configurator/issues
+#+ License:     GPL v3.0
+#+ OS:          Ubuntu 16.0.4,
+#+ Release:     0.0.1
+#+----------------------------------------------------------------------------+
 
 # EXAMPLE USAGE:
 # /bin/bash yam_sync_s3.sh /local/path/ /s3/path/"

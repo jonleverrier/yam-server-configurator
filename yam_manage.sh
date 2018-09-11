@@ -1,13 +1,16 @@
 #!/bin/bash
 
-# YAM server manager for Ubuntu 16.0.4
-# by Jon Leverrier (jon@youandme.digital)
-# Version 0.1
-
-# USE AT YOUR OWN RISK!
-
-# See https://github.com/jonleverrier/yam-server-configurator for further
-# information
+#+----------------------------------------------------------------------------+
+#+ YAM Server Manager 
+#+----------------------------------------------------------------------------+
+#+ Author:      Jon Leverrier (jon@youandme.digital)
+#+ Copyright:   2018 You & Me Digital SARL
+#+ GitHub:      https://github.com/jonleverrier/yam-server-configurator
+#+ Issues:      https://github.com/jonleverrier/yam-server-configurator/issues
+#+ License:     GPL v3.0
+#+ OS:          Ubuntu 16.0.4,
+#+ Release:     0.0.1
+#+----------------------------------------------------------------------------+
 
 # Change these settings below before running the script for the first time
 YAM_EMAIL_BUG=$(echo -en 'bugs@youandme.digital')
