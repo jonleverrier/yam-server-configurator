@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #+----------------------------------------------------------------------------+
-#+ YAM Server Manager 
+#+ YAM Server Manager
 #+----------------------------------------------------------------------------+
 #+ Author:      Jon Leverrier (jon@youandme.digital)
 #+ Copyright:   2018 You & Me Digital SARL
@@ -85,6 +85,13 @@ ask() {
 
     done
 }
+
+# check if root user
+if [ "${EUID}" != 0 ];
+then
+    echo "YAM Server Manager should be executed as the root user. Please switch to the root user and try again"
+    exit
+fi
 
 # Load install basesite function
 installBasesite() {
