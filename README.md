@@ -36,10 +36,8 @@ log rotation, ssl auto renewal, UFW, default error pages, local backup of core s
 
 When you are finished with setup, you can logout and login as your new sudo user. To run the script, you will need to `su` before running it.
 
-Like yam_setup.sh, customise the variables at the top of the yam_manage.sh script by typing the following into the command line:
-```
-nano /usr/local/bin/yam_manage.sh
-```
+Like yam_setup.sh, customise the variables at the top of the yam_manage.sh script before running.
+
 Once you're ready, type the following to load the script:
 
 ```
