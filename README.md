@@ -27,7 +27,7 @@ You will then be prompted to choose from the following options:
 3. Enable or disable SSH password authentication
 4. Quit
 
-If you choose to setup a fresh server, the script will installs and configure NGINX, MariaDB, PHP7.1 FPM, Certbot (Let's Encrypt), PhpMyAdmin, Fail2Ban with UFW, php-imagick, htop, zip, unzip, Digital Ocean agent, s3cmd, nmap, yam_backup_local.sh, yam_backup_s3.sh, yam_sync_s3.sh and yam_backup_system.sh
+If you choose to setup a fresh server, the script will installs and configure NGINX, MariaDB, PHP7.1 FPM, Certbot (Let's Encrypt), PhpMyAdmin, Fail2Ban with UFW, php-imagick, htop, zip, unzip, Digital Ocean agent, s3cmd, nmap, yam_backup_local.sh, yam_backup_s3.sh, yam_sync_s3.sh, yam_backup_system.sh and yam_manage.sh.
 
 The script also configures ssh keys, root and sudo users, time zone for server and mysql, skeleton directory,
 log rotation, ssl auto renewal, UFW, default error pages, local backup of core system folders, local backup of user web folders, S3 backup of core system folders, sessions, securing MODX, S3 backup of user web folders.
