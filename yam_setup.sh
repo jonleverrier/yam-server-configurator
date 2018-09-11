@@ -386,19 +386,19 @@ EOF
 # /nginx/default_server.conf
 
 server {
-listen	80 default_server;
-listen	[::]:80 default_server;
+    listen	80 default_server;
+    listen	[::]:80 default_server;
 
-# stop favicon generating 404
-location = /favicon.ico {
-    log_not_found off;
-}
+    # stop favicon generating 404
+    location = /favicon.ico {
+        log_not_found off;
+    }
 
-include /etc/nginx/default_error_messages.conf;
+    include /etc/nginx/default_error_messages.conf;
 
-location / {
-    return 404;
-}
+    location / {
+        return 404;
+    }
 
 }
 EOF
@@ -463,26 +463,26 @@ EOF
 
 # dev url https
 server {
-server_name ${URL_SERVER_DEFAULT};
-include /etc/nginx/conf.d/_default.d/main.conf;
-include /etc/nginx/default_error_messages.conf;
+    server_name ${URL_SERVER_DEFAULT};
+    include /etc/nginx/conf.d/_default.d/main.conf;
+    include /etc/nginx/default_error_messages.conf;
 
-listen [::]:443 http2 ssl;
-listen 443 http2 ssl;
-ssl_certificate /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/privkey.pem;
-include /etc/letsencrypt/options-ssl-nginx.conf;
-ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+    listen [::]:443 http2 ssl;
+    listen 443 http2 ssl;
+    ssl_certificate /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
 }
 
 # dev url redirect http to https
 server {
-server_name ${URL_SERVER_DEFAULT};
-return 301 https://\$host\$request_uri;
+    server_name ${URL_SERVER_DEFAULT};
+    return 301 https://\$host\$request_uri;
 
-listen 80;
-listen [::]:80;
+    listen 80;
+    listen [::]:80;
 
 }
 
@@ -499,26 +499,26 @@ EOF
 
 # dev url https
 server {
-server_name ${URL_SERVER_PMA};
-include /etc/nginx/conf.d/phpmyadmin.d/main.conf;
-include /etc/nginx/default_error_messages.conf;
+    server_name ${URL_SERVER_PMA};
+    include /etc/nginx/conf.d/phpmyadmin.d/main.conf;
+    include /etc/nginx/default_error_messages.conf;
 
-listen [::]:443 http2 ssl;
-listen 443 http2 ssl;
-ssl_certificate /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/privkey.pem;
-include /etc/letsencrypt/options-ssl-nginx.conf;
-ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+    listen [::]:443 http2 ssl;
+    listen 443 http2 ssl;
+    ssl_certificate /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${URL_SERVER_DEFAULT}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
 }
 
 # dev url redirect http to https
 server {
-server_name ${URL_SERVER_PMA};
-return 301 https://\$host\$request_uri;
+    server_name ${URL_SERVER_PMA};
+    return 301 https://\$host\$request_uri;
 
-listen 80;
-listen [::]:80;
+    listen 80;
+    listen [::]:80;
 }
 EOF
         # Adding conf file and directory for default website
@@ -536,8 +536,8 @@ include /etc/nginx/custom.d/_default.d/_default.location.header.*.conf;
 
 # setup php to use FPM
 location ~ \.php$ {
-include snippets/fastcgi-php.conf;
-fastcgi_pass unix:/run/php/php7.1-fpm-default.sock;
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass unix:/run/php/php7.1-fpm-default.sock;
 }
 
 # custom body file loads here if included
@@ -545,7 +545,7 @@ include /etc/nginx/custom.d/_default.d/_default.location.body.*.conf;
 
 # stop favicon generating 404
 location = /favicon.ico {
-log_not_found off;
+    log_not_found off;
 }
 
 # custom cache file loads here if included
@@ -554,7 +554,7 @@ include /etc/nginx/custom.d/_default.d/_default.location.footer.*.conf;
 # as this is the default website, non existant sub domain names will
 # redirect to this domain, so serve them an error 404
 location / {
-return 404;
+    return 404;
 }
 EOF
 
@@ -579,8 +579,8 @@ index index.php index.htm index.html;
 
 # setup php to use FPM
 location ~ \.php$ {
-include snippets/fastcgi-php.conf;
-fastcgi_pass unix:/run/php/php7.1-fpm-phpmyadmin.sock;
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass unix:/run/php/php7.1-fpm-phpmyadmin.sock;
 }
 
 # custom body file loads here if included
@@ -588,23 +588,23 @@ include /etc/nginx/custom.d/phpmyadmin.d/phpmyadmin.location.body.*.conf;
 
 # prevent access to hidden files
 location ~ /\. {
-deny all;
+    deny all;
 }
 
 # stop favicon generating 404
 location = /favicon.ico {
-log_not_found off;
+    log_not_found off;
 }
 
 # redirect to phpmyadmin folder
 location = / {
-return 301 http://\$host/phpmyadmin;
+    return 301 http://\$host/phpmyadmin;
 }
 
 # add password directory
 location /phpmyadmin {
-auth_basic "Private";
-auth_basic_user_file /home/${USER_SUDO}/.htpasswd;
+    auth_basic "Private";
+    auth_basic_user_file /home/${USER_SUDO}/.htpasswd;
 }
 
 # custom cache file loads here if included
