@@ -1,7 +1,7 @@
 # yam-server-configurator
 Setup an Ubutnu 16.04.4 x64 VPS from Digital Ocean. Host and manage multiple MODX websites running on a LEMP stack.
 
-Designed to be used on a fresh server with nothing installed apart from Ubutnu.
+Designed to be used on a fresh server with nothing else installed apart from Ubutnu.
 
 ## yam_setup.sh
 
