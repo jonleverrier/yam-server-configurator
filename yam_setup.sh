@@ -1,10 +1,16 @@
 #!/bin/bash
 
-# YAM server configurator for Ubuntu 16.0.4
-# by Jon Leverrier (jon@youandme.digital)
-# Version 0.6
-
-# USE AT YOUR OWN RISK!
+#+----------------------------------------------------------------------------+
+#+ YAM Server Setup
+#+----------------------------------------------------------------------------+
+#+ Author:      Jon Leverrier (jon@youandme.digital)
+#+ Copyright:   2018 You & Me Digital SARL
+#+ GitHub:      https://github.com/jonleverrier/yam-server-configurator
+#+ Issues:      https://github.com/jonleverrier/yam-server-configurator/issues
+#+ License:     GPL v3.0
+#+ OS:          Ubuntu 16.0.4,
+#+ Release:     0.0.6
+#+----------------------------------------------------------------------------+
 
 # Installs and configures NGINX, MariaDB, PHP7.1 FPM, Cerbot (Let's Encrypt),
 # PhpMyAdmin, Fail2Ban with UFW, php-imagick, htop, zip, unzip, Digital Ocean
@@ -16,9 +22,6 @@
 # local backup of core system folders,local backup of user web folders, S3
 # backup of core system folders, sessions, securing MODX, S3 backup of user
 # web folders
-
-# See https://github.com/jonleverrier/yam-server-configurator for further
-# information
 
 # Change these settings below before running the script for the first time
 YAM_EMAIL_BUG=$(echo -en 'bugs@youandme.digital')
