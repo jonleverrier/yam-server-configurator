@@ -108,7 +108,7 @@ fi
 setupServer() {
     if ask "Are you sure you want to setup a new server?"; then
         read -p "Enter a sudo user  : " USER_SUDO
-        read -s -p "Enter a sudo password  : " USER_SUDO_PASSWORD
+        read -s -p "Enter a sudo password  : " USER_SUDO_PASSWORD echo
         read -s -p "Enter a MYSQL password for sudo user  : " PASSWORD_MYSQL_SUDO
         read -s -p "Enter a MYSQL password for root user  : " PASSWORD_MYSQL_ROOT
         read -s -p "Enter a password for phpMyAdmin directory : " PASSWORD_PMA_DIR
