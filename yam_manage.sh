@@ -99,6 +99,7 @@ installBasesite() {
         read -p "Which project do you want to install MODX? : " PROJECT_NAME
         read -p "Who owns the project? : " PROJECT_OWNER
         read -s -p "Project mysql password : " PASSWORD_MYSQL
+        echo
         read -p "Project test url : " PROJECT_DOMAIN
         read -p "Name of MODX folder (without zip) : " FOLDER_MODX_ZIP
         read -p "URL to MODX zip : " URL_MODX
@@ -428,9 +429,12 @@ addVirtualhost() {
         read -p "Name of project (all one word, no spaces)  : " PROJECT_NAME
         read -p "Enter owner (user) of project  : " USER
         read -s -p "Enter user password  : " USER_PASSWORD
+        echo
         read -p "Enter test domain name  : " PROJECT_DOMAIN
         read -s -p "Enter MYSQL password  : " DB_PASSWORD
+        echo
         read -s -p "Enter MYSQL root password  : " DB_PASSWORD_ROOT
+        echo
         echo '------------------------------------------------------------------------'
         echo 'Setting up virtual host'
         echo '------------------------------------------------------------------------'
@@ -722,9 +726,12 @@ addVirtualhostBasesite() {
         read -p "Name of project (all one word, no spaces)  : " PROJECT_NAME
         read -p "Enter owner (user) of project  : " USER
         read -s -p "Enter user password  : " PASSWORD_USER
+        echo
         read -p "Enter test domain name  : " DOMAIN_TEST
         read -s -p "Enter MYSQL password  : " PASSWORD_MYSQL_USER
+        echo
         read -s -p "Enter MYSQL root password  : " PASSWORD_MYSQL_ROOT
+        echo
         echo '------------------------------------------------------------------------'
         echo 'Setting up virtual host with Basesite'
         echo '------------------------------------------------------------------------'
@@ -1232,7 +1239,9 @@ copyVirtualhost() {
         read -p "New: Project  : " NEW_PROJECT
         read -p "New: Owner  : " NEW_USER
         read -s -p "New: Owner Password  : " NEW_PASSWORD_OWNER
+        echo
         read -s -p "New: MYSQL Password  : " NEW_PASSWORD_MYSQL
+        echo
         read -p "New: URL  : " NEW_URL
         echo '------------------------------------------------------------------------'
         echo 'Copying project...'
@@ -1804,6 +1813,7 @@ addUserPasswordDirectory() {
         read -p "User folder to edit  : " USER_FOLDER
         read -p "Username  : " USERNAME
         read -s -p "Password  : " PASSWORD
+        echo
         echo '------------------------------------------------------------------------'
         echo 'Adding ${USERNAME} to ${USER_FOLDER} password directory'
         echo '------------------------------------------------------------------------'
@@ -1847,6 +1857,7 @@ deleteUser() {
     if ask "Are you sure you want to delete a user? This will delete the users home folder and MYSQL access"; then
         read -p "Enter the system user to delete  : " USER
         read -s -p "Confirm root MYSQL password  : " PASSWORD_MYSQL_ROOT
+        echo
         echo '------------------------------------------------------------------------'
         echo 'Deleting user and all associated files'
         echo '------------------------------------------------------------------------'

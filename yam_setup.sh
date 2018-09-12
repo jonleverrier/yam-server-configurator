@@ -999,6 +999,7 @@ secureServer() {
     if ask "Are you sure you want to setup a sudo user?"; then
         read -p "Enter a sudo user  : " USER_SUDO
         read -s -p "Enter a sudo password  : " USER_SUDO_PASSWORD
+        echo
         read -p "Paste SSH Keys  : " KEY_SSH_PUBLIC
         echo '------------------------------------------------------------------------'
         echo 'Securing server'
