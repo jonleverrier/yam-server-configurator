@@ -57,45 +57,7 @@ COLOUR_LPURPLE=$(echo -en '\033[01;35m')
 COLOUR_LCYAN=$(echo -en '\033[01;36m')
 COLOUR_WHITE=$(echo -en '\033[01;37m')
 
-# Setup up yes no questions
-# taken from https://djm.me/ask
-# nothing to edit here...
-ask() {
-    local prompt default reply
 
-    while true; do
-
-        if [ "${2:-}" = "Y" ]; then
-            prompt="Y/n"
-            default=Y
-        elif [ "${2:-}" = "N" ]; then
-            prompt="y/N"
-            default=N
-        else
-            prompt="y/n"
-            default=
-        fi
-
-        # Ask the question (not using "read -p" as it uses stderr not stdout)
-        echo -n "$1 [$prompt] "
-
-        # Read the answer (use /dev/tty in case stdin is redirected from
-        # somewhere else)
-        read reply </dev/tty
-
-        # Default?
-        if [ -z "$reply" ]; then
-            reply=$default
-        fi
-
-        # Check if the reply is valid
-        case "$reply" in
-            Y*|y*) return 0 ;;
-            N*|n*) return 1 ;;
-        esac
-
-    done
-}
 
 # check if root user
 if [ "${EUID}" != 0 ];
