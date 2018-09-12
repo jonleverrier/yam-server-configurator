@@ -164,7 +164,7 @@ EOF
         # disable bash history
         echo 'set +o history' >> ~/.bashrc
 
-        # setup log rotation 
+        # setup log rotation
         echo "${COLOUR_CYAN}-- setting up log rotation for ${USER_SUDO} ${COLOUR_RESTORE}"
         cat > /etc/logrotate.d/${USER_SUDO} << EOF
 /home/$USER/logs/nginx/*.log {
@@ -936,31 +936,31 @@ EOF
 
         echo "${COLOUR_WHITE}>> setting up system backup${COLOUR_RESTORE}"
         cat > /etc/cron.d/backup_server_local << EOF
-30 2    * * *   root    /root/yam_backup_system.sh >> /var/log/cron.log 2>&1
+30 2    * * *   root    /usr/local/bin/yam_backup_system.sh >> /var/log/cron.log 2>&1
 
 EOF
         cat > /etc/cron.d/backup_server_s3_nginx << EOF
-30 3    * * *   root    /root/yam_sync_s3.sh /var/backups/nginx/ /servers/backups/${YAM_SERVER_NAME}/var/backups/nginx/ >> /var/log/cron.log 2>&1
+30 3    * * *   root    /usr/local/bin/yam_sync_s3.sh /var/backups/nginx/ /servers/backups/${YAM_SERVER_NAME}/var/backups/nginx/ >> /var/log/cron.log 2>&1
 
 EOF
 
         cat > /etc/cron.d/backup_server_s3_letsencrypt << EOF
-30 3    * * *   root    /root/yam_sync_s3.sh /var/backups/letsencrypt/ /servers/backups/${YAM_SERVER_NAME}/var/backups/letsencrypt/ >> /var/log/cron.log 2>&1
+30 3    * * *   root    /usr/local/bin/yam_sync_s3.sh /var/backups/letsencrypt/ /servers/backups/${YAM_SERVER_NAME}/var/backups/letsencrypt/ >> /var/log/cron.log 2>&1
 
 EOF
 
         cat > /etc/cron.d/backup_server_s3_mysql << EOF
-30 3    * * *   root    /root/yam_sync_s3.sh /var/backups/mysql/ /servers/backups/${YAM_SERVER_NAME}/var/backups/mysql/ >> /var/log/cron.log 2>&1
+30 3    * * *   root    /usr/local/bin/yam_sync_s3.sh /var/backups/mysql/ /servers/backups/${YAM_SERVER_NAME}/var/backups/mysql/ >> /var/log/cron.log 2>&1
 
 EOF
 
         cat > /etc/cron.d/backup_server_s3_ssh << EOF
-30 3    * * *   root    /root/yam_sync_s3.sh /var/backups/ssh/ /servers/backups/${YAM_SERVER_NAME}/var/backups/ssh/ >> /var/log/cron.log 2>&1
+30 3    * * *   root    /usr/local/bin/yam_sync_s3.sh /var/backups/ssh/ /servers/backups/${YAM_SERVER_NAME}/var/backups/ssh/ >> /var/log/cron.log 2>&1
 
 EOF
 
         cat > /etc/cron.d/backup_server_s3_cron << EOF
-30 3    * * *   root    /root/yam_sync_s3.sh /var/backups/cron/ /servers/backups/${YAM_SERVER_NAME}/var/backups/cron/ >> /var/log/cron.log 2>&1
+30 3    * * *   root    /usr/local/bin/yam_sync_s3.sh /var/backups/cron/ /servers/backups/${YAM_SERVER_NAME}/var/backups/cron/ >> /var/log/cron.log 2>&1
 
 EOF
 
