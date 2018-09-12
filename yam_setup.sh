@@ -108,10 +108,14 @@ fi
 setupServer() {
     if ask "Are you sure you want to setup a new server?"; then
         read -p "Enter a sudo user  : " USER_SUDO
-        read -p "Enter a sudo password  : " USER_SUDO_PASSWORD
-        read -p "Enter a MYSQL password for sudo user  : " PASSWORD_MYSQL_SUDO
-        read -p "Enter a MYSQL password for root user  : " PASSWORD_MYSQL_ROOT
-        read -p "Enter a password for phpMyAdmin directory : " PASSWORD_PMA_DIR
+        read -s -p "Enter a sudo password  : " USER_SUDO_PASSWORD
+        echo
+        read -s -p "Enter a MYSQL password for sudo user  : " PASSWORD_MYSQL_SUDO
+        echo
+        read -s -p "Enter a MYSQL password for root user  : " PASSWORD_MYSQL_ROOT
+        echo
+        read -s -p "Enter a password for phpMyAdmin directory : " PASSWORD_PMA_DIR
+        echo
         read -p "Enter domain name for the default website  : " URL_SERVER_DEFAULT
         read -p "Enter domain name for phpMyAdmin  : " URL_SERVER_PMA
         echo '------------------------------------------------------------------------'
@@ -154,7 +158,8 @@ EOF
         echo "${COLOUR_CYAN}-- adding sudo user and changing password${COLOUR_RESTORE}"
         adduser --disabled-password --gecos "" ${USER_SUDO}
         adduser ${USER_SUDO} sudo
-        usermod --password ${USER_SUDO_PASSWORD} ${USER_SUDO}
+        PASSWORD=$(mkpasswd ${USER_SUDO_PASSWORD})
+        usermod --password ${PASSWORD} ${USER_SUDO}
 
         # disable bash history
         echo 'set +o history' >> ~/.bashrc
@@ -993,7 +998,8 @@ EOF
 secureServer() {
     if ask "Are you sure you want to setup a sudo user?"; then
         read -p "Enter a sudo user  : " USER_SUDO
-        read -p "Enter a sudo password  : " USER_SUDO_PASSWORD
+        read -s -p "Enter a sudo password  : " USER_SUDO_PASSWORD
+        echo
         read -p "Paste SSH Keys  : " KEY_SSH_PUBLIC
         echo '------------------------------------------------------------------------'
         echo 'Securing server'
