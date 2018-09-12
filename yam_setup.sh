@@ -158,7 +158,8 @@ EOF
         echo "${COLOUR_CYAN}-- adding sudo user and changing password${COLOUR_RESTORE}"
         adduser --disabled-password --gecos "" ${USER_SUDO}
         adduser ${USER_SUDO} sudo
-        usermod --password $(openssl passwd -1 ${USER_SUDO_PASSWORD}) ${USER_SUDO}
+        PASSWORD=$(mkpasswd ${USER_SUDO_PASSWORD})
+        usermod --password ${PASSWORD} ${USER_SUDO}
 
         # disable bash history
         echo 'set +o history' >> ~/.bashrc
