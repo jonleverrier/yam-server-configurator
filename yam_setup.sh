@@ -164,7 +164,7 @@ EOF
         # disable bash history
         echo 'set +o history' >> ~/.bashrc
 
-        # Adding a sudo user and setting password
+        # setup log rotation 
         echo "${COLOUR_CYAN}-- setting up log rotation for ${USER_SUDO} ${COLOUR_RESTORE}"
         cat > /etc/logrotate.d/${USER_SUDO} << EOF
 /home/$USER/logs/nginx/*.log {
