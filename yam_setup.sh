@@ -368,7 +368,6 @@ EOF
 EOF
         fi
 
-
         # Add default_server.conf
         echo "${COLOUR_CYAN}-- adding default_server.conf ${COLOUR_RESTORE}"
         cat > /etc/nginx/default_server.conf << EOF
