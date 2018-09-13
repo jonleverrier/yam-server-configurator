@@ -23,8 +23,7 @@ Then once you are done, type the following command to load the script:
 ```
 You will then be prompted to choose from the following options:
 1. Setup a fresh Ubuntu server
-2. Add sudo user and SSH keys
-3. Quit
+2. Quit
 
 If you choose to setup a fresh server, the script will installs and configure NGINX, MariaDB, PHP7.1 FPM, Certbot (Let's Encrypt), PhpMyAdmin, Fail2Ban with UFW, php-imagick, htop, zip, unzip, Digital Ocean agent, s3cmd, nmap, yam_backup_local.sh, yam_backup_s3.sh, yam_sync_s3.sh, yam_backup_system.sh and yam_manage.sh.
 
