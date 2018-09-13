@@ -27,8 +27,7 @@ You will then be prompted to choose from the following options:
 
 If you choose to setup a fresh server, the script will installs and configure NGINX, MariaDB, PHP7.1 FPM, Certbot (Let's Encrypt), PhpMyAdmin, Fail2Ban with UFW, php-imagick, htop, zip, unzip, Digital Ocean agent, s3cmd, nmap and additional YAM scripts.
 
-The script also configures ssh keys, root and sudo users, time zone for server and mysql, skeleton directory,
-log rotation, ssl auto renewal, UFW, default error pages, local backup of core system folders, local backup of user web folders, S3 backup of core system folders, sessions, securing MODX, S3 backup of user web folders.
+The script also configures root and sudo users, time zone for server and mysql, skeleton directory, log rotation, ssl auto renewal, UFW, default error pages, local backup of core system folders, local backup of user web folders, S3 backup of core system folders, sessions, securing MODX and S3 backup of user web folders.
 
 ## yam_secure.sh
 
