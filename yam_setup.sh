@@ -1113,7 +1113,7 @@ echo '| |              | || |              | || |              | |'
 echo '| .--------------. || .--------------. || .--------------. |'
 echo ' .----------------.  .----------------.  .----------------. '
 echo ''
-echo 'WELCOME TO THE YAM SERVER CONFIGURATOR'
+echo 'YAM_SETUP.SH'
 
 
 echo ''
