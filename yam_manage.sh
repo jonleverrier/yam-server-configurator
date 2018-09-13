@@ -20,6 +20,11 @@ YAM_DATEFORMAT_TIMEZONE=$(echo -en 'Europe/Paris')
 YAM_BASESITE_PATH=$(echo -en '/home/yam/public/alphasite/')
 YAM_BASESITE_DB=$(echo -en 'yam_db_yam_alphasite')
 
+# new databases or db users will be prefixed with these values.
+# For example: yam_db_user_project
+YAM_DATABASE_DB=$(echo -en 'yam_db')
+YAM_DATABASE_USER=$(echo -en 'yam_dbuser')
+
 # initial generic password for protected directories. this will be overriden
 # after setup
 YAM_PASSWORD_GENERIC=$(echo -en '1q2w3e4r')
@@ -176,12 +181,12 @@ installBasesite() {
  */
 \$database_type = 'mysql';
 \$database_server = '127.0.0.1';
-\$database_user = 'yam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME}';
+\$database_user = '${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME}';
 \$database_password = '${PASSWORD_MYSQL}';
 \$database_connection_charset = 'utf8';
-\$dbase = 'yam_db_${PROJECT_OWNER}_${PROJECT_NAME}';
+\$dbase = '${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME}';
 \$table_prefix = 'modx_';
-\$database_dsn = 'mysql:host=127.0.0.1;dbname=yam_db_${PROJECT_OWNER}_${PROJECT_NAME};charset=utf8';
+\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME};charset=utf8';
 \$config_options = array (
 );
 \$driver_options = array (
@@ -331,7 +336,7 @@ EOF
 
         # Import basesite database
         echo "${COLOUR_CYAN}-- importing ${URL_DATABASE##*/}...${COLOUR_RESTORE}"
-        mysql -uyam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} yam_db_${PROJECT_OWNER}_${PROJECT_NAME} < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
+        mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
 
         echo "${COLOUR_CYAN}-- adding db_changepaths.sql...${COLOUR_RESTORE}"
         cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql << EOF
@@ -349,10 +354,10 @@ EOF
 
 
         echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
-        mysql -uyam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} yam_db_${PROJECT_OWNER}_$PROJECT_NAME < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
+        mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_$PROJECT_NAME < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
 
         # Delete any session data from previous database
-        mysql -uyam_dbuser_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} yam_db_${PROJECT_OWNER}_${PROJECT_NAME} << EOF
+        mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} << EOF
 truncate modx_session;
 EOF
 
@@ -397,7 +402,7 @@ packageWebsite() {
         zip -r /home/${PROJECT_OWNER}/backup/temp/assets.zip assets
 
         echo "${COLOUR_WHITE}>> dumping database...${COLOUR_RESTORE}"
-        mysqldump -u root yam_db_${PROJECT_OWNER}_${PROJECT_NAME} > /home/${PROJECT_OWNER}/backup/temp/yam_db_${PROJECT_OWNER}_${PROJECT_NAME}.sql
+        mysqldump -u root ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} > /home/${PROJECT_OWNER}/backup/temp/${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME}.sql
 
         # If backup folder for user exists skip, else create a folder called backup
         echo "${COLOUR_WHITE}>> checking if destination folder exists...${COLOUR_RESTORE}"
@@ -706,9 +711,9 @@ EOF
         # Create database and user
         echo "${COLOUR_WHITE}>> setting up database...${COLOUR_RESTORE}"
         mysql --user=root --password=$DB_PASSWORD_ROOT << EOF
-CREATE DATABASE IF NOT EXISTS yam_db_${USER}_${PROJECT_NAME};
-CREATE USER 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';
-GRANT ALL PRIVILEGES ON yam_db_${USER}_${PROJECT_NAME}.* TO 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost';
+CREATE DATABASE IF NOT EXISTS ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME};
+CREATE USER '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';
+GRANT ALL PRIVILEGES ON ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME}.* TO '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
         echo ">> Done."
@@ -849,12 +854,12 @@ EOF
  */
 \$database_type = 'mysql';
 \$database_server = '127.0.0.1';
-\$database_user = 'yam_dbuser_${USER}_${PROJECT_NAME}';
+\$database_user = '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}';
 \$database_password = '${PASSWORD_MYSQL_USER}';
 \$database_connection_charset = 'utf8';
-\$dbase = 'yam_db_${USER}_${PROJECT_NAME}';
+\$dbase = '${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME}';
 \$table_prefix = 'modx_';
-\$database_dsn = 'mysql:host=127.0.0.1;dbname=yam_db_${USER}_${PROJECT_NAME};charset=utf8';
+\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME};charset=utf8';
 \$config_options = array (
 );
 \$driver_options = array (
@@ -1183,9 +1188,9 @@ EOF
         # Create database and user
         echo "${COLOUR_WHITE}>> setting up database...${COLOUR_RESTORE}"
         mysql --user=root --password=${PASSWORD_MYSQL_ROOT} << EOF
-CREATE DATABASE IF NOT EXISTS yam_db_${USER}_${PROJECT_NAME};
-CREATE USER 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIED BY '${PASSWORD_MYSQL_USER}';
-GRANT ALL PRIVILEGES ON yam_db_${USER}_${PROJECT_NAME}.* TO 'yam_dbuser_${USER}_${PROJECT_NAME}'@'localhost';
+CREATE DATABASE IF NOT EXISTS ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME};
+CREATE USER '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIED BY '${PASSWORD_MYSQL_USER}';
+GRANT ALL PRIVILEGES ON ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME}.* TO '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
         # Copy Basesite db and import into new project
@@ -1193,7 +1198,7 @@ EOF
         # Export
         mysqldump -u root ${YAM_BASESITE_DB} > /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
         # Import
-        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} yam_db_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
+        mysql -u ${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
 
         # Changing paths in db
         echo "${COLOUR_CYAN}-- exporting db_changepaths.sql...${COLOUR_RESTORE}"
@@ -1210,10 +1215,10 @@ UPDATE \`modx_context_setting\` SET \`value\`='https://${DOMAIN_TEST}/pdf/' WHER
 EOF
 
         echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
-        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p$PASSWORD_MYSQL_USER yam_db_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
+        mysql -u ${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME} -p$PASSWORD_MYSQL_USER ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
 
         # Delete any session data from previous database
-        mysql -u yam_dbuser_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} yam_db_${USER}_${PROJECT_NAME} << EOF
+        mysql -u ${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME} << EOF
 truncate modx_session;
 EOF
 
@@ -1508,18 +1513,18 @@ EOF
         # Create database and user
         echo "${COLOUR_WHITE}>> setting up new mysql user and database...${COLOUR_RESTORE}"
         mysql --user=root << EOF
-CREATE DATABASE IF NOT EXISTS yam_db_${NEW_USER}_${NEW_PROJECT};
-CREATE USER 'yam_dbuser_${NEW_USER}_${NEW_PROJECT}'@'localhost' IDENTIFIED BY '${NEW_PASSWORD_MYSQL}';
-GRANT ALL PRIVILEGES ON yam_db_${NEW_USER}_${NEW_PROJECT}.* TO 'yam_dbuser_${NEW_USER}_${NEW_PROJECT}'@'localhost';
+CREATE DATABASE IF NOT EXISTS ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT};
+CREATE USER '${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT}'@'localhost' IDENTIFIED BY '${NEW_PASSWORD_MYSQL}';
+GRANT ALL PRIVILEGES ON ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT}.* TO '${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
         # Copy basesite db and import into new project
         echo "${COLOUR_WHITE}>> installing database...${COLOUR_RESTORE}"
         # Export
-        mysqldump -u root yam_db_${COPY_USER}_${COPY_PROJECT} > /home/${NEW_USER}/public/${NEW_PROJECT}/yam_db_${COPY_USER}_${COPY_PROJECT}.sql
+        mysqldump -u root ${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT} > /home/${NEW_USER}/public/${NEW_PROJECT}/${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT}.sql
         # Import
-        mysql -u yam_dbuser_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} yam_db_${NEW_USER}_${NEW_PROJECT} < /home/${NEW_USER}/public/${NEW_PROJECT}/yam_db_${COPY_USER}_${COPY_PROJECT}.sql
+        mysql -u ${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT} < /home/${NEW_USER}/public/${NEW_PROJECT}/${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT}.sql
 
         # Changing paths in db
         echo "${COLOUR_CYAN}-- exporting db_changepaths.sql...${COLOUR_RESTORE}"
@@ -1537,16 +1542,16 @@ EOF
 
         # Delete any session data from previous database
         echo "${COLOUR_CYAN}-- deleting any session data from previous database...${COLOUR_RESTORE}"
-        mysql -u yam_dbuser_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} yam_db_${NEW_USER}_${NEW_PROJECT} << EOF
+        mysql -u ${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT} << EOF
 truncate modx_session;
 EOF
 
         echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
-        mysql -u yam_dbuser_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} yam_db_${NEW_USER}_${NEW_PROJECT} < /home/${NEW_USER}/public/${NEW_PROJECT}/db_changepaths.sql
+        mysql -u ${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT} < /home/${NEW_USER}/public/${NEW_PROJECT}/db_changepaths.sql
 
         # Clean up database
         echo "${COLOUR_CYAN}-- removing database installation files...${COLOUR_RESTORE}"
-        rm /home/${NEW_USER}/public/${NEW_PROJECT}/yam_db_${COPY_USER}_${COPY_PROJECT}.sql
+        rm /home/${NEW_USER}/public/${NEW_PROJECT}/${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT}.sql
         rm /home/${NEW_USER}/public/${NEW_PROJECT}/db_changepaths.sql
 
         # Delete config files and delete cache folder
@@ -1571,12 +1576,12 @@ EOF
  */
 \$database_type = 'mysql';
 \$database_server = '127.0.0.1';
-\$database_user = 'yam_dbuser_${NEW_USER}_${NEW_PROJECT}';
+\$database_user = '${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT}';
 \$database_password = '${NEW_PASSWORD_MYSQL}';
 \$database_connection_charset = 'utf8';
-\$dbase = 'yam_db_${NEW_USER}_${NEW_PROJECT}';
+\$dbase = '${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT}';
 \$table_prefix = 'modx_';
-\$database_dsn = 'mysql:host=127.0.0.1;dbname=yam_db_${NEW_USER}_${NEW_PROJECT};charset=utf8';
+\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT};charset=utf8';
 \$config_options = array (
 );
 \$driver_options = array (
@@ -1907,8 +1912,8 @@ deleteWebsite() {
 
             echo "${COLOUR_CYAN}-- deleting website database from MYSQL ${COLOUR_RESTORE}"
             mysql --user=root << EOF
-DROP USER 'yam_dbuser_${USER}_${DEL_PROJECT_NAME}'@'localhost';
-DROP DATABASE yam_db_${USER}_${DEL_PROJECT_NAME};
+DROP USER '${YAM_DATABASE_USER}_${USER}_${DEL_PROJECT_NAME}'@'localhost';
+DROP DATABASE ${YAM_DATABASE_DB}_${USER}_${DEL_PROJECT_NAME};
 FLUSH PRIVILEGES;
 EOF
             echo "${COLOUR_CYAN}-- cleaning up NGINX conf files ${COLOUR_RESTORE}"
