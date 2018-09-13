@@ -180,7 +180,7 @@ EOF
         apt-get install -y python-certbot-nginx
 
         # Configure SSL
-        certbot -n --nginx certonly --agree-tos --email ${YAM_EMAIL_SSL} -d ${URL_SERVER_DEFAULT} -d ${URL_SERVER_PMA}
+        certbot -n --nginx certonly --agree-tos --email ${YAM_EMAIL_SSL} -d ${URL_SERVER_DEFAULT} -d ${URL_SERVER_PMA} || { echo 'Problems connecting to Certbot. Please try again.' ; exit 1; }
 
         # Install NGINX
         echo "${COLOUR_WHITE}>> Installing NGINX...${COLOUR_RESTORE}"
