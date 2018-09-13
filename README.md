@@ -64,6 +64,7 @@ You will then be prompted to choose from the following options:
 8. Toggle password directory
 9. Delete user
 10. Delete website
+11. Quit
 
 ## Utility Scripts
 
