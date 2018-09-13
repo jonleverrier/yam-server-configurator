@@ -20,8 +20,8 @@ YAM_DATEFORMAT_TIMEZONE=$(echo -en 'Europe/Paris')
 YAM_BASESITE_PATH=$(echo -en '/home/yam/public/alphasite/')
 YAM_BASESITE_DB=$(echo -en 'yam_db_yam_alphasite')
 
-# new databases or db users will be prefixed with the following;
-# example: yam_db_user_project
+# new databases or db users will be prefixed with these values.
+# For example: yam_db_user_project
 YAM_DATABASE_DB=$(echo -en 'yam_db')
 YAM_DATABASE_USER=$(echo -en 'yam_dbuser')
 
