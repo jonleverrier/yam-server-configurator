@@ -188,14 +188,10 @@ order hosts,bind
 multi on
 EOF
 
-
-        echo ">> Done."
-
         # Upgrade system and base packages
         echo "${COLOUR_WHITE}>> upgrading system and packages...${COLOUR_RESTORE}"
         apt-get update
         DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o Dpkg::Options::="--force-confdef" --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-change-held-packages --allow-unauthenticated;
-        echo ">> Done."
 
         # Setup PPA
         echo "${COLOUR_WHITE}>> installing repositories...${COLOUR_RESTORE}"
@@ -205,22 +201,18 @@ EOF
         add-apt-repository -y ppa:certbot/certbot
         apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install apache2-utils
         apt-get update
-        echo ">> Done."
 
         # Install SSL
         echo "${COLOUR_WHITE}>> installing SSL...${COLOUR_RESTORE}"
         apt-get install -y python-certbot-nginx
-        echo ">> Done."
 
         # Configure SSL
         echo "${COLOUR_WHITE}>> configuring SSL...${COLOUR_RESTORE}"
         certbot -n --nginx certonly --agree-tos --email ${YAM_EMAIL_SSL} -d ${URL_SERVER_DEFAULT} -d ${URL_SERVER_PMA}
-        echo ">> Done."
 
         # Install NGINX
         echo "${COLOUR_WHITE}>> installing NGINX...${COLOUR_RESTORE}"
         apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages nginx
-        echo ">> Done."
 
         # Configure NGINX
         echo "${COLOUR_WHITE}>> configuring NGINX...${COLOUR_RESTORE}"
@@ -756,7 +748,6 @@ EOF
         # Install MYSQL
         echo "${COLOUR_WHITE}>> installing MariaDB...${COLOUR_RESTORE}"
         apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages tzdata mariadb-server
-        echo ">> Done."
 
         # Configure MYSQL
         echo "${COLOUR_WHITE}>> configuring MariaDB...${COLOUR_RESTORE}"
@@ -776,8 +767,6 @@ EOF
         # Set mysql time zone so it matches php
         mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
         sed -i "/\[mysqld\]/a default_time_zone = Europe\/Paris" /etc/mysql/mariadb.conf.d/50-server.cnf
-
-        echo ">> Done."
 
         # Install PHP7.1
         echo "${COLOUR_WHITE}>> installing PHP7.1...${COLOUR_RESTORE}"
@@ -859,13 +848,11 @@ EOF
         fi
 
         systemctl restart php7.1-fpm
-        echo ">> Done."
 
         # Installing phpMyAdmin
         echo "${COLOUR_WHITE}>> installing phpMyAdmin...${COLOUR_RESTORE}"
         export DEBIAN_FRONTEND=noninteractive
         apt-get -y install phpmyadmin
-        echo ">> Done."
 
         # Configuring phpMyAdmin
         echo "${COLOUR_WHITE}>> configuring phpMyAdmin...${COLOUR_RESTORE}"
@@ -889,12 +876,10 @@ EOF
         chmod -R 755 /home/${USER_SUDO}
         chmod -R 755 /home/${USER_SUDO}/public
         sudo ln -s /usr/share/phpmyadmin /home/${USER_SUDO}/public/phpmyadmin
-        echo ">> Done."
 
         # Install firewall
         echo "${COLOUR_WHITE}>> installing firewall...${COLOUR_RESTORE}"
         apt-get install -y fail2ban
-        echo ">> Done."
 
         echo "${COLOUR_WHITE}>> configuring firewall...${COLOUR_RESTORE}"
         cat > /etc/fail2ban/action.d/ufw.conf << EOF
@@ -931,7 +916,6 @@ EOF
 
         ufw allow OpenSSH
         ufw --force enable
-        echo ">> Done."
 
         echo "${COLOUR_WHITE}>> setting up system backup${COLOUR_RESTORE}"
         cat > /etc/cron.d/backup_server_local << EOF
@@ -988,7 +972,6 @@ EOF
         chmod -R 705 /usr/local/bin/yam_setup.sh
         chmod -R 705 /usr/local/bin/yam_manage.sh
         chmod -R 705 /usr/local/bin/yam_secure.sh
-        echo ">> Done."
 
     else
         break
