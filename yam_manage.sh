@@ -94,86 +94,83 @@ ask() {
 # check if root user
 if [ "${EUID}" != 0 ];
 then
-    echo "YAM Server Manager should be executed as the root user. Please switch to the root user and try again"
+    echo '------------------------------------------------------------------------'
+    echo 'YAM Manager should be executed as the root user. Please switch to the'
+    echo 'root user and try again'
+    echo '------------------------------------------------------------------------'
     exit
 fi
 
 # Load install basesite function
 installBasesite() {
-    if ask "Are you sure you want to inject a MODX website from an external source?"; then
-        read -p "Which project do you want to install MODX? : " PROJECT_NAME
-        read -p "Who owns the project? : " PROJECT_OWNER
-        read -s -p "Project mysql password : " PASSWORD_MYSQL
+    if ask "Are you sure you want to inject MODX into an existing website?"; then
+        read -p "Existing project name to install MODX : " PROJECT_NAME
+        read -p "Existing project owner : " PROJECT_OWNER
+        read -s -p "Existing project MYSQL password : " PASSWORD_MYSQL
         echo
-        read -p "Project test url : " PROJECT_DOMAIN
+        read -p "Existing project test URL : " PROJECT_DOMAIN
         read -p "Name of MODX folder (without zip) : " FOLDER_MODX_ZIP
         read -p "URL to MODX zip : " URL_MODX
         read -p "URL to database dump : " URL_DATABASE
         read -p "URL to assets zip : " URL_ASSETS
-        read -p "URL to core/packages zip : " URL_PACKAGES
-        read -p "URL to core/components zip : " URL_COMPONENTS
+        read -p "URL to packages zip : " URL_PACKAGES
+        read -p "URL to components zip : " URL_COMPONENTS
         echo '------------------------------------------------------------------------'
-        echo 'Installing MODX'
+        echo 'Injecting MODX into /home/${PROJECT_OWNER}/public/${PROJECT_NAME}'
         echo '------------------------------------------------------------------------'
 
-        if [ -d "/home/$PROJECT_OWNER/$PROJECT_NAME" ]; then
-            echo "-- Changing path to /home/${PROJECT_OWNER}/public/${PROJECT_NAME}"
-            # Navigate to the desired project folder
+        # if the website exists, continue...
+        if [ -d "/home/${PROJECT_OWNER}/public/${PROJECT_NAME}" ]; then
+
             cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
-        else
-            echo "-- Creating directory and changing path to /home/${PROJECT_OWNER}/public/${PROJECT_NAME}"
-            mkdir -p /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
-            cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
-        fi
 
-        # Stop backups by default
-        touch /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/.nobackup
+            # Stop backups
+            touch /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/.nobackup
 
-        echo "${COLOUR_WHITE}>> fetching MODX...${COLOUR_RESTORE}"
-        # Install MODX
-        wget -N ${URL_MODX}
+            echo "${COLOUR_WHITE}>> fetching MODX...${COLOUR_RESTORE}"
 
-        # Unzip folder
-        unzip ${FOLDER_MODX_ZIP}.zip
+            # Install MODX
+            wget -N ${URL_MODX}
 
-        # Move files inside modx folder up a level
-        mv /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${FOLDER_MODX_ZIP}/{.,}* /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/
+            # Unzip folder
+            unzip ${FOLDER_MODX_ZIP}.zip
 
-        # Clean up installation
-        rm -rf ${FOLDER_MODX_ZIP}
-        rm ${FOLDER_MODX_ZIP}.zip
+            # Move files inside modx folder up a level
+            mv /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${FOLDER_MODX_ZIP}/{.,}* /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/
 
-        echo "${COLOUR_WHITE}>> installing assets...${COLOUR_RESTORE}"
-        # Install assets folder
-        wget -N ${URL_ASSETS}
-        unzip -o assets.zip
-        rm assets.zip
+            # Clean up installation
+            rm -rf ${FOLDER_MODX_ZIP}
+            rm ${FOLDER_MODX_ZIP}.zip
 
-        # Install packages and components
-        cd core
+            echo "${COLOUR_WHITE}>> installing assets...${COLOUR_RESTORE}"
+            # Install assets folder
+            wget -N ${URL_ASSETS}
+            unzip -o assets.zip
+            rm assets.zip
 
-        echo "${COLOUR_WHITE}>> installing components...${COLOUR_RESTORE}"
-        # Components
-        wget -N ${URL_COMPONENTS}
-        unzip -o components.zip
-        rm components.zip
+            # Install packages and components
+            cd core
 
-        echo "${COLOUR_WHITE}>> installing packages...${COLOUR_RESTORE}"
-        # Packages
-        wget -N ${URL_PACKAGES}
-        unzip -o packages.zip
-        rm packages.zip
+            echo "${COLOUR_WHITE}>> installing components...${COLOUR_RESTORE}"
+            # Components
+            wget -N ${URL_COMPONENTS}
+            unzip -o components.zip
+            rm components.zip
 
-        echo "${COLOUR_CYAN}-- deleting existing config files in root, core, manager and connectors... ${COLOUR_RESTORE}"
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/config/config.inc.php
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php
+            echo "${COLOUR_WHITE}>> installing packages...${COLOUR_RESTORE}"
+            # Packages
+            wget -N ${URL_PACKAGES}
+            unzip -o packages.zip
+            rm packages.zip
 
-        echo "${COLOUR_WHITE}>> installing new MODX config files...${COLOUR_RESTORE}"
-        if [ -f /home/$PROJECT_OWNER/public/$PROJECT_NAME/core/config/config.inc.php ]; then
-            echo "-- MODX core config file already exists. Skipping..."
-        else
+            echo "${COLOUR_WHITE}>> deleting existing config files in root, core, manager and connectors... ${COLOUR_RESTORE}"
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/config/config.inc.php
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php
+
+            echo "${COLOUR_WHITE}>> installing new MODX config files...${COLOUR_RESTORE}"
+
             cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/config/config.inc.php << EOF
 <?php
 /**
@@ -269,12 +266,8 @@ if (!defined('MODX_CACHE_DISABLED')) {
     define('MODX_CACHE_DISABLED', \$modx_cache_disabled);
 }
 EOF
-        fi
 
-        # Add manager config for MODX
-        if [ -f /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX manager config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add manager config for MODX
             cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php << EOF
 <?php
 /*
@@ -286,12 +279,7 @@ define('MODX_CORE_PATH', '/home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
 
-        # Add connectors config for MODX
-        if [ -f /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX connectors config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
             cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php << EOF
 <?php
 /*
@@ -303,12 +291,8 @@ define('MODX_CORE_PATH', '/home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
 
-        # Add root config for MODX
-        if [ -f /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX root config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add root config for MODX
             cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php << EOF
 <?php
 /*
@@ -320,26 +304,25 @@ define('MODX_CORE_PATH', '/home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
 
-        # Secure / change permissions on config file after save
-        echo "${COLOUR_CYAN}-- adjusting MODX permissions for config files...${COLOUR_RESTORE}"
-        chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/config/config.inc.php
-        chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php
-        chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php
-        chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php
+            # Secure / change permissions on config file after save
+            echo "${COLOUR_CYAN}-- adjusting MODX permissions for config files...${COLOUR_RESTORE}"
+            chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/config/config.inc.php
+            chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php
+            chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php
+            chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php
 
-        # Import database
-        echo "${COLOUR_WHITE}>> importing database...${COLOUR_RESTORE}"
-        cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
-        wget -N ${URL_DATABASE}
+            # Import database
+            echo "${COLOUR_WHITE}>> importing database...${COLOUR_RESTORE}"
+            cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
+            wget -N ${URL_DATABASE}
 
-        # Import basesite database
-        echo "${COLOUR_CYAN}-- importing ${URL_DATABASE##*/}...${COLOUR_RESTORE}"
-        mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
+            # Import basesite database
+            echo "${COLOUR_CYAN}-- importing ${URL_DATABASE##*/}...${COLOUR_RESTORE}"
+            mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
 
-        echo "${COLOUR_CYAN}-- adding db_changepaths.sql...${COLOUR_RESTORE}"
-        cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql << EOF
+            echo "${COLOUR_CYAN}-- adding db_changepaths.sql...${COLOUR_RESTORE}"
+            cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql << EOF
 UPDATE \`modx_context_setting\` SET \`value\`='${PROJECT_DOMAIN}' WHERE \`context_key\`='en' AND \`key\`='http_host';
 UPDATE \`modx_context_setting\` SET \`value\`='${PROJECT_DOMAIN}' WHERE \`context_key\`='fr' AND \`key\`='http_host';
 UPDATE \`modx_context_setting\` SET \`value\`='${PROJECT_DOMAIN}' WHERE \`context_key\`='es' AND \`key\`='http_host';
@@ -351,25 +334,31 @@ UPDATE \`modx_context_setting\` SET \`value\`='https://${PROJECT_DOMAIN}/es/' WH
 UPDATE \`modx_context_setting\` SET \`value\`='https://${PROJECT_DOMAIN}/pdf/' WHERE \`context_key\`='pdf' AND \`key\`='site_url';
 EOF
 
+            echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
+            mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_$PROJECT_NAME < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
 
-
-        echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
-        mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_$PROJECT_NAME < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
-
-        # Delete any session data from previous database
-        mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} << EOF
+            # Delete any session data from previous database
+            mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} << EOF
 truncate modx_session;
 EOF
 
-        # Clean up database
-        echo "${COLOUR_CYAN}-- removing installation files...${COLOUR_RESTORE}"
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
+            # Clean up database
+            echo "${COLOUR_CYAN}-- removing installation files...${COLOUR_RESTORE}"
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
 
-        # Set permissions, just incase...
-        echo "${COLOUR_CYAN}-- adjusting permissions...${COLOUR_RESTORE}"
-        rm -rf /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/cache
-        chown -R ${PROJECT_OWNER}:${PROJECT_OWNER} /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
+            # Set permissions, just incase...
+            echo "${COLOUR_CYAN}-- adjusting permissions...${COLOUR_RESTORE}"
+            rm -rf /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/cache
+            chown -R ${PROJECT_OWNER}:${PROJECT_OWNER} /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
+
+        # if a development website does not exist...
+        else
+            echo "A development website does not exist with the credentials given."
+            echo "Please setup a new development website first and run this"
+            echo "process again."
+            exit
+        fi
 
     else
         break
@@ -385,43 +374,50 @@ packageWebsite() {
         echo 'Packaging $PROJECT_NAME'
         echo '------------------------------------------------------------------------'
 
-        # Creating tempory dir for files
-        echo "${COLOUR_WHITE}>> creating temp folder...${COLOUR_RESTORE}"
-        mkdir -p /home/${PROJECT_OWNER}/backup/temp/
+        if [ -d "/home/$PROJECT_OWNER/public/$PROJECT_NAME" ]; then
 
-        # Navigate to the desired project folder
-        echo "${COLOUR_WHITE}>> packaging packages...${COLOUR_RESTORE}"
-        cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core
-        zip -r /home/${PROJECT_OWNER}/backup/temp/packages.zip packages
+            # Creating tempory dir for files
+            echo "${COLOUR_WHITE}>> creating temp folder...${COLOUR_RESTORE}"
+            mkdir -p /home/${PROJECT_OWNER}/backup/temp/
 
-        echo "${COLOUR_WHITE}>> packaging components...${COLOUR_RESTORE}"
-        zip -r /home/${PROJECT_OWNER}/backup/temp/components.zip components
+            # Navigate to the desired project folder
+            echo "${COLOUR_WHITE}>> packaging packages...${COLOUR_RESTORE}"
+            cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core
+            zip -r /home/${PROJECT_OWNER}/backup/temp/packages.zip packages
 
-        echo "${COLOUR_WHITE}>> packaging assets...${COLOUR_RESTORE}"
-        cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
-        zip -r /home/${PROJECT_OWNER}/backup/temp/assets.zip assets
+            echo "${COLOUR_WHITE}>> packaging components...${COLOUR_RESTORE}"
+            zip -r /home/${PROJECT_OWNER}/backup/temp/components.zip components
 
-        echo "${COLOUR_WHITE}>> dumping database...${COLOUR_RESTORE}"
-        mysqldump -u root ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} > /home/${PROJECT_OWNER}/backup/temp/${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME}.sql
+            echo "${COLOUR_WHITE}>> packaging assets...${COLOUR_RESTORE}"
+            cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
+            zip -r /home/${PROJECT_OWNER}/backup/temp/assets.zip assets
 
-        # If backup folder for user exists skip, else create a folder called backup
-        echo "${COLOUR_WHITE}>> checking if destination folder exists...${COLOUR_RESTORE}"
-        if [ -d "/home/$PROJECT_OWNER/backup/$PROJECT_NAME" ]; then
-            echo "-- Backup folder for ${PROJECT_NAME} already exists. Skipping..."
+            echo "${COLOUR_WHITE}>> dumping database...${COLOUR_RESTORE}"
+            mysqldump -u root ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} > /home/${PROJECT_OWNER}/backup/temp/${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME}.sql
+
+            # If backup folder for user exists skip, else create a folder called backup
+            echo "${COLOUR_WHITE}>> checking if destination folder exists...${COLOUR_RESTORE}"
+            if [ -d "/home/$PROJECT_OWNER/backup/$PROJECT_NAME" ]; then
+                echo "-- Backup folder for ${PROJECT_NAME} already exists. Skipping..."
+            else
+                # Make backup dir for user
+                mkdir -p /home/${PROJECT_OWNER}/backup/${PROJECT_NAME}
+            fi
+
+            echo "${COLOUR_WHITE}>> creating final package...${COLOUR_RESTORE}"
+            cd /home/${PROJECT_OWNER}/backup/temp
+            zip -r /home/${PROJECT_OWNER}/backup/${PROJECT_NAME}/${PROJECT_OWNER}-${PROJECT_NAME}-package-${YAM_DATEFORMAT_FULL}.zip .
+
+            rm -rf /home/${PROJECT_OWNER}/backup/temp
+
+            echo "${COLOUR_WHITE}Package complete: ${COLOUR_RESTORE}"
+            echo "${COLOUR_WHITE}/home/${PROJECT_OWNER}/backup/${PROJECT_NAME}/${PROJECT_OWNER}-${PROJECT_NAME}-package-${YAM_DATEFORMAT_FULL}.zip ${COLOUR_RESTORE}"
+
         else
-            # Make backup dir for user
-            mkdir -p /home/${PROJECT_OWNER}/backup/${PROJECT_NAME}
+            echo "A development website does not exist with the credentials given."
+            echo "Please check the information you provided and try again."
+            exit
         fi
-
-        echo "${COLOUR_WHITE}>> creating final package...${COLOUR_RESTORE}"
-        cd /home/${PROJECT_OWNER}/backup/temp
-        zip -r /home/${PROJECT_OWNER}/backup/${PROJECT_NAME}/${PROJECT_OWNER}-${PROJECT_NAME}-package-${YAM_DATEFORMAT_FULL}.zip .
-
-        rm -rf /home/${PROJECT_OWNER}/backup/temp
-
-        echo "${COLOUR_WHITE}Package complete: ${COLOUR_RESTORE}"
-        echo "${COLOUR_WHITE}/home/${PROJECT_OWNER}/backup/${PROJECT_NAME}/${PROJECT_OWNER}-${PROJECT_NAME}-package-${YAM_DATEFORMAT_FULL}.zip ${COLOUR_RESTORE}"
-
 
     else
         break
@@ -431,36 +427,44 @@ packageWebsite() {
 # Load add virtual host function
 addVirtualhost() {
     if ask "Are you sure you want to add a new development website?"; then
-        read -p "Name of project (all one word, no spaces)  : " PROJECT_NAME
-        read -p "Enter owner (user) of project  : " USER
-        read -s -p "Enter user password  : " USER_PASSWORD
+        read -p "Project name  : " PROJECT_NAME
+        read -p "Project user  : " USER
+        read -s -p "User password  : " USER_PASSWORD
         echo
-        read -p "Enter test domain name  : " PROJECT_DOMAIN
-        read -s -p "Enter MYSQL password  : " DB_PASSWORD
+        read -p "Project URL  : " PROJECT_DOMAIN
+        read -s -p "Project MYSQL password  : " DB_PASSWORD
         echo
-        read -s -p "Enter MYSQL root password  : " DB_PASSWORD_ROOT
+        read -s -p "Root MYSQL password  : " DB_PASSWORD_ROOT
         echo
         echo '------------------------------------------------------------------------'
         echo 'Setting up virtual host'
         echo '------------------------------------------------------------------------'
 
-        # Add user to server
-        echo "${COLOUR_WHITE}>> checking user account for ${USER}...${COLOUR_RESTORE}"
-        if id "$USER" >/dev/null 2>&1; then
-              echo "The user already exists. Skipping..."
+        # if a user and project already exists...
+        if [ -d "/home/${USER}/public/${PROJECT_NAME}" ]; then
+
+            echo "A development website with these credentials already exists."
+            echo "Please check the information you provided and try again."
+            exit
+
         else
-            echo "${COLOUR_CYAN}-- adding user${COLOUR_RESTORE}"
-            adduser --disabled-password --gecos "" ${USER}
-            PASSWORD=$(mkpasswd ${USER_PASSWORD})
-            usermod --password ${PASSWORD} ${USER}
 
-            chown root:root /home/$USER
-
-            echo "${COLOUR_CYAN}-- Setting up log rotation ${COLOUR_RESTORE}"
-            if [ -f /etc/logrotate.d/${USER} ]; then
-                echo "${COLOUR_CYAN}-- Log rotation already exists. Skipping...${COLOUR_RESTORE}"
+            # Add user to server
+            echo "${COLOUR_WHITE}>> Checking user account for ${USER}...${COLOUR_RESTORE}"
+            if id "$USER" >/dev/null 2>&1; then
+                  echo "${COLOUR_CYAN}-- The user already exists. Skipping...${COLOUR_RESTORE}"
             else
-                cat > /etc/logrotate.d/${USER} << EOF
+                echo "${COLOUR_CYAN}-- Adding user${COLOUR_RESTORE}"
+                adduser --disabled-password --gecos "" ${USER}
+                PASSWORD=$(mkpasswd ${USER_PASSWORD})
+                usermod --password ${PASSWORD} ${USER}
+                chown root:root /home/$USER
+
+                echo "${COLOUR_CYAN}-- Setting up log rotation ${COLOUR_RESTORE}"
+                if [ -f /etc/logrotate.d/${USER} ]; then
+                    echo "${COLOUR_CYAN}-- Log rotation already exists. Skipping...${COLOUR_RESTORE}"
+                else
+                    cat > /etc/logrotate.d/${USER} << EOF
 /home/${USER}/logs/nginx/*.log {
     daily
     missingok
@@ -472,36 +476,35 @@ addVirtualhost() {
     sharedscripts
 }
 EOF
-            fi
+                fi
 
+                echo "${COLOUR_CYAN}-- Adding cron job for backups${COLOUR_RESTORE}"
 
-            echo "${COLOUR_CYAN}-- adding cron job for backups${COLOUR_RESTORE}"
-
-            if [ -f /etc/cron.d/backup_local_${USER} ]; then
-                echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
-            else
-                cat > /etc/cron.d/backup_local_${USER} << EOF
-30 2    * * *   root    /root/yam_backup_local.sh ${USER} >> /var/log/cron.log 2>&1
-
-EOF
-            fi
-
-            if [ -f /etc/cron.d/backup_s3_${USER} ]; then
-                echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
-            else
-                cat > /etc/cron.d/backup_s3_${USER} << EOF
-* 3    * * *   root    /root/yam_backup_s3.sh $USER ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
+                if [ -f /etc/cron.d/backup_local_${USER} ]; then
+                    echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
+                else
+                    cat > /etc/cron.d/backup_local_${USER} << EOF
+30 2    * * *   root    /usr/local/bin/yam_backup_local.sh ${USER} >> /var/log/cron.log 2>&1
 
 EOF
-            fi
+                fi
 
-            echo "${COLOUR_CYAN}-- setting up SFTP${COLOUR_RESTORE}"
-            if grep -Fxq "Match User $USER" /etc/ssh/sshd_config
-            then
-                echo "${COLOUR_CYAN}-- SFTP user found. Skipping...${COLOUR_RESTORE}"
-            else
-                echo "${COLOUR_CYAN}-- No SFTP user found. Adding new user...${COLOUR_RESTORE}"
-            cat >> /etc/ssh/sshd_config << EOF
+                if [ -f /etc/cron.d/backup_s3_${USER} ]; then
+                    echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
+                else
+                    cat > /etc/cron.d/backup_s3_${USER} << EOF
+* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh $USER ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
+
+EOF
+                fi
+
+                echo "${COLOUR_CYAN}-- Setting up SFTP${COLOUR_RESTORE}"
+                if grep -Fxq "Match User $USER" /etc/ssh/sshd_config
+                then
+                    echo "${COLOUR_CYAN}---- SFTP user found. Skipping...${COLOUR_RESTORE}"
+                else
+                    echo "${COLOUR_CYAN}---- No SFTP user found. Adding new user...${COLOUR_RESTORE}"
+                cat >> /etc/ssh/sshd_config << EOF
 
 Match User ${USER}
     ChrootDirectory %h
@@ -512,48 +515,46 @@ Match User ${USER}
     AllowTcpForwarding no
     X11Forwarding no
 EOF
-            service ssh restart
+                service ssh restart
+                fi
+
             fi
 
+            # Create user directories
+            echo "${COLOUR_WHITE}>> Creating home folder for ${USER}...${COLOUR_RESTORE}"
+            mkdir -p /home/${USER}/public/${PROJECT_NAME}
+            touch /home/${USER}/public/${PROJECT_NAME}/.nobackup
+            chown -R ${USER}:${USER} /home/${USER}/public/${PROJECT_NAME}
 
-        fi
+            # Create session folder
+            mkdir -p /home/${USER}/tmp/${PROJECT_NAME}
+            chown -R ${USER}:${USER} /home/${USER}/tmp
 
-        # Create user directories
-        echo "${COLOUR_WHITE}>> creating home folder for ${USER}...${COLOUR_RESTORE}"
-        mkdir -p /home/${USER}/public/${PROJECT_NAME}
-        touch /home/${USER}/public/${PROJECT_NAME}/.nobackup
-        chown -R ${USER}:${USER} /home/${USER}/public/${PROJECT_NAME}
+            # Password protect directory by default
+            if [ -f "/home/$USER/.htpasswd" ]; then
+                echo "${COLOUR_CYAN}-- .htpassword file exists. adding user.${COLOUR_RESTORE}"
+                htpasswd -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
+            else
+                echo "${COLOUR_CYAN}-- .htpassword does not exist. creating file and adding user.${COLOUR_RESTORE}"
+                htpasswd -c -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
+            fi
 
-        # Create session folder
-        mkdir -p /home/${USER}/tmp/${PROJECT_NAME}
-        chown -R ${USER}:${USER} /home/${USER}/tmp
+            # Create log files
+            if [ -f "/home/$USER/logs/nginx/${USER}_${PROJECT_NAME}_error.log" ]; then
+                echo "${COLOUR_CYAN}-- Log files for ${PROJECT_NAME} already exist. Skipping...${COLOUR_RESTORE}"
+            else
+                echo "${COLOUR_CYAN}-- Creating log files${COLOUR_RESTORE}"
+                touch /home/${USER}/logs/nginx/${USER}_${PROJECT_NAME}_error.log
+            fi
 
-        # Password protect directory by default
-        if [ -f "/home/$USER/.htpasswd" ]; then
-            echo "${COLOUR_CYAN}-- .htpassword file exists. adding user.${COLOUR_RESTORE}"
-            htpasswd -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
-        else
-            echo "${COLOUR_CYAN}-- .htpassword does not exist. creating file and adding user.${COLOUR_RESTORE}"
-            htpasswd -c -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
-        fi
+            # Configure SSL
+            echo "${COLOUR_WHITE}>> Configuring SSL...${COLOUR_RESTORE}"
+            certbot -n --nginx certonly -d ${PROJECT_DOMAIN}
 
-        # Create log files
-        if [ -f "/home/$USER/logs/nginx/${USER}_${PROJECT_NAME}_error.log" ]; then
-            echo "${COLOUR_CYAN}-- log files for ${PROJECT_NAME} already exist. Skipping...${COLOUR_RESTORE}"
-        else
-            echo "${COLOUR_CYAN}-- creating log files${COLOUR_RESTORE}"
-            touch /home/${USER}/logs/nginx/${USER}_${PROJECT_NAME}_error.log
-        fi
-
-        # Configure SSL
-        echo "${COLOUR_WHITE}>> configuring SSL...${COLOUR_RESTORE}"
-        certbot -n --nginx certonly -d ${PROJECT_DOMAIN}
-        echo "Done."
-
-        echo "${COLOUR_WHITE}>> configuring NGINX${COLOUR_RESTORE}"
-        # Adding virtual host for user
-        echo "${COLOUR_CYAN}-- adding default conf file for $PROJECT_NAME...${COLOUR_RESTORE}"
-        cat > /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.conf << EOF
+            echo "${COLOUR_WHITE}>> Configuring NGINX${COLOUR_RESTORE}"
+            # Adding virtual host for user
+            echo "${COLOUR_CYAN}-- Adding default conf file for $PROJECT_NAME...${COLOUR_RESTORE}"
+            cat > /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.conf << EOF
 # Generated by the YAM server configurator
 # Do not edit as you may loose your changes
 # If you have found a bug, please email $YAM_EMAIL_BUG
@@ -586,10 +587,10 @@ server {
 }
 EOF
 
-        # Adding conf file and directory for default website
-        echo "${COLOUR_CYAN}-- adding conf files and directory for ${PROJECT_NAME} ${COLOUR_RESTORE}"
-        mkdir -p /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.d
-        cat > /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.d/main.conf << EOF
+            # Adding conf file and directory for default website
+            echo "${COLOUR_CYAN}-- Adding conf files and directory for ${PROJECT_NAME} ${COLOUR_RESTORE}"
+            mkdir -p /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.d
+            cat > /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.d/main.conf << EOF
 # Generated by the YAM server configurator
 # Do not edit as you may loose your changes
 # If you have found a bug, please email $YAM_EMAIL_BUG
@@ -647,10 +648,10 @@ location @modx {
 
 EOF
 
-        # Adding custom conf directory for default website
-        echo "${COLOUR_CYAN}-- adding custom conf directory for $PROJECT_NAME ${COLOUR_RESTORE}"
-        mkdir -p /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d
-        cat > /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d/readme.txt << EOF
+            # Adding custom conf directory for default website
+            echo "${COLOUR_CYAN}-- Adding custom conf directory for $PROJECT_NAME ${COLOUR_RESTORE}"
+            mkdir -p /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d
+            cat > /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d/readme.txt << EOF
 In this directory you can add custom rewrite rules in the follwing format.
 
 $PROJECT_NAME.location.*.conf
@@ -668,21 +669,21 @@ Add rules towards the footer of the conf doc
 Don't forget to reload NGINX from the terminal using:
 systemctl reload nginx
 EOF
-        # Add file to password protect directory by default
-        cat > /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d/${PROJECT_NAME}.location.password.conf << EOF
+            # Add file to password protect directory by default
+            cat > /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d/${PROJECT_NAME}.location.password.conf << EOF
 # add password directory
 auth_basic "Private";
 auth_basic_user_file /home/${USER}/.htpasswd;
 EOF
 
-        systemctl reload nginx
-        echo ">> NGINX configuration complete."
+            systemctl reload nginx
+            echo ">> NGINX configuration complete."
 
-        echo "${COLOUR_WHITE}>> configuring php...${COLOUR_RESTORE}"
-        if [ -f /etc/php/7.1/fpm/pool.d/${USER}-${PROJECT_NAME}.conf ]; then
-            echo "pool configuration for ${USER}-${PROJECT_NAME} already exists. Skipping..."
-        else
-            cat > /etc/php/7.1/fpm/pool.d/${USER}-${PROJECT_NAME}.conf << EOF
+            echo "${COLOUR_WHITE}>> Configuring php...${COLOUR_RESTORE}"
+            if [ -f /etc/php/7.1/fpm/pool.d/${USER}-${PROJECT_NAME}.conf ]; then
+                echo "${COLOUR_CYAN}-- Pool configuration for ${USER}-${PROJECT_NAME} already exists. Skipping...${COLOUR_RESTORE}"
+            else
+                cat > /etc/php/7.1/fpm/pool.d/${USER}-${PROJECT_NAME}.conf << EOF
 [${USER}-${PROJECT_NAME}]
 user = ${USER}
 group = ${USER}
@@ -704,21 +705,21 @@ php_value[default_socket_timeout] = 120
 php_value[session.cookie_secure] = 1
 php_value[session.cookie_httponly] = 1
 EOF
-            systemctl restart php7.1-fpm
-            echo "-- Added php worker for ${USER}-${PROJECT_NAME}."
-        fi
+                systemctl restart php7.1-fpm
+                echo "${COLOUR_CYAN}-- Added php worker for ${USER}-${PROJECT_NAME} ${COLOUR_RESTORE}"
+            fi
 
-        # Create database and user
-        echo "${COLOUR_WHITE}>> setting up database...${COLOUR_RESTORE}"
-        mysql --user=root --password=$DB_PASSWORD_ROOT << EOF
+            # Create database and user
+            echo "${COLOUR_WHITE}>> Setting up database...${COLOUR_RESTORE}"
+            mysql --user=root --password=$DB_PASSWORD_ROOT << EOF
 CREATE DATABASE IF NOT EXISTS ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME};
 CREATE USER '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';
 GRANT ALL PRIVILEGES ON ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME}.* TO '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
-        echo ">> Done."
+            echo ">> Done."
 
-
+        fi
 
     else
         break
@@ -728,37 +729,45 @@ EOF
 # Load add virtual host with basesite function
 addVirtualhostBasesite() {
     if ask "Are you sure you want to setup a new Virtual Host with Basesite installed?"; then
-        read -p "Name of project (all one word, no spaces)  : " PROJECT_NAME
-        read -p "Enter owner (user) of project  : " USER
-        read -s -p "Enter user password  : " PASSWORD_USER
+        read -p "Project name  : " PROJECT_NAME
+        read -p "Project user  : " USER
+        read -s -p "User password  : " PASSWORD_USER
         echo
-        read -p "Enter test domain name  : " DOMAIN_TEST
-        read -s -p "Enter MYSQL password  : " PASSWORD_MYSQL_USER
+        read -p "Project URL  : " DOMAIN_TEST
+        read -s -p "Project MYSQL password  : " PASSWORD_MYSQL_USER
         echo
-        read -s -p "Enter MYSQL root password  : " PASSWORD_MYSQL_ROOT
+        read -s -p "Root MYSQL password  : " PASSWORD_MYSQL_ROOT
         echo
         echo '------------------------------------------------------------------------'
         echo 'Setting up virtual host with Basesite'
         echo '------------------------------------------------------------------------'
 
-        # Add user to server
-        echo "${COLOUR_WHITE}>> checking user account for ${USER}...${COLOUR_RESTORE}"
-        if id "$USER" >/dev/null 2>&1; then
-              echo "-- The user already exists. Skipping..."
+        # if a user and project already exists...
+        if [ -d "/home/${USER}/public/${PROJECT_NAME}" ]; then
+
+            echo "A development website with these credentials already exists."
+            echo "Please check the information you provided and try again."
+            exit
+
         else
-            adduser --disabled-password --gecos "" ${USER}
-            PASSWORD=$(mkpasswd ${PASSWORD_USER})
-            usermod --password ${PASSWORD} ${USER}
 
-            chown root:root /home/${USER}
-
-            echo "${COLOUR_CYAN}-- Added user ${COLOUR_RESTORE}"
-
-            echo "${COLOUR_CYAN}-- Setting up log rotation ${COLOUR_RESTORE}"
-            if [ -f /etc/logrotate.d/$USER ]; then
-                echo "${COLOUR_CYAN}-- Log rotation already exists. Skipping...${COLOUR_RESTORE}"
+            # Add user to server
+            echo "${COLOUR_WHITE}>> Checking user account for ${USER}...${COLOUR_RESTORE}"
+            if id "$USER" >/dev/null 2>&1; then
+                  echo "-- The user already exists. Skipping..."
             else
-                cat > /etc/logrotate.d/${USER} << EOF
+                adduser --disabled-password --gecos "" ${USER}
+                PASSWORD=$(mkpasswd ${PASSWORD_USER})
+                usermod --password ${PASSWORD} ${USER}
+                chown root:root /home/${USER}
+
+                echo "${COLOUR_CYAN}-- Added user ${COLOUR_RESTORE}"
+
+                echo "${COLOUR_CYAN}-- Setting up log rotation ${COLOUR_RESTORE}"
+                if [ -f /etc/logrotate.d/$USER ]; then
+                    echo "${COLOUR_CYAN}---- Log rotation already exists. Skipping...${COLOUR_RESTORE}"
+                else
+                    cat > /etc/logrotate.d/${USER} << EOF
 /home/${USER}/logs/nginx/*.log {
     daily
     missingok
@@ -770,37 +779,35 @@ addVirtualhostBasesite() {
     sharedscripts
 }
 EOF
-            fi
+                fi
 
+                echo "${COLOUR_CYAN}-- Adding cron job for backups${COLOUR_RESTORE}"
 
-            echo "${COLOUR_CYAN}-- adding cron job for backups${COLOUR_RESTORE}"
-
-            if [ -f /etc/cron.d/backup_local_$USER ]; then
-                echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
-            else
-                cat > /etc/cron.d/backup_local_$USER << EOF
-30 2    * * *   root    /root/yam_backup_local.sh $USER >> /var/log/cron.log 2>&1
-
-EOF
-            fi
-
-            if [ -f /etc/cron.d/backup_s3_$USER ]; then
-                echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
-            else
-                cat > /etc/cron.d/backup_s3_$USER << EOF
-* 3    * * *   root    /root/yam_backup_s3.sh $USER $YAM_SERVER_NAME >> /var/log/cron.log 2>&1
+                if [ -f /etc/cron.d/backup_local_$USER ]; then
+                    echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
+                else
+                    cat > /etc/cron.d/backup_local_$USER << EOF
+30 2    * * *   root    /usr/local/bin/yam_backup_local.sh $USER >> /var/log/cron.log 2>&1
 
 EOF
-            fi
+                fi
 
+                if [ -f /etc/cron.d/backup_s3_$USER ]; then
+                    echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
+                else
+                    cat > /etc/cron.d/backup_s3_$USER << EOF
+* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh $USER $YAM_SERVER_NAME >> /var/log/cron.log 2>&1
 
-            echo "${COLOUR_CYAN}-- setting up SFTP${COLOUR_RESTORE}"
-            if grep -Fxq "Match User $USER" /etc/ssh/sshd_config
-            then
-                echo "${COLOUR_CYAN}-- SFTP user found. Skipping...${COLOUR_RESTORE}"
-            else
-                echo "${COLOUR_CYAN}-- No SFTP user found. Adding new user...${COLOUR_RESTORE}"
-            cat >> /etc/ssh/sshd_config  << EOF
+EOF
+                fi
+
+                echo "${COLOUR_CYAN}-- Setting up SFTP${COLOUR_RESTORE}"
+                if grep -Fxq "Match User $USER" /etc/ssh/sshd_config
+                then
+                    echo "${COLOUR_CYAN}---- SFTP user found. Skipping...${COLOUR_RESTORE}"
+                else
+                    echo "${COLOUR_CYAN}---- No SFTP user found. Adding new user...${COLOUR_RESTORE}"
+                cat >> /etc/ssh/sshd_config  << EOF
 
 Match User ${USER}
     ChrootDirectory %h
@@ -811,42 +818,39 @@ Match User ${USER}
     AllowTcpForwarding no
     X11Forwarding no
 EOF
-            service ssh restart
+                service ssh restart
+
+                fi
 
             fi
 
-        fi
+            # Create user directories
+            echo "${COLOUR_WHITE}>> Creating project folder for ${USER}...${COLOUR_RESTORE}"
+            mkdir -p /home/${USER}/public/${PROJECT_NAME}
+            touch /home/${USER}/public/${PROJECT_NAME}/.nobackup
 
-        # Create user directories
-        echo "${COLOUR_WHITE}>> creating project folder for ${USER}...${COLOUR_RESTORE}"
-        mkdir -p /home/${USER}/public/${PROJECT_NAME}
-        touch /home/${USER}/public/${PROJECT_NAME}/.nobackup
+            # Create sessions folder
+            mkdir -p /home/${USER}/tmp/${PROJECT_NAME}
+            chown -R ${USER}:${USER} /home/${USER}/tmp
 
-        # Create sessions folder
-        mkdir -p /home/${USER}/tmp/${PROJECT_NAME}
-        chown -R ${USER}:${USER} /home/${USER}/tmp
+            # Installing Basesite
+            echo "${COLOUR_WHITE}>> Installing Basesite ${USER}...${COLOUR_RESTORE}"
 
-        # Installing Basesite
-        echo "${COLOUR_WHITE}>> installing Basesite ${USER}...${COLOUR_RESTORE}"
+            echo "${COLOUR_CYAN}-- Copying Basesite from base to ${PROJECT_NAME} ${COLOUR_RESTORE}"
+            cp -R ${YAM_BASESITE_PATH}. /home/${USER}/public/${PROJECT_NAME}
 
-        echo "${COLOUR_CYAN}-- copying Basesite from base to ${PROJECT_NAME} ${COLOUR_RESTORE}"
-        cp -R ${YAM_BASESITE_PATH}. /home/${USER}/public/${PROJECT_NAME}
+            echo "${COLOUR_CYAN}-- Deleting existing config files in core, manager and connectors... ${COLOUR_RESTORE}"
+            rm /home/${USER}/public/${PROJECT_NAME}/core/config/config.inc.php
+            rm /home/${USER}/public/${PROJECT_NAME}/connectors/config.core.php
+            rm /home/${USER}/public/${PROJECT_NAME}/manager/config.core.php
+            rm /home/${USER}/public/${PROJECT_NAME}/config.core.php
 
-        echo "${COLOUR_CYAN}-- deleting existing config files in core, manager and connectors... ${COLOUR_RESTORE}"
-        rm /home/${USER}/public/${PROJECT_NAME}/core/config/config.inc.php
-        rm /home/${USER}/public/${PROJECT_NAME}/connectors/config.core.php
-        rm /home/${USER}/public/${PROJECT_NAME}/manager/config.core.php
-        rm /home/${USER}/public/${PROJECT_NAME}/config.core.php
+            echo "${COLOUR_CYAN}-- Deleting cache folder${COLOUR_RESTORE}"
+            rm -rf /home/${USER}/public/${PROJECT_NAME}/core/cache/
 
-        echo "${COLOUR_CYAN}-- deleting cache folder${COLOUR_RESTORE}"
-        rm -rf /home/${USER}/public/${PROJECT_NAME}/core/cache/
+            echo "${COLOUR_WHITE}>> Installing MODX config files...${COLOUR_RESTORE}"
 
-        echo "${COLOUR_WHITE}>> installing MODX config files...${COLOUR_RESTORE}"
-
-        # Add core config for MODX
-        if [ -f /home/${USER}/public/${PROJECT_NAME}/core/config/config.inc.php ]; then
-            echo "${COLOUR_CYAN}-- MODX core config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add core config for MODX
             cat > /home/${USER}/public/${PROJECT_NAME}/core/config/config.inc.php << EOF
 <?php
 /**
@@ -942,12 +946,7 @@ if (!defined('MODX_CACHE_DISABLED')) {
     define('MODX_CACHE_DISABLED', \$modx_cache_disabled);
 }
 EOF
-        fi
-
-        # Add manager config for MODX
-        if [ -f /home/$USER/public/$PROJECT_NAME/manager/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX manager config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add manager config for MODX
             cat > /home/${USER}/public/${PROJECT_NAME}/manager/config.core.php << EOF
 <?php
 /*
@@ -959,12 +958,8 @@ define('MODX_CORE_PATH', '/home/${USER}/public/${PROJECT_NAME}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
 
-        # Add connectors config for MODX
-        if [ -f /home/$USER/public/$PROJECT_NAME/connectors/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX connectors config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add connectors config for MODX
             cat > /home/${USER}/public/${PROJECT_NAME}/connectors/config.core.php << EOF
 <?php
 /*
@@ -976,12 +971,8 @@ define('MODX_CORE_PATH', '/home/${USER}/public/${PROJECT_NAME}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
 
-        # Add root config for MODX
-        if [ -f /home/$USER/public/$PROJECT_NAME/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX root config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add root config for MODX
             cat > /home/${USER}/public/${PROJECT_NAME}/config.core.php << EOF
 <?php
 /*
@@ -993,44 +984,43 @@ define('MODX_CORE_PATH', '/home/${USER}/public/${PROJECT_NAME}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
 
-        # Secure / change permissions on config file after save
-        echo "${COLOUR_CYAN}-- adjusting permissions...${COLOUR_RESTORE}"
-        chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/core/config/config.inc.php
-        chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/manager/config.core.php
-        chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/connectors/config.core.php
-        chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/config.core.php
+            # Secure / change permissions on config file after save
+            echo "${COLOUR_CYAN}-- Adjusting permissions...${COLOUR_RESTORE}"
+            chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/core/config/config.inc.php
+            chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/manager/config.core.php
+            chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/connectors/config.core.php
+            chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/config.core.php
 
-        # Change permissions
-        chown -R ${USER}:${USER} /home/${USER}/public/${PROJECT_NAME}
+            # Change permissions
+            chown -R ${USER}:${USER} /home/${USER}/public/${PROJECT_NAME}
 
-        # Password protect directory by default
-        echo "${COLOUR_CYAN}-- password protecting directory...${COLOUR_RESTORE}"
-        if [ -f "/home/$USER/.htpasswd" ]; then
-            echo "${COLOUR_CYAN}-- .htpassword file exists. adding user.${COLOUR_RESTORE}"
-            htpasswd -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
-        else
-            echo "${COLOUR_CYAN}-- .htpassword file does not exist. creating file and adding user.${COLOUR_RESTORE}"
-            htpasswd -c -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
-        fi
+            # Password protect directory by default
+            echo "${COLOUR_CYAN}-- Password protecting directory...${COLOUR_RESTORE}"
+            if [ -f "/home/$USER/.htpasswd" ]; then
+                echo "${COLOUR_CYAN}-- .htpassword file exists. adding user.${COLOUR_RESTORE}"
+                htpasswd -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
+            else
+                echo "${COLOUR_CYAN}-- .htpassword file does not exist. creating file and adding user.${COLOUR_RESTORE}"
+                htpasswd -c -b /home/${USER}/.htpasswd ${PROJECT_NAME} ${YAM_PASSWORD_GENERIC}
+            fi
 
-        # Create log files
-        echo "${COLOUR_WHITE}>> creating log files...${COLOUR_RESTORE}"
-        if [ -e "/home/$USER/logs/nginx/${USER}_${PROJECT_NAME}_error.log" ]; then
-            echo "${COLOUR_CYAN}-- log files for ${PROJECT_NAME} already exist. Skipping...${COLOUR_RESTORE}"
-        else
-            touch /home/${USER}/logs/nginx/${USER}_${PROJECT_NAME}_error.log
-        fi
+            # Create log files
+            echo "${COLOUR_WHITE}>> Creating log files...${COLOUR_RESTORE}"
+            if [ -e "/home/$USER/logs/nginx/${USER}_${PROJECT_NAME}_error.log" ]; then
+                echo "${COLOUR_CYAN}-- Log files for ${PROJECT_NAME} already exist. Skipping...${COLOUR_RESTORE}"
+            else
+                touch /home/${USER}/logs/nginx/${USER}_${PROJECT_NAME}_error.log
+            fi
 
-        # Configure SSL
-        echo "${COLOUR_WHITE}>> configuring SSL...${COLOUR_RESTORE}"
-        certbot -n --nginx certonly -d ${DOMAIN_TEST}
+            # Configure SSL
+            echo "${COLOUR_WHITE}>> Configuring SSL...${COLOUR_RESTORE}"
+            certbot -n --nginx certonly -d ${DOMAIN_TEST}
 
-        echo "${COLOUR_WHITE}>> configuring NGINX${COLOUR_RESTORE}"
-        # Adding virtual host for user
-        echo "${COLOUR_CYAN}-- adding default conf file for ${PROJECT_NAME}...${COLOUR_RESTORE}"
-        cat > /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.conf << EOF
+            echo "${COLOUR_WHITE}>> Configuring NGINX${COLOUR_RESTORE}"
+            # Adding virtual host for user
+            echo "${COLOUR_CYAN}-- Adding default conf file for ${PROJECT_NAME}...${COLOUR_RESTORE}"
+            cat > /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.conf << EOF
 # Generated by the YAM server configurator
 # Do not edit as you may loose your changes
 # If you have found a bug, please email ${YAM_EMAIL_BUG}
@@ -1063,10 +1053,10 @@ server {
 }
 EOF
 
-        # Adding conf file and directory for default website
-        echo "${COLOUR_CYAN}-- adding conf files and directory for $PROJECT_NAME ${COLOUR_RESTORE}"
-        mkdir -p /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.d
-        cat > /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.d/main.conf << EOF
+            # Adding conf file and directory for default website
+            echo "${COLOUR_CYAN}-- Adding conf files and directory for $PROJECT_NAME ${COLOUR_RESTORE}"
+            mkdir -p /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.d
+            cat > /etc/nginx/conf.d/${USER}-${PROJECT_NAME}.d/main.conf << EOF
 # Generated by the YAM server configurator
 # Do not edit as you may loose your changes
 # If you have found a bug, please email ${YAM_EMAIL_BUG}
@@ -1124,10 +1114,10 @@ location @modx {
 
 EOF
 
-        # Adding custom conf directory for project
-        echo "${COLOUR_CYAN}-- adding custom conf directory for ${PROJECT_NAME} ${COLOUR_RESTORE}"
-        mkdir -p /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d
-        cat > /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d/readme.txt << EOF
+            # Adding custom conf directory for project
+            echo "${COLOUR_CYAN}-- Adding custom conf directory for ${PROJECT_NAME} ${COLOUR_RESTORE}"
+            mkdir -p /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d
+            cat > /etc/nginx/custom.d/${USER}-${PROJECT_NAME}.d/readme.txt << EOF
 In this directory you can add custom rewrite rules in the follwing format.
 
 ${PROJECT_NAME}.location.*.conf
@@ -1152,14 +1142,13 @@ auth_basic "Private";
 auth_basic_user_file /home/${USER}/.htpasswd;
 EOF
 
-        systemctl reload nginx
-        echo "NGINX configuration complete."
+            systemctl reload nginx
 
-        echo "${COLOUR_WHITE}>> configuring php...${COLOUR_RESTORE}"
-        if [ -f /etc/php/7.1/fpm/pool.d/${USER}-${PROJECT_NAME}.conf ]; then
-            echo "-- pool configuration for ${PROJECT_NAME} already exists. Skipping..."
-        else
-            cat > /etc/php/7.1/fpm/pool.d/${USER}-${PROJECT_NAME}.conf << EOF
+            echo "${COLOUR_WHITE}>> Configuring php...${COLOUR_RESTORE}"
+            if [ -f /etc/php/7.1/fpm/pool.d/${USER}-${PROJECT_NAME}.conf ]; then
+                echo "${COLOUR_CYAN}-- Pool configuration for ${PROJECT_NAME} already exists. Skipping...${COLOUR_RESTORE}"
+            else
+                cat > /etc/php/7.1/fpm/pool.d/${USER}-${PROJECT_NAME}.conf << EOF
 [${USER}-${PROJECT_NAME}]
 user = ${USER}
 group = ${USER}
@@ -1181,28 +1170,28 @@ php_value[default_socket_timeout] = 120
 php_value[session.cookie_secure] = 1
 php_value[session.cookie_httponly] = 1
 EOF
-            systemctl restart php7.1-fpm
-            echo "${COLOUR_CYAN}-- Added php worker for ${USER}-${PROJECT_NAME}.${COLOUR_RESTORE}"
-        fi
+                systemctl restart php7.1-fpm
+                echo "${COLOUR_CYAN}-- Added php worker for ${USER}-${PROJECT_NAME}.${COLOUR_RESTORE}"
+            fi
 
-        # Create database and user
-        echo "${COLOUR_WHITE}>> setting up database...${COLOUR_RESTORE}"
-        mysql --user=root --password=${PASSWORD_MYSQL_ROOT} << EOF
+            # Create database and user
+            echo "${COLOUR_WHITE}>> Setting up database...${COLOUR_RESTORE}"
+            mysql --user=root --password=${PASSWORD_MYSQL_ROOT} << EOF
 CREATE DATABASE IF NOT EXISTS ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME};
 CREATE USER '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIED BY '${PASSWORD_MYSQL_USER}';
 GRANT ALL PRIVILEGES ON ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME}.* TO '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
-        # Copy Basesite db and import into new project
-        echo "${COLOUR_CYAN}-- injecting Basesite into database...${COLOUR_RESTORE}"
-        # Export
-        mysqldump -u root ${YAM_BASESITE_DB} > /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
-        # Import
-        mysql -u ${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
+            # Copy Basesite db and import into new project
+            echo "${COLOUR_CYAN}-- Injecting Basesite into database...${COLOUR_RESTORE}"
+            # Export
+            mysqldump -u root ${YAM_BASESITE_DB} > /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
+            # Import
+            mysql -u ${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
 
-        # Changing paths in db
-        echo "${COLOUR_CYAN}-- exporting db_changepaths.sql...${COLOUR_RESTORE}"
-        cat > /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql << EOF
+            # Changing paths in db
+            echo "${COLOUR_CYAN}-- Exporting db_changepaths.sql...${COLOUR_RESTORE}"
+            cat > /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql << EOF
 UPDATE \`modx_context_setting\` SET \`value\`='${DOMAIN_TEST}' WHERE \`context_key\`='en' AND \`key\`='http_host';
 UPDATE \`modx_context_setting\` SET \`value\`='${DOMAIN_TEST}' WHERE \`context_key\`='fr' AND \`key\`='http_host';
 UPDATE \`modx_context_setting\` SET \`value\`='${DOMAIN_TEST}' WHERE \`context_key\`='es' AND \`key\`='http_host';
@@ -1214,22 +1203,22 @@ UPDATE \`modx_context_setting\` SET \`value\`='https://${DOMAIN_TEST}/es/' WHERE
 UPDATE \`modx_context_setting\` SET \`value\`='https://${DOMAIN_TEST}/pdf/' WHERE \`context_key\`='pdf' AND \`key\`='site_url';
 EOF
 
-        echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
-        mysql -u ${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME} -p$PASSWORD_MYSQL_USER ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
+            echo "${COLOUR_CYAN}-- Importing db_changepaths.sql...${COLOUR_RESTORE}"
+            mysql -u ${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME} -p$PASSWORD_MYSQL_USER ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME} < /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
 
-        # Delete any session data from previous database
-        mysql -u ${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME} << EOF
+            # Delete any session data from previous database
+            mysql -u ${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME} -p${PASSWORD_MYSQL_USER} ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME} << EOF
 truncate modx_session;
 EOF
 
-        # Clean up database
-        echo "${COLOUR_CYAN}-- removing database installation files...${COLOUR_RESTORE}"
-        rm /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
-        rm /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
+            # Clean up database
+            echo "${COLOUR_CYAN}-- Removing database installation files...${COLOUR_RESTORE}"
+            rm /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
+            rm /home/${USER}/public/${PROJECT_NAME}/db_basesite.sql
 
-        echo "Installation complete."
+            echo "Installation complete."
 
-
+        fi
 
     else
         break
@@ -1239,37 +1228,39 @@ EOF
 # Load copy virtual host fucnction
 copyVirtualhost() {
     if ask "Are you sure you want to copy a development website?"; then
-        read -p "Copy: Project  : " COPY_PROJECT
-        read -p "Copy: Owner  : " COPY_USER
-        read -p "New: Project  : " NEW_PROJECT
-        read -p "New: Owner  : " NEW_USER
-        read -s -p "New: Owner Password  : " NEW_PASSWORD_OWNER
+        read -p "Copy project  : " COPY_PROJECT
+        read -p "Copy project owner  : " COPY_USER
+        read -p "New project  : " NEW_PROJECT
+        read -p "New project owner  : " NEW_USER
+        read -s -p "New project owner password  : " NEW_PASSWORD_OWNER
         echo
-        read -s -p "New: MYSQL Password  : " NEW_PASSWORD_MYSQL
+        read -s -p "New project MYSQL password  : " NEW_PASSWORD_MYSQL
         echo
-        read -p "New: URL  : " NEW_URL
+        read -p "New URL  : " NEW_URL
         echo '------------------------------------------------------------------------'
         echo 'Copying project...'
         echo '------------------------------------------------------------------------'
 
-        # Add user to server if it doesn't exist
-        echo "${COLOUR_WHITE}>> checking user account for ${NEW_USER}...${COLOUR_RESTORE}"
-        if id "${NEW_USER}" >/dev/null 2>&1; then
-              echo "-- The user already exists. Skipping..."
-        else
-            adduser --disabled-password --gecos "" ${NEW_USER}
-            PASSWORD=$(mkpasswd ${NEW_PASSWORD_OWNER})
-            usermod --password ${PASSWORD} ${NEW_USER}
+        # if a user and project already exists...
+        if [ -d "/home/${COPY_USER}/public/${COPY_PROJECT}" ]; then
 
-            chown root:root /home/${USER}
-
-            echo "${COLOUR_CYAN}-- Added new user ${COLOUR_RESTORE}"
-
-            echo "${COLOUR_CYAN}-- Setting up log rotation ${COLOUR_RESTORE}"
-            if [ -f /etc/logrotate.d/${NEW_USER} ]; then
-                echo "${COLOUR_CYAN}-- Log rotation already exists. Skipping...${COLOUR_RESTORE}"
+            # Add user to server if it doesn't exist
+            echo "${COLOUR_WHITE}>> Checking user account for ${NEW_USER}...${COLOUR_RESTORE}"
+            if id "${NEW_USER}" >/dev/null 2>&1; then
+                  echo "-- The user already exists. Skipping..."
             else
-                cat > /etc/logrotate.d/${NEW_USER} << EOF
+                adduser --disabled-password --gecos "" ${NEW_USER}
+                PASSWORD=$(mkpasswd ${NEW_PASSWORD_OWNER})
+                usermod --password ${PASSWORD} ${NEW_USER}
+                chown root:root /home/${USER}
+
+                echo "${COLOUR_CYAN}-- Added new user ${COLOUR_RESTORE}"
+
+                echo "${COLOUR_CYAN}-- Setting up log rotation ${COLOUR_RESTORE}"
+                if [ -f /etc/logrotate.d/${NEW_USER} ]; then
+                    echo "${COLOUR_CYAN}-- Log rotation already exists. Skipping...${COLOUR_RESTORE}"
+                else
+                    cat > /etc/logrotate.d/${NEW_USER} << EOF
 /home/${NEW_USER}/logs/nginx/*.log {
     daily
     missingok
@@ -1281,34 +1272,33 @@ copyVirtualhost() {
     sharedscripts
 }
 EOF
-            fi
+                fi
 
-
-            echo "${COLOUR_CYAN}-- adding cron job for backups${COLOUR_RESTORE}"
-            if [ -f /etc/cron.d/backup_local_${NEW_USER} ]; then
-                echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
-            else
-                cat > /etc/cron.d/backup_local_${NEW_USER} << EOF
-30 2    * * *   root    /root/yam_backup_local.sh ${NEW_OWNER} >> /var/log/cron.log 2>&1
-
-EOF
-            fi
-            if [ -f /etc/cron.d/backup_s3_${NEW_USER} ]; then
-                echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
-            else
-                cat > /etc/cron.d/backup_s3_${NEW_USER} << EOF
-* 3    * * *   root    /root/yam_backup_s3.sh ${NEW_OWNER} ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
+                echo "${COLOUR_CYAN}-- Adding cron job for backups${COLOUR_RESTORE}"
+                if [ -f /etc/cron.d/backup_local_${NEW_USER} ]; then
+                    echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
+                else
+                    cat > /etc/cron.d/backup_local_${NEW_USER} << EOF
+30 2    * * *   root    /usr/local/bin/yam_backup_local.sh ${NEW_OWNER} >> /var/log/cron.log 2>&1
 
 EOF
-            fi
+                fi
+                if [ -f /etc/cron.d/backup_s3_${NEW_USER} ]; then
+                    echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
+                else
+                    cat > /etc/cron.d/backup_s3_${NEW_USER} << EOF
+* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh ${NEW_OWNER} ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
 
-            echo "${COLOUR_CYAN}-- setting up SFTP${COLOUR_RESTORE}"
-            if grep -Fxq "Match User ${NEW_OWNER}" /etc/ssh/sshd_config
-            then
-                echo "${COLOUR_CYAN}-- SFTP user found. Skipping...${COLOUR_RESTORE}"
-            else
-                echo "${COLOUR_CYAN}-- No SFTP user found. Adding new user...${COLOUR_RESTORE}"
-            cat >> /etc/ssh/sshd_config  << EOF
+EOF
+                fi
+
+                echo "${COLOUR_CYAN}-- Setting up SFTP${COLOUR_RESTORE}"
+                if grep -Fxq "Match User ${NEW_OWNER}" /etc/ssh/sshd_config
+                then
+                    echo "${COLOUR_CYAN}---- SFTP user found. Skipping...${COLOUR_RESTORE}"
+                else
+                    echo "${COLOUR_CYAN}---- No SFTP user found. Adding new user...${COLOUR_RESTORE}"
+                cat >> /etc/ssh/sshd_config  << EOF
 
 Match User ${NEW_USER}
     ChrootDirectory %h
@@ -1319,43 +1309,43 @@ Match User ${NEW_USER}
     AllowTcpForwarding no
     X11Forwarding no
 EOF
-            service ssh restart
+                service ssh restart
+
+                fi
 
             fi
 
-        fi
+            # Create project folder
+            echo "${COLOUR_WHITE}>> Creating project folder for ${NEW_USER}...${COLOUR_RESTORE}"
+            mkdir -p /home/${NEW_USER}/public/${NEW_PROJECT}
 
-        # Create project folder
-        echo "${COLOUR_WHITE}>> creating project folder for ${NEW_USER}...${COLOUR_RESTORE}"
-        mkdir -p /home/${NEW_USER}/public/${NEW_PROJECT}
+            # Create new session folder
+            mkdir -p /home/${NEW_USER}/tmp/${NEW_PROJECT}
+            chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}/tmp/${NEW_PROJECT}
 
-        # Create new session folder
-        mkdir -p /home/${NEW_USER}/tmp/${NEW_PROJECT}
-        chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}/tmp/${NEW_PROJECT}
+            # Copy project a to b
+            echo "${COLOUR_WHITE}>> Copying ${COPY_PROJECT} owned by ${COPY_USER} to ${NEW_PROJECT} owned by ${NEW_USER}...${COLOUR_RESTORE}"
+            cp -R /home/${COPY_USER}/public/${COPY_PROJECT}/. /home/${NEW_USER}/public/${NEW_PROJECT}
+            touch /home/${NEW_USER}/public/${NEW_PROJECT}/.nobackup
 
-        # Copy project a to b
-        echo "${COLOUR_WHITE}>> copying ${COPY_PROJECT} owned by ${COPY_USER} to ${NEW_PROJECT} owned by ${NEW_USER}...${COLOUR_RESTORE}"
-        cp -R /home/${COPY_USER}/public/${COPY_PROJECT}/. /home/${NEW_USER}/public/${NEW_PROJECT}
-        touch /home/${NEW_USER}/public/${NEW_PROJECT}/.nobackup
+            # Password protect directory by default
+            echo "${COLOUR_WHITE}>> Password protecting directory...${COLOUR_RESTORE}"
+            if [ -f "/home/${NEW_USER}/.htpasswd" ]; then
+                echo "${COLOUR_CYAN}-- .htpassword file exists. adding user.${COLOUR_RESTORE}"
+                htpasswd -b /home/${NEW_USER}/.htpasswd ${NEW_PROJECT} ${YAM_PASSWORD_GENERIC}
+            else
+                echo "${COLOUR_CYAN}-- .htpassword file does not exist. creating file and adding user.${COLOUR_RESTORE}"
+                htpasswd -c -b /home/${NEW_USER}/.htpasswd ${NEW_PROJECT} ${YAM_PASSWORD_GENERIC}
+            fi
 
-        # Password protect directory by default
-        echo "${COLOUR_WHITE}>> password protecting directory...${COLOUR_RESTORE}"
-        if [ -f "/home/${NEW_USER}/.htpasswd" ]; then
-            echo "${COLOUR_CYAN}-- .htpassword file exists. adding user.${COLOUR_RESTORE}"
-            htpasswd -b /home/${NEW_USER}/.htpasswd ${NEW_PROJECT} ${YAM_PASSWORD_GENERIC}
-        else
-            echo "${COLOUR_CYAN}-- .htpassword file does not exist. creating file and adding user.${COLOUR_RESTORE}"
-            htpasswd -c -b /home/${NEW_USER}/.htpasswd ${NEW_PROJECT} ${YAM_PASSWORD_GENERIC}
-        fi
+            # Configure SSL
+            echo "${COLOUR_WHITE}>> Configuring SSL...${COLOUR_RESTORE}"
+            certbot -n --nginx certonly -d ${NEW_URL}
 
-        # Configure SSL
-        echo "${COLOUR_WHITE}>> configuring SSL...${COLOUR_RESTORE}"
-        certbot -n --nginx certonly -d ${NEW_URL}
-
-        echo "${COLOUR_WHITE}>> configuring NGINX${COLOUR_RESTORE}"
-        # Adding virtual host for user
-        echo "${COLOUR_CYAN}-- adding default conf file for ${NEW_PROJECT}...${COLOUR_RESTORE}"
-        cat > /etc/nginx/conf.d/${NEW_USER}-${NEW_PROJECT}.conf << EOF
+            echo "${COLOUR_WHITE}>> Configuring NGINX${COLOUR_RESTORE}"
+            # Adding virtual host for user
+            echo "${COLOUR_CYAN}-- Adding default conf file for ${NEW_PROJECT}...${COLOUR_RESTORE}"
+            cat > /etc/nginx/conf.d/${NEW_USER}-${NEW_PROJECT}.conf << EOF
 # Generated by the YAM server configurator
 # Do not edit as you may loose your changes
 # If you have found a bug, please email $YAM_EMAIL_BUG
@@ -1388,10 +1378,10 @@ server {
 }
 EOF
 
-        # Adding conf file and directory for default website
-        echo "${COLOUR_CYAN}-- adding conf files and directory for ${NEW_PROJECT} ${COLOUR_RESTORE}"
-        mkdir -p /etc/nginx/conf.d/${NEW_USER}-${NEW_PROJECT}.d
-        cat > /etc/nginx/conf.d/${NEW_USER}-${NEW_PROJECT}.d/main.conf << EOF
+            # Adding conf file and directory for default website
+            echo "${COLOUR_CYAN}-- Adding conf files and directory for ${NEW_PROJECT} ${COLOUR_RESTORE}"
+            mkdir -p /etc/nginx/conf.d/${NEW_USER}-${NEW_PROJECT}.d
+            cat > /etc/nginx/conf.d/${NEW_USER}-${NEW_PROJECT}.d/main.conf << EOF
 # Generated by the YAM server configurator
 # Do not edit as you may loose your changes
 # If you have found a bug, please email $YAM_EMAIL_BUG
@@ -1449,10 +1439,10 @@ location @modx {
 
 EOF
 
-        # Adding custom conf directory for project
-        echo "${COLOUR_CYAN}-- adding custom conf directory for ${NEW_PROJECT} ${COLOUR_RESTORE}"
-        mkdir -p /etc/nginx/custom.d/${NEW_USER}-${NEW_PROJECT}.d
-        cat > /etc/nginx/custom.d/${NEW_USER}-${NEW_PROJECT}.d/readme.txt << EOF
+            # Adding custom conf directory for project
+            echo "${COLOUR_CYAN}-- Adding custom conf directory for ${NEW_PROJECT} ${COLOUR_RESTORE}"
+            mkdir -p /etc/nginx/custom.d/${NEW_USER}-${NEW_PROJECT}.d
+            cat > /etc/nginx/custom.d/${NEW_USER}-${NEW_PROJECT}.d/readme.txt << EOF
 In this directory you can add custom rewrite rules in the follwing format.
 
 ${NEW_PROJECT}.location.*.conf
@@ -1470,21 +1460,21 @@ Add rules towards the footer of the conf doc
 Don't forget to reload NGINX from the terminal using:
 systemctl reload nginx
 EOF
-        # Add file to password protect directory by default
-        cat > /etc/nginx/custom.d/${NEW_USER}-${NEW_PROJECT}.d/${NEW_PROJECT}.location.password.conf << EOF
+            # Add file to password protect directory by default
+            cat > /etc/nginx/custom.d/${NEW_USER}-${NEW_PROJECT}.d/${NEW_PROJECT}.location.password.conf << EOF
 # add password directory
 auth_basic "Private";
 auth_basic_user_file /home/${NEW_USER}/.htpasswd;
 EOF
 
-        systemctl reload nginx
-        echo "${COLOUR_CYAN}-- NGINX configuration complete.${COLOUR_RESTORE}"
+            systemctl reload nginx
+            echo "${COLOUR_CYAN}-- NGINX configuration complete.${COLOUR_RESTORE}"
 
-        echo "${COLOUR_WHITE}>> configuring php...${COLOUR_RESTORE}"
-        if [ -f /etc/php/7.1/fpm/pool.d/${NEW_USER}-${NEW_PROJECT}.conf ]; then
-            echo "-- pool configuration for ${NEW_PROJECT} already exists. Skipping..."
-        else
-            cat > /etc/php/7.1/fpm/pool.d/${NEW_USER}-${NEW_PROJECT}.conf << EOF
+            echo "${COLOUR_WHITE}>> Configuring php...${COLOUR_RESTORE}"
+            if [ -f /etc/php/7.1/fpm/pool.d/${NEW_USER}-${NEW_PROJECT}.conf ]; then
+                echo "${COLOUR_CYAN}-- Pool configuration for ${NEW_PROJECT} already exists. Skipping...${COLOUR_RESTORE}"
+            else
+                cat > /etc/php/7.1/fpm/pool.d/${NEW_USER}-${NEW_PROJECT}.conf << EOF
 [${NEW_USER}-${NEW_PROJECT}]
 user = ${NEW_USER}
 group = ${NEW_USER}
@@ -1506,29 +1496,29 @@ php_value[default_socket_timeout] = 120
 php_value[session.cookie_secure] = 1
 php_value[session.cookie_httponly] = 1
 EOF
-            systemctl restart php7.1-fpm
-            echo "${COLOUR_CYAN}-- Added php worker for ${NEW_USER}-${NEW_PROJECT}.${COLOUR_RESTORE}"
-        fi
+                systemctl restart php7.1-fpm
+                echo "${COLOUR_CYAN}-- Added php worker for ${NEW_USER}-${NEW_PROJECT}.${COLOUR_RESTORE}"
+            fi
 
-        # Create database and user
-        echo "${COLOUR_WHITE}>> setting up new mysql user and database...${COLOUR_RESTORE}"
-        mysql --user=root << EOF
+            # Create database and user
+            echo "${COLOUR_WHITE}>> Setting up new mysql user and database...${COLOUR_RESTORE}"
+            mysql --user=root << EOF
 CREATE DATABASE IF NOT EXISTS ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT};
 CREATE USER '${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT}'@'localhost' IDENTIFIED BY '${NEW_PASSWORD_MYSQL}';
 GRANT ALL PRIVILEGES ON ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT}.* TO '${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
-        # Copy basesite db and import into new project
-        echo "${COLOUR_WHITE}>> installing database...${COLOUR_RESTORE}"
-        # Export
-        mysqldump -u root ${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT} > /home/${NEW_USER}/public/${NEW_PROJECT}/${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT}.sql
-        # Import
-        mysql -u ${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT} < /home/${NEW_USER}/public/${NEW_PROJECT}/${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT}.sql
+            # Copy basesite db and import into new project
+            echo "${COLOUR_WHITE}>> Installing database...${COLOUR_RESTORE}"
+            # Export
+            mysqldump -u root ${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT} > /home/${NEW_USER}/public/${NEW_PROJECT}/${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT}.sql
+            # Import
+            mysql -u ${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT} < /home/${NEW_USER}/public/${NEW_PROJECT}/${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT}.sql
 
-        # Changing paths in db
-        echo "${COLOUR_CYAN}-- exporting db_changepaths.sql...${COLOUR_RESTORE}"
-        cat > /home/${NEW_USER}/public/${NEW_PROJECT}/db_changepaths.sql << EOF
+            # Changing paths in db
+            echo "${COLOUR_CYAN}-- Exporting db_changepaths.sql...${COLOUR_RESTORE}"
+            cat > /home/${NEW_USER}/public/${NEW_PROJECT}/db_changepaths.sql << EOF
 UPDATE \`modx_context_setting\` SET \`value\`='${NEW_URL}' WHERE \`context_key\`='en' AND \`key\`='http_host';
 UPDATE \`modx_context_setting\` SET \`value\`='${NEW_URL}' WHERE \`context_key\`='fr' AND \`key\`='http_host';
 UPDATE \`modx_context_setting\` SET \`value\`='${NEW_URL}' WHERE \`context_key\`='es' AND \`key\`='http_host';
@@ -1540,35 +1530,32 @@ UPDATE \`modx_context_setting\` SET \`value\`='https://${NEW_URL}/es/' WHERE \`c
 UPDATE \`modx_context_setting\` SET \`value\`='https://${NEW_URL}/pdf/' WHERE \`context_key\`='pdf' AND \`key\`='site_url';
 EOF
 
-        # Delete any session data from previous database
-        echo "${COLOUR_CYAN}-- deleting any session data from previous database...${COLOUR_RESTORE}"
-        mysql -u ${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT} << EOF
+            # Delete any session data from previous database
+            echo "${COLOUR_CYAN}-- Deleting any session data from previous database...${COLOUR_RESTORE}"
+            mysql -u ${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT} << EOF
 truncate modx_session;
 EOF
 
-        echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
-        mysql -u ${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT} < /home/${NEW_USER}/public/${NEW_PROJECT}/db_changepaths.sql
+            echo "${COLOUR_CYAN}-- Importing db_changepaths.sql...${COLOUR_RESTORE}"
+            mysql -u ${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT} -p${NEW_PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT} < /home/${NEW_USER}/public/${NEW_PROJECT}/db_changepaths.sql
 
-        # Clean up database
-        echo "${COLOUR_CYAN}-- removing database installation files...${COLOUR_RESTORE}"
-        rm /home/${NEW_USER}/public/${NEW_PROJECT}/${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT}.sql
-        rm /home/${NEW_USER}/public/${NEW_PROJECT}/db_changepaths.sql
+            # Clean up database
+            echo "${COLOUR_CYAN}-- Removing database installation files...${COLOUR_RESTORE}"
+            rm /home/${NEW_USER}/public/${NEW_PROJECT}/${YAM_DATABASE_DB}_${COPY_USER}_${COPY_PROJECT}.sql
+            rm /home/${NEW_USER}/public/${NEW_PROJECT}/db_changepaths.sql
 
-        # Delete config files and delete cache folder
-        echo "${COLOUR_WHITE}>> deleting existing config files in core, manager and connectors... ${COLOUR_RESTORE}"
-        rm /home/${NEW_USER}/public/${NEW_PROJECT}/core/config/config.inc.php
-        rm /home/${NEW_USER}/public/${NEW_PROJECT}/connectors/config.core.php
-        rm /home/${NEW_USER}/public/${NEW_PROJECT}/manager/config.core.php
-        rm /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php
+            # Delete config files and delete cache folder
+            echo "${COLOUR_WHITE}>> Deleting existing config files in core, manager and connectors... ${COLOUR_RESTORE}"
+            rm /home/${NEW_USER}/public/${NEW_PROJECT}/core/config/config.inc.php
+            rm /home/${NEW_USER}/public/${NEW_PROJECT}/connectors/config.core.php
+            rm /home/${NEW_USER}/public/${NEW_PROJECT}/manager/config.core.php
+            rm /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php
 
-        echo "${COLOUR_WHITE}>> deleting cache folder${COLOUR_RESTORE}"
-        rm -rf /home/${NEW_USER}/public/${NEW_PROJECT}/core/cache/
+            echo "${COLOUR_WHITE}>> Deleting cache folder${COLOUR_RESTORE}"
+            rm -rf /home/${NEW_USER}/public/${NEW_PROJECT}/core/cache/
 
-        # Add core config for MODX
-        echo "${COLOUR_WHITE}>> installing new config files...${COLOUR_RESTORE}"
-        if [ -f /home/${NEW_USER}/public/${NEW_PROJECT}/core/config/config.inc.php ]; then
-            echo "${COLOUR_CYAN}-- MODX core config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add core config for MODX
+            echo "${COLOUR_WHITE}>> Installing new config files...${COLOUR_RESTORE}"
             cat > /home/${NEW_USER}/public/${NEW_PROJECT}/core/config/config.inc.php << EOF
 <?php
 /**
@@ -1664,12 +1651,8 @@ if (!defined('MODX_CACHE_DISABLED')) {
     define('MODX_CACHE_DISABLED', \$modx_cache_disabled);
 }
 EOF
-        fi
 
-        # Add manager config for MODX
-        if [ -f /home/${NEW_USER}/public/${NEW_PROJECT}/manager/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX manager config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add manager config for MODX
             cat > /home/${NEW_USER}/public/${NEW_PROJECT}/manager/config.core.php << EOF
 <?php
 /*
@@ -1681,12 +1664,8 @@ define('MODX_CORE_PATH', '/home/${NEW_USER}/public/${NEW_PROJECT}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
 
-        # Add connectors config for MODX
-        if [ -f /home/${NEW_USER}/public/${NEW_PROJECT}/connectors/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX connectors config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add connectors config for MODX
             cat > /home/${NEW_USER}/public/${NEW_PROJECT}/connectors/config.core.php << EOF
 <?php
 /*
@@ -1698,13 +1677,13 @@ define('MODX_CORE_PATH', '/home/${NEW_USER}/public/${NEW_PROJECT}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
+            fi
 
-        # Add root config for MODX
-        if [ -f /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX root config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
-            cat > /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php << EOF
+            # Add root config for MODX
+            if [ -f /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php ]; then
+                echo "${COLOUR_CYAN}-- MODX root config file already exists. Skipping...${COLOUR_RESTORE}"
+            else
+                cat > /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php << EOF
 <?php
 /*
  * This file is managed by the installation process.  Any modifications to it may get overwritten.
@@ -1715,19 +1694,26 @@ define('MODX_CORE_PATH', '/home/${NEW_USER}/public/${NEW_PROJECT}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
+
+            # Secure / change permissions on config file after save
+            echo "${COLOUR_WHITE}>> Adjusting permissions...${COLOUR_RESTORE}"
+            chmod -R 644 /home/${NEW_USER}/public/${NEW_PROJECT}/core/config/config.inc.php
+            chmod -R 644 /home/${NEW_USER}/public/${NEW_PROJECT}/manager/config.core.php
+            chmod -R 644 /home/${NEW_USER}/public/${NEW_PROJECT}/connectors/config.core.php
+            chmod -R 644 /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php
+
+            # Change permissions
+            chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}/public/${NEW_PROJECT}
+
+            echo "${COLOUR_WHITE}Copy complete.${COLOUR_RESTORE}"
+
+        else
+
+            echo "/home/${COPY_USER}/public/${COPY_PROJECT} does not exist"
+            echo "Please check the information you provided and try again."
+            exit
+
         fi
-
-        # Secure / change permissions on config file after save
-        echo "${COLOUR_WHITE}>> adjusting permissions...${COLOUR_RESTORE}"
-        chmod -R 644 /home/${NEW_USER}/public/${NEW_PROJECT}/core/config/config.inc.php
-        chmod -R 644 /home/${NEW_USER}/public/${NEW_PROJECT}/manager/config.core.php
-        chmod -R 644 /home/${NEW_USER}/public/${NEW_PROJECT}/connectors/config.core.php
-        chmod -R 644 /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php
-
-        # Change permissions
-        chown -R ${NEW_USER}:${NEW_USER} /home/${NEW_USER}/public/${NEW_PROJECT}
-
-        echo "${COLOUR_WHITE}Copy complete.${COLOUR_RESTORE}"
 
     else
         break
@@ -1737,19 +1723,25 @@ EOF
 # Map domain to website function
 addDomain() {
     if ask "Are you sure you want to add a domain to a website?"; then
-        read -p "What domain name do you want to add  : " ADD_DOMAIN
-        read -p "Which website should this be mapped to?  : " ADD_PROJECT
-        read -p "Who owns the website?  : " ADD_USER
+        read -p "Domain name  : " ADD_DOMAIN
+        read -p "Existing project  : " ADD_PROJECT
+        read -p "Existing owner of project  : " ADD_USER
+        echo '------------------------------------------------------------------------'
+        echo 'Adding ${ADD_DOMAIN} to ${ADD_PROJECT}'
+        echo '------------------------------------------------------------------------'
 
-        # Issue certificate for new domain name
-        echo "${COLOUR_WHITE}>> issuing new SSL for $ADD_DOMAIN ${COLOUR_RESTORE}"
-        certbot -n --nginx certonly -d ${ADD_DOMAIN} -d www.${ADD_DOMAIN}
+        # if the project exists...
+        if [ -d "/home/${ADD_USER}/public/${ADD_PROJECT}" ]; then
 
-        # Add new domain name to virtual host
-        echo "${COLOUR_WHITE}>> adding ${ADD_DOMAIN} to virtual host conf ${COLOUR_RESTORE}"
+            # Issue certificate for new domain name
+            echo "${COLOUR_WHITE}>> Issuing new SSL for $ADD_DOMAIN ${COLOUR_RESTORE}"
+            certbot -n --nginx certonly -d ${ADD_DOMAIN} -d www.${ADD_DOMAIN}
 
-        # Add new entry to the bottom of the file
-        cat >> /etc/nginx/conf.d/${ADD_USER}-${ADD_PROJECT}.conf << EOF
+            # Add new domain name to virtual host
+            echo "${COLOUR_WHITE}>> Adding ${ADD_DOMAIN} to virtual host conf ${COLOUR_RESTORE}"
+
+            # Add new entry to the bottom of the file
+            cat >> /etc/nginx/conf.d/${ADD_USER}-${ADD_PROJECT}.conf << EOF
 
 # live domain https
 server {
@@ -1802,9 +1794,15 @@ server {
 }
 EOF
 
-        systemctl reload nginx
+            systemctl reload nginx
+            echo "Done."
 
-        echo "Done."
+        else
+            echo "A development website does not exist with the credentials given."
+            echo "Please check the information you provided and try again."
+            exit
+        fi
+
 
 
     else
@@ -1925,32 +1923,31 @@ EOF
             echo "${COLOUR_CYAN}-- cleaning up PHP configuration ${COLOUR_RESTORE}"
             rm -rf /etc/php/7.1/fpm/pool.d/${USER}-${DEL_PROJECT_NAME}.conf
             systemctl reload php7.1-fpm
-            echo "Website removed."
 
             echo "${COLOUR_CYAN}-- deleting SSL certificates ${COLOUR_RESTORE}"
-            if [ -f "/etc/letsencrypt/renewal/${DEL_PROJECT_URL}.conf" ]; then
+            if [ -d "/etc/letsencrypt/renewal/${DEL_PROJECT_URL}.conf" ]; then
                 rm -rf /etc/letsencrypt/renewal/${DEL_PROJECT_URL}.conf
             else
-                echo "no renewal cert to delete. skipping..."
+                echo "${COLOUR_CYAN}---- No renewal cert to delete. skipping...${COLOUR_RESTORE}"
             fi
 
-            if [ -f "/etc/letsencrypt/live/${DEL_PROJECT_URL}" ]; then
+            if [ -d "/etc/letsencrypt/live/${DEL_PROJECT_URL}" ]; then
                 rm -rf /etc/letsencrypt/archive/${DEL_PROJECT_URL}
             else
-                echo "no live cert to delete. skipping..."
+                echo "${COLOUR_CYAN}---- No live cert to delete. skipping...${COLOUR_RESTORE}"
             fi
 
-            if [ -f "/etc/letsencrypt/archive/${DEL_PROJECT_URL}" ]; then
+            if [ -d "/etc/letsencrypt/archive/${DEL_PROJECT_URL}" ]; then
                 rm -rf /etc/letsencrypt/archive/${DEL_PROJECT_URL}
             else
-                echo "no archive cert to delete. skipping..."
+                echo "${COLOUR_CYAN}---- No archive cert to delete. skipping...${COLOUR_RESTORE}"
             fi
 
+            echo "Website removed."
 
         else
             echo "No website found. Skipping..."
         fi
-
 
     else
         break
@@ -1979,12 +1976,12 @@ echo ''
 echo 'What can I help you with today?'
 echo ''
 options=(
-    "Inject a MODX website from an external source"
-    "Package MODX website for injection"
     "Add new development website"
+    "Inject MODX into an existing development website"
     "Add new development website with Basesite"
+    "Package up website for injection"
     "Copy development website"
-    "Map domain to website"
+    "Map domain to development website"
     "Add user to password directory"
     "Toggle password directory"
     "Delete user"
@@ -1994,10 +1991,10 @@ options=(
 
 select option in "${options[@]}"; do
     case "$REPLY" in
-        1) installBasesite ;;
-        2) packageWebsite ;;
-        3) addVirtualhost ;;
-        4) addVirtualhostBasesite ;;
+        1) addVirtualhost ;;
+        2) installBasesite ;;
+        3) addVirtualhostBasesite ;;
+        4) packageWebsite ;;
         5) copyVirtualhost ;;
         6) addDomain ;;
         7) addUserPasswordDirectory ;;
