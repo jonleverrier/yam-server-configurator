@@ -46,7 +46,10 @@ You will then be prompted to choose from the following options:
 
 ## yam_manage.sh
 
-Like yam_setup.sh, customise the variables at the top of the yam_manage.sh script before running.
+Like yam_setup.sh, customise the variables at the top of the yam_manage.sh script before running:
+```
+sudo nano /usr/local/bin/yam_manage.sh
+```
 
 Once you're ready, type the following to load the script:
 
