@@ -12,17 +12,6 @@
 #+ Release:     0.0.6
 #+----------------------------------------------------------------------------+
 
-# Installs and configures NGINX, MariaDB, PHP7.1 FPM, Cerbot (Let's Encrypt),
-# PhpMyAdmin, Fail2Ban with UFW, php-imagick, htop, zip, unzip, Digital Ocean
-# agent, s3cmd, nmap, yam_backup_local.sh, yam_backup_s3.sh, yam_sync_s3.sh and
-# yam_backup_system.sh
-
-# Also configures ssh keys, root and sudo users, time zone for server and mysql,
-# skeleton directory, log rotation, ssl auto renewal, UFW, default error pages,
-# local backup of core system folders,local backup of user web folders, S3
-# backup of core system folders, sessions, securing MODX, S3 backup of user
-# web folders
-
 # Change these settings below before running the script for the first time
 YAM_EMAIL_BUG=$(echo -en 'bugs@youandme.digital')
 YAM_EMAIL_SSL=$(echo -en 'jon@youandme.digital')
@@ -157,7 +146,7 @@ EOF
         echo "${COLOUR_CYAN}-- adding sudo user and changing password${COLOUR_RESTORE}"
 
         # install whois, as mkpasswd requires this to work
-        apt-get install whois;
+        apt-get install -y whois;
 
         adduser --disabled-password --gecos "" ${USER_SUDO}
         adduser ${USER_SUDO} sudo
