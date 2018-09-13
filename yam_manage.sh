@@ -119,64 +119,58 @@ installBasesite() {
         echo 'Injecting MODX into /home/${PROJECT_OWNER}/public/${PROJECT_NAME}'
         echo '------------------------------------------------------------------------'
 
-        if [ -d "/home/$PROJECT_OWNER/$PROJECT_NAME" ]; then
-            echo "-- Changing path to /home/${PROJECT_OWNER}/public/${PROJECT_NAME}"
-            # Navigate to the desired project folder
+        # if the website exists, continue...
+        if [ -d "/home/${PROJECT_OWNER}/public/${PROJECT_NAME}" ]; then
+
             cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
-        else
-            echo "-- Creating directory and changing path to /home/${PROJECT_OWNER}/public/${PROJECT_NAME}"
-            mkdir -p /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
-            cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
-        fi
 
-        # Stop backups by default
-        touch /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/.nobackup
+            # Stop backups
+            touch /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/.nobackup
 
-        echo "${COLOUR_WHITE}>> fetching MODX...${COLOUR_RESTORE}"
-        # Install MODX
-        wget -N ${URL_MODX}
+            echo "${COLOUR_WHITE}>> fetching MODX...${COLOUR_RESTORE}"
 
-        # Unzip folder
-        unzip ${FOLDER_MODX_ZIP}.zip
+            # Install MODX
+            wget -N ${URL_MODX}
 
-        # Move files inside modx folder up a level
-        mv /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${FOLDER_MODX_ZIP}/{.,}* /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/
+            # Unzip folder
+            unzip ${FOLDER_MODX_ZIP}.zip
 
-        # Clean up installation
-        rm -rf ${FOLDER_MODX_ZIP}
-        rm ${FOLDER_MODX_ZIP}.zip
+            # Move files inside modx folder up a level
+            mv /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${FOLDER_MODX_ZIP}/{.,}* /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/
 
-        echo "${COLOUR_WHITE}>> installing assets...${COLOUR_RESTORE}"
-        # Install assets folder
-        wget -N ${URL_ASSETS}
-        unzip -o assets.zip
-        rm assets.zip
+            # Clean up installation
+            rm -rf ${FOLDER_MODX_ZIP}
+            rm ${FOLDER_MODX_ZIP}.zip
 
-        # Install packages and components
-        cd core
+            echo "${COLOUR_WHITE}>> installing assets...${COLOUR_RESTORE}"
+            # Install assets folder
+            wget -N ${URL_ASSETS}
+            unzip -o assets.zip
+            rm assets.zip
 
-        echo "${COLOUR_WHITE}>> installing components...${COLOUR_RESTORE}"
-        # Components
-        wget -N ${URL_COMPONENTS}
-        unzip -o components.zip
-        rm components.zip
+            # Install packages and components
+            cd core
 
-        echo "${COLOUR_WHITE}>> installing packages...${COLOUR_RESTORE}"
-        # Packages
-        wget -N ${URL_PACKAGES}
-        unzip -o packages.zip
-        rm packages.zip
+            echo "${COLOUR_WHITE}>> installing components...${COLOUR_RESTORE}"
+            # Components
+            wget -N ${URL_COMPONENTS}
+            unzip -o components.zip
+            rm components.zip
 
-        echo "${COLOUR_CYAN}-- deleting existing config files in root, core, manager and connectors... ${COLOUR_RESTORE}"
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/config/config.inc.php
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php
+            echo "${COLOUR_WHITE}>> installing packages...${COLOUR_RESTORE}"
+            # Packages
+            wget -N ${URL_PACKAGES}
+            unzip -o packages.zip
+            rm packages.zip
 
-        echo "${COLOUR_WHITE}>> installing new MODX config files...${COLOUR_RESTORE}"
-        if [ -f /home/$PROJECT_OWNER/public/$PROJECT_NAME/core/config/config.inc.php ]; then
-            echo "-- MODX core config file already exists. Skipping..."
-        else
+            echo "${COLOUR_WHITE}>> deleting existing config files in root, core, manager and connectors... ${COLOUR_RESTORE}"
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/config/config.inc.php
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php
+
+            echo "${COLOUR_WHITE}>> installing new MODX config files...${COLOUR_RESTORE}"
+
             cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/config/config.inc.php << EOF
 <?php
 /**
@@ -272,12 +266,8 @@ if (!defined('MODX_CACHE_DISABLED')) {
     define('MODX_CACHE_DISABLED', \$modx_cache_disabled);
 }
 EOF
-        fi
 
-        # Add manager config for MODX
-        if [ -f /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX manager config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add manager config for MODX
             cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php << EOF
 <?php
 /*
@@ -289,12 +279,7 @@ define('MODX_CORE_PATH', '/home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
 
-        # Add connectors config for MODX
-        if [ -f /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX connectors config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
             cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php << EOF
 <?php
 /*
@@ -306,12 +291,8 @@ define('MODX_CORE_PATH', '/home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
 
-        # Add root config for MODX
-        if [ -f /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php ]; then
-            echo "${COLOUR_CYAN}-- MODX root config file already exists. Skipping...${COLOUR_RESTORE}"
-        else
+            # Add root config for MODX
             cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php << EOF
 <?php
 /*
@@ -323,26 +304,25 @@ define('MODX_CORE_PATH', '/home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-        fi
 
-        # Secure / change permissions on config file after save
-        echo "${COLOUR_CYAN}-- adjusting MODX permissions for config files...${COLOUR_RESTORE}"
-        chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/config/config.inc.php
-        chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php
-        chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php
-        chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php
+            # Secure / change permissions on config file after save
+            echo "${COLOUR_CYAN}-- adjusting MODX permissions for config files...${COLOUR_RESTORE}"
+            chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/config/config.inc.php
+            chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/manager/config.core.php
+            chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/connectors/config.core.php
+            chmod -R 644 /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/config.core.php
 
-        # Import database
-        echo "${COLOUR_WHITE}>> importing database...${COLOUR_RESTORE}"
-        cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
-        wget -N ${URL_DATABASE}
+            # Import database
+            echo "${COLOUR_WHITE}>> importing database...${COLOUR_RESTORE}"
+            cd /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
+            wget -N ${URL_DATABASE}
 
-        # Import basesite database
-        echo "${COLOUR_CYAN}-- importing ${URL_DATABASE##*/}...${COLOUR_RESTORE}"
-        mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
+            # Import basesite database
+            echo "${COLOUR_CYAN}-- importing ${URL_DATABASE##*/}...${COLOUR_RESTORE}"
+            mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
 
-        echo "${COLOUR_CYAN}-- adding db_changepaths.sql...${COLOUR_RESTORE}"
-        cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql << EOF
+            echo "${COLOUR_CYAN}-- adding db_changepaths.sql...${COLOUR_RESTORE}"
+            cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql << EOF
 UPDATE \`modx_context_setting\` SET \`value\`='${PROJECT_DOMAIN}' WHERE \`context_key\`='en' AND \`key\`='http_host';
 UPDATE \`modx_context_setting\` SET \`value\`='${PROJECT_DOMAIN}' WHERE \`context_key\`='fr' AND \`key\`='http_host';
 UPDATE \`modx_context_setting\` SET \`value\`='${PROJECT_DOMAIN}' WHERE \`context_key\`='es' AND \`key\`='http_host';
@@ -356,23 +336,32 @@ EOF
 
 
 
-        echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
-        mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_$PROJECT_NAME < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
+            echo "${COLOUR_CYAN}-- importing db_changepaths.sql...${COLOUR_RESTORE}"
+            mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_$PROJECT_NAME < /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
 
-        # Delete any session data from previous database
-        mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} << EOF
+            # Delete any session data from previous database
+            mysql -u${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME} -p${PASSWORD_MYSQL} ${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME} << EOF
 truncate modx_session;
 EOF
 
-        # Clean up database
-        echo "${COLOUR_CYAN}-- removing installation files...${COLOUR_RESTORE}"
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
-        rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
+            # Clean up database
+            echo "${COLOUR_CYAN}-- removing installation files...${COLOUR_RESTORE}"
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
+            rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
 
-        # Set permissions, just incase...
-        echo "${COLOUR_CYAN}-- adjusting permissions...${COLOUR_RESTORE}"
-        rm -rf /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/cache
-        chown -R ${PROJECT_OWNER}:${PROJECT_OWNER} /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
+            # Set permissions, just incase...
+            echo "${COLOUR_CYAN}-- adjusting permissions...${COLOUR_RESTORE}"
+            rm -rf /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/cache
+            chown -R ${PROJECT_OWNER}:${PROJECT_OWNER} /home/${PROJECT_OWNER}/public/${PROJECT_NAME}
+
+        # if a development website does not exist...
+        else
+            echo "A development website does not exist with the credentials given."
+            echo "Please setup a new development website first and run this"
+            echo "process again."
+        fi
+
+
 
     else
         break
