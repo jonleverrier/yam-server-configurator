@@ -445,7 +445,6 @@ addVirtualhost() {
             adduser --disabled-password --gecos "" ${USER}
             PASSWORD=$(mkpasswd ${USER_PASSWORD})
             usermod --password ${PASSWORD} ${USER}
-
             chown root:root /home/$USER
 
             echo "${COLOUR_CYAN}-- Setting up log rotation ${COLOUR_RESTORE}"
@@ -466,14 +465,13 @@ addVirtualhost() {
 EOF
             fi
 
-
             echo "${COLOUR_CYAN}-- adding cron job for backups${COLOUR_RESTORE}"
 
             if [ -f /etc/cron.d/backup_local_${USER} ]; then
                 echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
             else
                 cat > /etc/cron.d/backup_local_${USER} << EOF
-30 2    * * *   root    /root/yam_backup_local.sh ${USER} >> /var/log/cron.log 2>&1
+30 2    * * *   root    /usr/local/bin/yam_backup_local.sh ${USER} >> /var/log/cron.log 2>&1
 
 EOF
             fi
@@ -482,7 +480,7 @@ EOF
                 echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
             else
                 cat > /etc/cron.d/backup_s3_${USER} << EOF
-* 3    * * *   root    /root/yam_backup_s3.sh $USER ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
+* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh $USER ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
 
 EOF
             fi
@@ -771,7 +769,7 @@ EOF
                 echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
             else
                 cat > /etc/cron.d/backup_local_$USER << EOF
-30 2    * * *   root    /root/yam_backup_local.sh $USER >> /var/log/cron.log 2>&1
+30 2    * * *   root    /usr/local/bin/yam_backup_local.sh $USER >> /var/log/cron.log 2>&1
 
 EOF
             fi
@@ -780,7 +778,7 @@ EOF
                 echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
             else
                 cat > /etc/cron.d/backup_s3_$USER << EOF
-* 3    * * *   root    /root/yam_backup_s3.sh $USER $YAM_SERVER_NAME >> /var/log/cron.log 2>&1
+* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh $USER $YAM_SERVER_NAME >> /var/log/cron.log 2>&1
 
 EOF
             fi
@@ -1281,7 +1279,7 @@ EOF
                 echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
             else
                 cat > /etc/cron.d/backup_local_${NEW_USER} << EOF
-30 2    * * *   root    /root/yam_backup_local.sh ${NEW_OWNER} >> /var/log/cron.log 2>&1
+30 2    * * *   root    /usr/local/bin/yam_backup_local.sh ${NEW_OWNER} >> /var/log/cron.log 2>&1
 
 EOF
             fi
@@ -1289,7 +1287,7 @@ EOF
                 echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
             else
                 cat > /etc/cron.d/backup_s3_${NEW_USER} << EOF
-* 3    * * *   root    /root/yam_backup_s3.sh ${NEW_OWNER} ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
+* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh ${NEW_OWNER} ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
 
 EOF
             fi
