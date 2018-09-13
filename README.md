@@ -31,10 +31,10 @@ The script also configures root and sudo users, time zone for server and mysql, 
 
 ## yam_secure.sh
 
-When you are finished with setup, you can logout and login as your new sudo user. To run the script, you will need to `su` before running it. Type the following to load the script:
+When you are finished with setup, you can logout and login as your new sudo user. To run the script, you will need to `su <user>` before running it. Type the following to load the script:
 
 ```
-/bin/bash yam_secure.sh
+sudo /bin/bash yam_secure.sh
 ```
 You will then be prompted to choose from the following options:
 1. Setup sudo user
@@ -51,7 +51,7 @@ Like yam_setup.sh, customise the variables at the top of the yam_manage.sh scrip
 Once you're ready, type the following to load the script:
 
 ```
-/bin/bash yam_manage.sh
+sudo /bin/bash yam_manage.sh
 ```
 You will then be prompted to choose from the following options:
 1. Inject a MODX website from an external source
