@@ -94,7 +94,7 @@ secureServer() {
         # Check to see if whois is installed on the server
         echo "${COLOUR_WHITE}>> checking to see if package whois is installed...${COLOUR_RESTORE}"
         if [ $(dpkg-query -W -f='${Status}' whois 2>/dev/null | grep -c "ok installed") -eq 0 ]; then
-            apt-get install whois;
+            apt-get install -y whois;
         else
             echo "Done. The whois package is already installed."
         fi
