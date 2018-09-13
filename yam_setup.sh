@@ -152,6 +152,10 @@ EOF
 
         # Adding a sudo user and setting password
         echo "${COLOUR_CYAN}-- adding sudo user and changing password${COLOUR_RESTORE}"
+
+        # install whois, as mkpasswd requires this to work
+        apt-get install whois;
+
         adduser --disabled-password --gecos "" ${USER_SUDO}
         adduser ${USER_SUDO} sudo
         PASSWORD=$(mkpasswd ${USER_SUDO_PASSWORD})
@@ -188,10 +192,7 @@ EOF
         # Upgrade system and base packages
         echo "${COLOUR_WHITE}>> upgrading system and packages...${COLOUR_RESTORE}"
         apt-get update
-        DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o
-            Dpkg::Options::="--force-confdef" --allow-downgrades
-            --allow-remove-essential --allow-change-held-packages
-            --allow-change-held-packages --allow-unauthenticated;
+        DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o Dpkg::Options::="--force-confdef" --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-change-held-packages --allow-unauthenticated;
         echo ">> Done."
 
         # Setup PPA
