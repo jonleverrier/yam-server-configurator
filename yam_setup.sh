@@ -186,7 +186,6 @@ EOF
 # The "order" line is only used by old versions of the C library.
 order hosts,bind
 multi on
-nospoof on
 EOF
 
 
