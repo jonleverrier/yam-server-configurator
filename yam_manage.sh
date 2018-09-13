@@ -94,26 +94,29 @@ ask() {
 # check if root user
 if [ "${EUID}" != 0 ];
 then
-    echo "YAM Server Manager should be executed as the root user. Please switch to the root user and try again"
+    echo '------------------------------------------------------------------------'
+    echo 'YAM Manager should be executed as the root user. Please switch to the'
+    echo 'root user and try again'
+    echo '------------------------------------------------------------------------'
     exit
 fi
 
 # Load install basesite function
 installBasesite() {
-    if ask "Are you sure you want to inject a MODX website from an external source?"; then
-        read -p "Which project do you want to install MODX? : " PROJECT_NAME
-        read -p "Who owns the project? : " PROJECT_OWNER
-        read -s -p "Project mysql password : " PASSWORD_MYSQL
+    if ask "Are you sure you want to inject MODX into an existing website?"; then
+        read -p "Existing project name to install MODX : " PROJECT_NAME
+        read -p "Existing project owner : " PROJECT_OWNER
+        read -s -p "Existing project MYSQL password : " PASSWORD_MYSQL
         echo
-        read -p "Project test url : " PROJECT_DOMAIN
+        read -p "Existing project test URL : " PROJECT_DOMAIN
         read -p "Name of MODX folder (without zip) : " FOLDER_MODX_ZIP
         read -p "URL to MODX zip : " URL_MODX
         read -p "URL to database dump : " URL_DATABASE
         read -p "URL to assets zip : " URL_ASSETS
-        read -p "URL to core/packages zip : " URL_PACKAGES
-        read -p "URL to core/components zip : " URL_COMPONENTS
+        read -p "URL to packages zip : " URL_PACKAGES
+        read -p "URL to components zip : " URL_COMPONENTS
         echo '------------------------------------------------------------------------'
-        echo 'Installing MODX'
+        echo 'Injecting MODX into /home/${PROJECT_OWNER}/public/${PROJECT_NAME}'
         echo '------------------------------------------------------------------------'
 
         if [ -d "/home/$PROJECT_OWNER/$PROJECT_NAME" ]; then
@@ -1979,12 +1982,12 @@ echo ''
 echo 'What can I help you with today?'
 echo ''
 options=(
-    "Inject a MODX website from an external source"
-    "Package MODX website for injection"
     "Add new development website"
+    "Inject MODX into an existing development website"
     "Add new development website with Basesite"
+    "Package up website for injection"
     "Copy development website"
-    "Map domain to website"
+    "Map domain to development website"
     "Add user to password directory"
     "Toggle password directory"
     "Delete user"
@@ -1994,10 +1997,10 @@ options=(
 
 select option in "${options[@]}"; do
     case "$REPLY" in
-        1) installBasesite ;;
-        2) packageWebsite ;;
-        3) addVirtualhost ;;
-        4) addVirtualhostBasesite ;;
+        1) addVirtualhost ;;
+        2) installBasesite ;;
+        3) addVirtualhostBasesite ;;
+        4) packageWebsite ;;
         5) copyVirtualhost ;;
         6) addDomain ;;
         7) addUserPasswordDirectory ;;
