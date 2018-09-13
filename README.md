@@ -39,11 +39,12 @@ When you are finished with setup, you can logout and login as your new sudo user
 /bin/bash yam_secure.sh
 ```
 You will then be prompted to choose from the following options:
-1. Disable password login
-2. Enable password login
-3. Disable root login
-4. Enable root login
-5. Quit
+1. Setup sudo user
+2. Disable password login
+3. Enable password login
+4. Disable root login
+5. Enable root login
+6. Quit
 
 ## yam_manage.sh
 
