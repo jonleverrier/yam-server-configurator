@@ -119,16 +119,34 @@ setupServer() {
         ln -sf /usr/share/zoneinfo/${YAM_DATEFORMAT_TIMEZONE} /etc/localtime
 
         # Upgrade system and base packages
-        echo "${COLOUR_WHITE}>> Configuring system and packages...${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> Configuring packages...${COLOUR_RESTORE}"
         DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o Dpkg::Options::="--force-confdef" --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-change-held-packages --allow-unauthenticated;
 
         # Setup PPA
-        apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages software-properties-common
         add-apt-repository -y ppa:ondrej/php
         add-apt-repository -y ppa:nijel/phpmyadmin
         add-apt-repository -y ppa:certbot/certbot
-        apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install apache2-utils whois
+        apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install software-properties-common apache2-utils whois apache2-utils whois php-imagick htop zip unzip s3cmd nmap
         apt-get update
+        apt-get clean
+        apt-get purge -y snapd
+        curl -sSL https://agent.digitalocean.com/install.sh | sh
+
+        # Install yam utilities
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_local.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_s3.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_system.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_sync_s3.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_manage.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_secure.sh
+
+        chmod -R 700 /usr/local/bin/yam_backup_local.sh
+        chmod -R 700 /usr/local/bin/yam_backup_s3.sh
+        chmod -R 700 /usr/local/bin/yam_backup_system.sh
+        chmod -R 700 /usr/local/bin/yam_sync_s3.sh
+        chmod -R 700 /usr/local/bin/yam_setup.sh
+        chmod -R 700 /usr/local/bin/yam_manage.sh
+        chmod -R 700 /usr/local/bin/yam_secure.sh
 
         echo "${COLOUR_WHITE}>> Setting up user...${COLOUR_RESTORE}"
         # Setting up skeleton directory
@@ -894,30 +912,6 @@ EOF
 30 3    * * *   root    /usr/local/bin/yam_sync_s3.sh /var/backups/cron/ /servers/backups/${YAM_SERVER_NAME}/var/backups/cron/ >> /var/log/cron.log 2>&1
 
 EOF
-
-        # Install additional packages
-        echo "${COLOUR_WHITE}>> Installing additional packages...${COLOUR_RESTORE}"
-        apt-get install -y php-imagick htop zip unzip s3cmd nmap
-        apt-get clean
-        systemctl reload nginx
-        apt-get purge -y snapd
-        curl -sSL https://agent.digitalocean.com/install.sh | sh
-
-        # Install yam utilities
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_local.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_s3.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_system.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_sync_s3.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_manage.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_secure.sh
-
-        chmod -R 700 /usr/local/bin/yam_backup_local.sh
-        chmod -R 700 /usr/local/bin/yam_backup_s3.sh
-        chmod -R 700 /usr/local/bin/yam_backup_system.sh
-        chmod -R 700 /usr/local/bin/yam_sync_s3.sh
-        chmod -R 700 /usr/local/bin/yam_setup.sh
-        chmod -R 700 /usr/local/bin/yam_manage.sh
-        chmod -R 700 /usr/local/bin/yam_secure.sh
 
     else
         break
