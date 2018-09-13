@@ -1677,13 +1677,8 @@ define('MODX_CORE_PATH', '/home/${NEW_USER}/public/${NEW_PROJECT}/core/');
 define('MODX_CONFIG_KEY', 'config');
 ?>
 EOF
-            fi
 
-            # Add root config for MODX
-            if [ -f /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php ]; then
-                echo "${COLOUR_CYAN}-- MODX root config file already exists. Skipping...${COLOUR_RESTORE}"
-            else
-                cat > /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php << EOF
+            cat > /home/${NEW_USER}/public/${NEW_PROJECT}/config.core.php << EOF
 <?php
 /*
  * This file is managed by the installation process.  Any modifications to it may get overwritten.
