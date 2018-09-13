@@ -31,9 +31,21 @@ If you choose to setup a fresh server, the script will installs and configure NG
 The script also configures ssh keys, root and sudo users, time zone for server and mysql, skeleton directory,
 log rotation, ssl auto renewal, UFW, default error pages, local backup of core system folders, local backup of user web folders, S3 backup of core system folders, sessions, securing MODX, S3 backup of user web folders.
 
-## yam_manage.sh
+## yam_secure.sh
 
-When you are finished with setup, you can logout and login as your new sudo user. To run the script, you will need to `su` before running it.
+When you are finished with setup, you can logout and login as your new sudo user. To run the script, you will need to `su` before running it. Type the following to load the script:
+
+```
+/bin/bash yam_secure.sh
+```
+You will then be prompted to choose from the following options:
+1. Disable password login
+2. Enable password login
+3. Disable root login
+4. Enable root login
+5. Quit
+
+## yam_manage.sh
 
 Like yam_setup.sh, customise the variables at the top of the yam_manage.sh script before running.
 
