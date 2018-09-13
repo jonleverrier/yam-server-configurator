@@ -28,10 +28,6 @@ YAM_EMAIL_BUG=$(echo -en 'bugs@youandme.digital')
 YAM_EMAIL_SSL=$(echo -en 'jon@youandme.digital')
 YAM_DATEFORMAT_TIMEZONE=$(echo -en 'Europe/Paris')
 
-# if you have a MODX basesite that you work from enter the details below
-YAM_BASESITE_PATH=$(echo -en '/home/yam/public/alphasite/')
-YAM_BASESITE_DB=$(echo -en 'yam_db_yam_alphasite')
-
 # initial generic password for protected directories. this will be overriden
 # after setup
 YAM_PASSWORD_GENERIC=$(echo -en '1q2w3e4r')
