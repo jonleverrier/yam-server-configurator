@@ -23,18 +23,28 @@ Then once you are done, type the following command to load the script:
 ```
 You will then be prompted to choose from the following options:
 1. Setup a fresh Ubuntu server
-2. Add sudo user and SSH keys
-3. Enable or disable SSH password authentication
-4. Quit
+2. Quit
 
-If you choose to setup a fresh server, the script will installs and configure NGINX, MariaDB, PHP7.1 FPM, Certbot (Let's Encrypt), PhpMyAdmin, Fail2Ban with UFW, php-imagick, htop, zip, unzip, Digital Ocean agent, s3cmd, nmap, yam_backup_local.sh, yam_backup_s3.sh, yam_sync_s3.sh, yam_backup_system.sh and yam_manage.sh.
+If you choose to setup a fresh server, the script will installs and configure NGINX, MariaDB, PHP7.1 FPM, Certbot (Let's Encrypt), PhpMyAdmin, Fail2Ban with UFW, php-imagick, htop, zip, unzip, Digital Ocean agent, s3cmd, nmap and additional YAM scripts.
 
-The script also configures ssh keys, root and sudo users, time zone for server and mysql, skeleton directory,
-log rotation, ssl auto renewal, UFW, default error pages, local backup of core system folders, local backup of user web folders, S3 backup of core system folders, sessions, securing MODX, S3 backup of user web folders.
+The script also configures root and sudo users, time zone for server and mysql, skeleton directory, log rotation, ssl auto renewal, UFW, default error pages, local backup of core system folders, local backup of user web folders, S3 backup of core system folders, sessions, securing MODX and S3 backup of user web folders.
+
+## yam_secure.sh
+
+When you are finished with setup, you can logout and login as your new sudo user. To run the script, you will need to `su` before running it. Type the following to load the script:
+
+```
+/bin/bash yam_secure.sh
+```
+You will then be prompted to choose from the following options:
+1. Setup sudo user
+2. Disable password login
+3. Enable password login
+4. Disable root login
+5. Enable root login
+6. Quit
 
 ## yam_manage.sh
-
-When you are finished with setup, you can logout and login as your new sudo user. To run the script, you will need to `su` before running it.
 
 Like yam_setup.sh, customise the variables at the top of the yam_manage.sh script before running.
 
