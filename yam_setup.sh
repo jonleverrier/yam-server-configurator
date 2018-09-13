@@ -118,6 +118,12 @@ setupServer() {
         # Setting timezone
         ln -sf /usr/share/zoneinfo/${YAM_DATEFORMAT_TIMEZONE} /etc/localtime
 
+        # Setting up skeleton directory
+        mkdir -p /etc/skel/tmp
+        mkdir -p /etc/skel/logs
+        mkdir -p /etc/skel/logs/nginx
+        mkdir -p /etc/skel/public
+
         # Upgrade system and base packages
         echo "${COLOUR_WHITE}>> Configuring packages...${COLOUR_RESTORE}"
         DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o Dpkg::Options::="--force-confdef" --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-change-held-packages --allow-unauthenticated;
@@ -149,14 +155,6 @@ setupServer() {
         chmod -R 700 /usr/local/bin/yam_secure.sh
 
         echo "${COLOUR_WHITE}>> Setting up user...${COLOUR_RESTORE}"
-        # Setting up skeleton directory
-        mkdir -p /etc/skel/tmp
-        mkdir -p /etc/skel/logs
-        mkdir -p /etc/skel/logs/nginx
-        mkdir -p /etc/skel/public
-
-        # disable bash history
-        echo 'set +o history' >> ~/.bashrc
 
         # Adding a sudo user and setting password
         adduser --disabled-password --gecos "" ${USER_SUDO}
@@ -164,19 +162,8 @@ setupServer() {
         PASSWORD=$(mkpasswd ${USER_SUDO_PASSWORD})
         usermod --password ${PASSWORD} ${USER_SUDO}
 
-        # setup log rotation
-        cat > /etc/logrotate.d/${USER_SUDO} << EOF
-/home/$USER/logs/nginx/*.log {
-daily
-missingok
-rotate 7
-compress
-size 5M
-notifempty
-create 0640 www-data www-data
-sharedscripts
-}
-EOF
+        # disable bash history
+        echo 'set +o history' >> ~/.bashrc
 
         # adds sudo user to sudoers file to stop password prompt
         cat > /etc/sudoers.d/${USER_SUDO} << EOF
@@ -207,6 +194,20 @@ EOF
         # Disable The Default Nginx Site
         rm -rf /etc/nginx/sites-available/
         rm -rf /etc/nginx/sites-enabled/
+
+        # setup log rotation
+        cat > /etc/logrotate.d/${USER_SUDO} << EOF
+/home/$USER/logs/nginx/*.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    size 5M
+    notifempty
+    create 0640 www-data www-data
+    sharedscripts
+}
+EOF
 
         # Backup the original nginx.conf file
         cp /etc/nginx/nginx.conf{,.bak}
