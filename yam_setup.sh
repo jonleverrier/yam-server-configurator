@@ -96,7 +96,10 @@ ask() {
 # check if root user
 if [ "${EUID}" != 0 ];
 then
-    echo "YAM Server Setup should be executed as the root user. Please switch to the root user and try again"
+    echo '------------------------------------------------------------------------'
+    echo 'YAM Manager should be executed as the root user. Please switch to the'
+    echo 'root user and try again'
+    echo '------------------------------------------------------------------------'
     exit
 fi
 
