@@ -37,7 +37,7 @@ When you are finished with setup, you can logout and login as your new sudo user
 /bin/bash yam_secure.sh
 ```
 You will then be prompted to choose from the following options:
-1. Setup sudo user
+1. Setup sudo and root user with keys
 2. Disable password login
 3. Enable password login
 4. Disable root login

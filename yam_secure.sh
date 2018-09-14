@@ -82,7 +82,7 @@ fi
 
 # Load secure server function
 secureServer() {
-    if ask "Are you sure you want to setup a sudo user?"; then
+    if ask "Are you sure you want to setup root and sudo user with keys?"; then
         read -p "Enter a sudo user  : " USER_SUDO
         read -s -p "Enter a sudo password  : " USER_SUDO_PASSWORD
         echo
@@ -262,7 +262,7 @@ echo ''
 echo 'What can I help you with today?'
 echo ''
 passwordOptions=(
-    "Setup sudo user"
+    "Setup sudo and root user with keys"
     "Disable password login"
     "Enable password login"
     "Disable root login"
