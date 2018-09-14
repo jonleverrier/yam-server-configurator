@@ -17,9 +17,9 @@ YAM_EMAIL_BUG=$(echo -en 'bugs@youandme.digital')
 YAM_EMAIL_SSL=$(echo -en 'jon@youandme.digital')
 YAM_DATEFORMAT_TIMEZONE=$(echo -en 'Europe/Paris')
 
-# initial generic password for protected directories. this will be overriden
+# initial password for protected directories. can be overriden
 # after setup
-YAM_PASSWORD_GENERIC=$(echo -en '1q2w3e4r')
+YAM_PASSWORD_GENERIC=$(openssl rand -base64 24)
 
 # S3 backup settings
 YAM_SERVER_NAME=$(echo -en 'yam-avalon-ams3-01')
@@ -101,8 +101,6 @@ setupServer() {
         read -s -p "Enter a MYSQL password for sudo user  : " PASSWORD_MYSQL_SUDO
         echo
         read -s -p "Enter a MYSQL password for root user  : " PASSWORD_MYSQL_ROOT
-        echo
-        read -s -p "Enter a password for phpMyAdmin directory : " PASSWORD_PMA_DIR
         echo
         read -p "Enter domain name for the default website  : " URL_SERVER_DEFAULT
         read -p "Enter domain name for phpMyAdmin  : " URL_SERVER_PMA
@@ -833,7 +831,7 @@ EOF
         chown -R ${USER_SUDO}:${USER_SUDO} /usr/share/phpmyadmin
 
         # Password protect phpmyadmin directory
-        htpasswd -b -c /home/${USER_SUDO}/.htpasswd phpmyadmin ${PASSWORD_PMA_DIR}
+        htpasswd -b -c /home/${USER_SUDO}/.htpasswd phpmyadmin ${YAM_PASSWORD_GENERIC}
 
         # Add user folder and create a system link to the public folder
         chown root:root /home/${USER_SUDO}
