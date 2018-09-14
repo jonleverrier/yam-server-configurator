@@ -130,7 +130,7 @@ setupServer() {
         apt-get update
         add-apt-repository -y ppa:ondrej/php
         add-apt-repository -y ppa:certbot/certbot
-        apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install software-properties-common apache2-utils whois php-imagick htop zip unzip s3cmd nmap
+        apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install software-properties-common apache2-utils whois htop zip unzip s3cmd nmap
         apt-get clean
         apt-get purge -y snapd
         curl -sSL https://agent.digitalocean.com/install.sh | sh
@@ -736,7 +736,7 @@ EOF
 
         # Install PHP7.1
         echo "${COLOUR_WHITE}>> installing PHP7.1...${COLOUR_RESTORE}"
-        apt-get install -y php7.1 php7.1-fpm php7.1-cli php7.1-curl php7.1-common php7.1-mbstring php7.1-gd php7.1-intl php7.1-xml php7.1-mysql php7.1-mcrypt php7.1-zip
+        apt-get install -y php7.1 php7.1-fpm php7.1-cli php7.1-curl php7.1-common php7.1-mbstring php7.1-gd php7.1-intl php7.1-xml php7.1-mysql php7.1-mcrypt php7.1-zip php-imagick
 
         # Configure PHP.7.1
         # First backup original php.ini file
