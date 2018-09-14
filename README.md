@@ -142,4 +142,6 @@ yam_setup.sh installs fail2ban which works with UFW to block IP addresses from a
 
 Standard users have access to SFTP but not SSH and are contained to their own home folder via chroot. Access to troublesome PHP functions has been restricted. A unique username and database name is used on a per project basis. All development websites are password protected by default and issued an automatic SSL.
 
-If you're looking for something that scales, try [this](https://www.digitalocean.com/community/tutorials/getting-started-with-puppet-code-manifests-and-modules).
+These scripts are designed to get your setup quickly. Ultimately, security is an ongoing process and needs to be reviewed regulary.
+
+If you're looking for something that scales, try [Puppet](https://www.digitalocean.com/community/tutorials/getting-started-with-puppet-code-manifests-and-modules).
