@@ -717,7 +717,6 @@ CREATE USER '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}'@'localhost' IDENTIFIE
 GRANT ALL PRIVILEGES ON ${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME}.* TO '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}'@'localhost';
 FLUSH PRIVILEGES;
 EOF
-            echo ">> Done."
 
         fi
 
@@ -1843,7 +1842,6 @@ securePasswordDirectory() {
             mv /etc/nginx/custom.d/${OWNER}-${PROJECT}.d/_${PROJECT}.location.password.conf /etc/nginx/custom.d/${OWNER}-${PROJECT}.d/${PROJECT}.location.password.conf
         fi
         systemctl reload nginx
-        echo "${COLOUR_WHITE}>> Done.${COLOUR_RESTORE}"
 
     else
         break
