@@ -175,6 +175,9 @@ setupServer() {
 ${USER_SUDO} ALL=(ALL) NOPASSWD:ALL
 EOF
 
+        # dev: for testing 
+        exit
+
         # Install SSL
         echo "${COLOUR_WHITE}>> Installing SSL...${COLOUR_RESTORE}"
         apt-get install -y python-certbot-nginx
