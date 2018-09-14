@@ -140,4 +140,4 @@ yam_setup.sh installs fail2ban which works with UFW to block IP addresses from a
 
 ### Standard Users
 
-Standard users have access to SFTP but not SSH and are contained in their own home folder via chroot. Access to troublesome PHP functions has been restricted. A unique username and database is used on a per project basis.
+Standard users have access to SFTP but not SSH and are contained in their own home folder via chroot. Access to troublesome PHP functions has been restricted. A unique username and database is used on a per project basis. All development websites are password protected by default and issued an automatic SSL.
