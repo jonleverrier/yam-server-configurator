@@ -112,11 +112,58 @@ setupServer() {
         echo 'This will install NGINX, PHP7.1 FPM, MariaDB and core packages'
         echo ''
 
-        # INSTALLING AS ROOT
-        echo "${COLOUR_WHITE}>> installing as root...${COLOUR_RESTORE}"
-
         # Adjusting server settings ...
-        echo "${COLOUR_WHITE}>> adjusting server settings...${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> Adjusting server settings...${COLOUR_RESTORE}"
+
+        # Setting timezone
+        ln -sf /usr/share/zoneinfo/${YAM_DATEFORMAT_TIMEZONE} /etc/localtime
+
+        # Setting up skeleton directory
+        mkdir -p /etc/skel/tmp
+        mkdir -p /etc/skel/logs
+        mkdir -p /etc/skel/logs/nginx
+        mkdir -p /etc/skel/public
+
+        # Upgrade system and base packages
+        echo "${COLOUR_WHITE}>> Configuring packages...${COLOUR_RESTORE}"
+        DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o Dpkg::Options::="--force-confdef" --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-change-held-packages --allow-unauthenticated;
+
+        # Setup PPA
+        add-apt-repository -y ppa:ondrej/php
+        add-apt-repository -y ppa:nijel/phpmyadmin
+        add-apt-repository -y ppa:certbot/certbot
+        apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install software-properties-common apache2-utils whois apache2-utils whois php-imagick htop zip unzip s3cmd nmap
+        apt-get update
+        apt-get clean
+        apt-get purge -y snapd
+        curl -sSL https://agent.digitalocean.com/install.sh | sh
+
+        # Install yam utilities
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_local.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_s3.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_system.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_sync_s3.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_manage.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_secure.sh
+
+        chmod -R 700 /usr/local/bin/yam_backup_local.sh
+        chmod -R 700 /usr/local/bin/yam_backup_s3.sh
+        chmod -R 700 /usr/local/bin/yam_backup_system.sh
+        chmod -R 700 /usr/local/bin/yam_sync_s3.sh
+        chmod -R 700 /usr/local/bin/yam_setup.sh
+        chmod -R 700 /usr/local/bin/yam_manage.sh
+        chmod -R 700 /usr/local/bin/yam_secure.sh
+
+        echo "${COLOUR_WHITE}>> Setting up user...${COLOUR_RESTORE}"
+
+        # Adding a sudo user and setting password
+        adduser --disabled-password --gecos "" ${USER_SUDO}
+        adduser ${USER_SUDO} sudo
+        PASSWORD=$(mkpasswd ${USER_SUDO_PASSWORD})
+        usermod --password ${PASSWORD} ${USER_SUDO}
+
+        # disable bash history
+        echo 'set +o history' >> ~/.bashrc
 
         # adds sudo user to sudoers file to stop password prompt
         cat > /etc/sudoers.d/${USER_SUDO} << EOF
@@ -128,83 +175,18 @@ setupServer() {
 ${USER_SUDO} ALL=(ALL) NOPASSWD:ALL
 EOF
 
-        # Adding log files
-        touch /var/log/cron.log
-
-        # Setting timezone
-        echo "${COLOUR_CYAN}-- setting timezone to ${YAM_DATEFORMAT_TIMEZONE}${COLOUR_RESTORE}"
-        ln -sf /usr/share/zoneinfo/${YAM_DATEFORMAT_TIMEZONE} /etc/localtime
-
-        # Setting up skeleton directory
-        echo "${COLOUR_CYAN}-- setting up skeleton directory${COLOUR_RESTORE}"
-        mkdir -p /etc/skel/tmp
-        mkdir -p /etc/skel/logs
-        mkdir -p /etc/skel/logs/nginx
-        mkdir -p /etc/skel/public
-
-        # Adding a sudo user and setting password
-        echo "${COLOUR_CYAN}-- adding sudo user and changing password${COLOUR_RESTORE}"
-
-        # install whois, as mkpasswd requires this to work
-        apt-get install -y whois;
-
-        adduser --disabled-password --gecos "" ${USER_SUDO}
-        adduser ${USER_SUDO} sudo
-        PASSWORD=$(mkpasswd ${USER_SUDO_PASSWORD})
-        usermod --password ${PASSWORD} ${USER_SUDO}
-
-        # disable bash history
-        echo 'set +o history' >> ~/.bashrc
-
-        # setup log rotation
-        echo "${COLOUR_CYAN}-- setting up log rotation for ${USER_SUDO} ${COLOUR_RESTORE}"
-        cat > /etc/logrotate.d/${USER_SUDO} << EOF
-/home/$USER/logs/nginx/*.log {
-daily
-missingok
-rotate 7
-compress
-size 5M
-notifempty
-create 0640 www-data www-data
-sharedscripts
-}
-EOF
-        echo "${COLOUR_CYAN}-- hardening host.conf ${COLOUR_RESTORE}"
-        cat > /etc/host.conf << EOF
-# The "order" line is only used by old versions of the C library.
-order hosts,bind
-multi on
-EOF
-
-        # Upgrade system and base packages
-        echo "${COLOUR_WHITE}>> upgrading system and packages...${COLOUR_RESTORE}"
-        apt-get update
-        DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o Dpkg::Options::="--force-confdef" --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-change-held-packages --allow-unauthenticated;
-
-        # Setup PPA
-        echo "${COLOUR_WHITE}>> installing repositories...${COLOUR_RESTORE}"
-        apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages software-properties-common
-        add-apt-repository -y ppa:ondrej/php
-        add-apt-repository -y ppa:nijel/phpmyadmin
-        add-apt-repository -y ppa:certbot/certbot
-        apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install apache2-utils
-        apt-get update
-
         # Install SSL
-        echo "${COLOUR_WHITE}>> installing SSL...${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> Installing SSL...${COLOUR_RESTORE}"
         apt-get install -y python-certbot-nginx
 
         # Configure SSL
-        echo "${COLOUR_WHITE}>> configuring SSL...${COLOUR_RESTORE}"
-        certbot -n --nginx certonly --agree-tos --email ${YAM_EMAIL_SSL} -d ${URL_SERVER_DEFAULT} -d ${URL_SERVER_PMA}
+        certbot -n --nginx certonly --agree-tos --email ${YAM_EMAIL_SSL} -d ${URL_SERVER_DEFAULT} -d ${URL_SERVER_PMA} || { echo 'Problems connecting to Certbot. Please try again.' ; exit 1; }
 
         # Install NGINX
-        echo "${COLOUR_WHITE}>> installing NGINX...${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> Installing NGINX...${COLOUR_RESTORE}"
         apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages nginx
 
         # Configure NGINX
-        echo "${COLOUR_WHITE}>> configuring NGINX...${COLOUR_RESTORE}"
         ufw allow 'Nginx Full'
         ufw delete allow 'Nginx HTTP'
         ufw delete allow 'Nginx HTTPS'
@@ -213,8 +195,19 @@ EOF
         rm -rf /etc/nginx/sites-available/
         rm -rf /etc/nginx/sites-enabled/
 
-        # Make changes to nginx.conf
-        echo "${COLOUR_CYAN}-- making changes to nginx.conf${COLOUR_RESTORE}"
+        # setup log rotation
+        cat > /etc/logrotate.d/${USER_SUDO} << EOF
+/home/$USER/logs/nginx/*.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    size 5M
+    notifempty
+    create 0640 www-data www-data
+    sharedscripts
+}
+EOF
 
         # Backup the original nginx.conf file
         cp /etc/nginx/nginx.conf{,.bak}
@@ -345,8 +338,6 @@ http {
 }
 EOF
 
-        # Add main-extra.conf
-        echo "${COLOUR_CYAN}-- adding main_extra.conf${COLOUR_RESTORE}"
         # Added if statement here to prevent the file being overwritten
         # if setup has already been run
         if [ -f /etc/nginx/main_extra.conf ]; then
@@ -358,7 +349,6 @@ EOF
         fi
 
         # Add default_server.conf
-        echo "${COLOUR_CYAN}-- adding default_server.conf ${COLOUR_RESTORE}"
         cat > /etc/nginx/default_server.conf << EOF
 # Generated by the YAM server configurator
 # Do not edit as you may loose your changes
@@ -437,7 +427,6 @@ location = /503.html {
 }
 EOF
         # Adding default conf file for default website
-        echo "${COLOUR_CYAN}-- adding default conf file for default website${COLOUR_RESTORE}"
         cat > /etc/nginx/conf.d/_default.conf << EOF
 # Generated by the YAM server configurator
 # Do not edit as you may loose your changes
@@ -473,7 +462,6 @@ server {
 EOF
 
         # Adding default conf file for phpMyAdmin website
-        echo "${COLOUR_CYAN}-- adding default conf file for phpMyAdmin website${COLOUR_RESTORE}"
         cat > /etc/nginx/conf.d/phpmyadmin.conf << EOF
 # Generated by the YAM server configurator
 # Do not edit as you may loose your changes
@@ -506,7 +494,6 @@ server {
 }
 EOF
         # Adding conf file and directory for default website
-        echo "${COLOUR_CYAN}-- adding conf files and directory for default website${COLOUR_RESTORE}"
         mkdir -p /etc/nginx/conf.d/_default.d
         cat > /etc/nginx/conf.d/_default.d/main.conf << EOF
 # Generated by the YAM server configurator
@@ -543,7 +530,6 @@ location / {
 EOF
 
         # Adding conf file and directory for phpMyAdmin website
-        echo "${COLOUR_CYAN}-- adding conf files and directory for phpmyadmin website${COLOUR_RESTORE}"
         mkdir -p /etc/nginx/conf.d/phpmyadmin.d
         cat > /etc/nginx/conf.d/phpmyadmin.d/main.conf << EOF
 # Generated by the YAM server configurator
@@ -595,7 +581,6 @@ location /phpmyadmin {
 include /etc/nginx/custom.d/phpmyadmin.d/phpmyadmin.location.footer.*.conf;
 EOF
         # Adding custom conf directory for default website
-        echo "${COLOUR_CYAN}-- adding custom conf directory for default website${COLOUR_RESTORE}"
         mkdir -p /etc/nginx/custom.d/_default.d
         cat > /etc/nginx/custom.d/_default.d/readme.txt << EOF
 In this directory you can add custom rewrite rules in the follwing format.
@@ -608,7 +593,6 @@ Don't forget to reload NGINX from the terminal using:
 systemctl reload nginx
 EOF
         # Adding custom conf directory for default website
-        echo "${COLOUR_CYAN}-- adding custom conf directory for phpMyAdmin website${COLOUR_RESTORE}"
         mkdir -p /etc/nginx/custom.d/phpmyadmin.d
         cat > /etc/nginx/custom.d/phpmyadmin.d/readme.txt << EOF
 In this directory you can add custom rewrite rules in the follwing format.
@@ -621,7 +605,6 @@ Don't forget to reload NGINX from the terminal using:
 systemctl reload nginx
 EOF
         # Adding default error pages
-        echo "${COLOUR_CYAN}-- setting up custom error pages...${COLOUR_RESTORE}"
         mkdir -p /var/www/errors
         cat > /var/www/errors/401.html << EOF
 <!DOCTYPE html>
@@ -731,15 +714,12 @@ EOF
 </html>
 EOF
         systemctl reload nginx
-        echo ">> NGINX has been restarted. Configuration complete."
 
         # Install MYSQL
-        echo "${COLOUR_WHITE}>> installing MariaDB...${COLOUR_RESTORE}"
-        apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages tzdata mariadb-server
+        echo "${COLOUR_WHITE}>> Installing MariaDB...${COLOUR_RESTORE}"
+        apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages mariadb-server
 
         # Configure MYSQL
-        echo "${COLOUR_WHITE}>> configuring MariaDB...${COLOUR_RESTORE}"
-
         # Do a manual mysql_secure_installation
         mysql --user=root --password=$PASSWORD_MYSQL_ROOT << EOF
 SET PASSWORD FOR 'root'@'localhost' = PASSWORD('${PASSWORD_MYSQL_ROOT}');
@@ -761,8 +741,6 @@ EOF
         apt-get install -y php7.1 php7.1-fpm php7.1-cli php7.1-curl php7.1-common php7.1-mbstring php7.1-gd php7.1-intl php7.1-xml php7.1-mysql php7.1-mcrypt php7.1-zip
 
         # Configure PHP.7.1
-        echo "${COLOUR_WHITE}>> configuring PHP7.1...${COLOUR_RESTORE}"
-
         # First backup original php.ini file
         cp /etc/php/7.1/fpm/php.ini /etc/php/7.1/fpm/php.ini.bak
 
@@ -778,7 +756,6 @@ EOF
         sed -i "s/session.cookie_httponly =/session.cookie_httponly = 1/" /etc/php/7.1/fpm/php.ini
         sed -i 's#;session.save_path = "/var/lib/php/sessions"#session.save_path = "/var/lib/php/sessions"#' /etc/php/7.1/fpm/php.ini
 
-        echo "${COLOUR_CYAN}-- adding php workers for default site and phpmyadmin${COLOUR_RESTORE}"
         # Delete default www.conf file
         rm -rf /etc/php/7.1/fpm/pool.d/www.conf
 
@@ -809,6 +786,7 @@ php_value[session.cookie_httponly] = 1
 
 EOF
         fi
+
         if [ -f /etc/php/7.1/fpm/pool.d/default.conf ]; then
             echo "${COLOUR_CYAN}-- pool configuration for default already exists. Skipping...${COLOUR_RESTORE}"
         else
@@ -838,12 +816,11 @@ EOF
         systemctl restart php7.1-fpm
 
         # Installing phpMyAdmin
-        echo "${COLOUR_WHITE}>> installing phpMyAdmin...${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> Installing phpMyAdmin...${COLOUR_RESTORE}"
         export DEBIAN_FRONTEND=noninteractive
         apt-get -y install phpmyadmin
 
         # Configuring phpMyAdmin
-        echo "${COLOUR_WHITE}>> configuring phpMyAdmin...${COLOUR_RESTORE}"
         touch /home/${USER_SUDO}/logs/nginx/phpmyadmin_error.log
         mkdir -p /home/${USER_SUDO}/public/phpmyadmin
 
@@ -866,10 +843,9 @@ EOF
         sudo ln -s /usr/share/phpmyadmin /home/${USER_SUDO}/public/phpmyadmin
 
         # Install firewall
-        echo "${COLOUR_WHITE}>> installing firewall...${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> Installing firewall...${COLOUR_RESTORE}"
         apt-get install -y fail2ban
 
-        echo "${COLOUR_WHITE}>> configuring firewall...${COLOUR_RESTORE}"
         cat > /etc/fail2ban/action.d/ufw.conf << EOF
 [Definition]
 actionstart =
@@ -905,7 +881,10 @@ EOF
         ufw allow OpenSSH
         ufw --force enable
 
-        echo "${COLOUR_WHITE}>> setting up system backup${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> Setting up system backup${COLOUR_RESTORE}"
+        # Adding log files
+        touch /var/log/cron.log
+
         cat > /etc/cron.d/backup_server_local << EOF
 30 2    * * *   root    /usr/local/bin/yam_backup_system.sh >> /var/log/cron.log 2>&1
 
@@ -934,32 +913,6 @@ EOF
 30 3    * * *   root    /usr/local/bin/yam_sync_s3.sh /var/backups/cron/ /servers/backups/${YAM_SERVER_NAME}/var/backups/cron/ >> /var/log/cron.log 2>&1
 
 EOF
-
-        # Install additional packages
-        echo "${COLOUR_WHITE}>> installing additional packages...${COLOUR_RESTORE}"
-        apt-get install -y php-imagick
-        apt-get install -y htop zip unzip s3cmd nmap
-        apt-get clean
-        systemctl reload nginx
-        apt-get purge -y snapd
-        curl -sSL https://agent.digitalocean.com/install.sh | sh
-
-        # Install yam utilities
-        echo "${COLOUR_WHITE}>> installing yam server utilities...${COLOUR_RESTORE}"
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_local.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_s3.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_system.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_sync_s3.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_manage.sh
-        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_secure.sh
-
-        chmod -R 700 /usr/local/bin/yam_backup_local.sh
-        chmod -R 700 /usr/local/bin/yam_backup_s3.sh
-        chmod -R 700 /usr/local/bin/yam_backup_system.sh
-        chmod -R 700 /usr/local/bin/yam_sync_s3.sh
-        chmod -R 700 /usr/local/bin/yam_setup.sh
-        chmod -R 700 /usr/local/bin/yam_manage.sh
-        chmod -R 700 /usr/local/bin/yam_secure.sh
 
     else
         break
