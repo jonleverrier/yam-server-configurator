@@ -103,7 +103,7 @@ fi
 
 # Load install basesite function
 installBasesite() {
-    if ask "Are you sure you want to inject MODX into an existing website?"; then
+    if ask "Are you sure you want to setup a new Basesite? This will inject MODX into an existing website?"; then
         read -p "Existing project name : " PROJECT_NAME
         read -p "Existing project owner : " PROJECT_OWNER
         read -s -p "Existing project MYSQL password : " PASSWORD_MYSQL
@@ -1972,7 +1972,7 @@ echo 'What can I help you with today?'
 echo ''
 options=(
     "Add new development website"
-    "Inject MODX into an existing development website"
+    "Install a Basesite"
     "Add new development website with Basesite"
     "Package up website for injection"
     "Copy development website"

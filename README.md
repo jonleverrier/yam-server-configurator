@@ -57,12 +57,12 @@ Once you're ready, type the following to load the script:
 /bin/bash yam_manage.sh
 ```
 You will then be prompted to choose from the following options:
-1. Inject a MODX website from an external source
-2. Package MODX website for injection
-3. Add new development website
-4. Add new development website with Basesite
+1. Add new development website
+2. Install a Basesite
+3. Add new development website with Basesite
+4. Package up website for injection
 5. Copy development website
-6. Map domain to website
+6. Map domain to development website
 7. Add user to password directory
 8. Toggle password directory
 9. Delete user
