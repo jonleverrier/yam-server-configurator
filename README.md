@@ -131,7 +131,7 @@ Example usage:
 ### Sudo User
 yam_setup.sh will create a sudo user. This user has SFTP and SSH access. You have the ability in yam_secure.sh to disable the `root` user, password logins and setup SSH keys - please do this!
 
-By default, bash history is disabled and password fields during yam_setup.sh, yam_secure.sh and yam_manage.sh are hidden, however it may be still possible for somebody with access to your server already to view this information.
+By default, bash history is disabled and password fields during yam_setup.sh, yam_secure.sh and yam_manage.sh are hidden, however it may still be possible for somebody with access to your server already to view this information.
 
 ### MYSQL & Firewall
 During setup, MYSQL will run through a manual secure installation process.
