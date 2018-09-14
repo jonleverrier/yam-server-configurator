@@ -7,8 +7,12 @@ These scripts are designed to be used on a fresh server with nothing else instal
 
 Type | Hostname | Value | TTL
 ------------ | ------------- | ------------- | -------------
-CNAME | `*.dev.yourdomain.com` | is an alias of `dev.yourdomain.com` | 43200
-A | `dev.yourdomain.com` | directs to `<server ip>` | 600
+CNAME | `*.dev.mymodxhosting.com` | is an alias of `dev.mymodxhosting.com` | 43200
+A | `dev.mymodxhosting.com` | directs to `<server ip>` | 600
+
+During setup, you will be asked for the URL to your default website and phpmyadmin installation in order to issue SSL certificates for those domains. Example values are:
+* Domain for default website: dev.mymodxhosting.com
+* Domain for phpmyadmin: pma.user.dev.mymodxhosting.com
 
 ## yam_setup.sh
 
