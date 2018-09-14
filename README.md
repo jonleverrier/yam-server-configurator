@@ -7,8 +7,8 @@ These scripts are designed to be used on a fresh server with nothing else instal
 
 Type | Hostname | Value | TTL
 ------------ | ------------- | ------------- | -------------
-CNAME | `*.dev.yourdomain.com` | is an alias of dev.yourdomain.com | 43200
-A | dev.yourdomain.com | directs to <server ip> | 600
+CNAME | `*.dev.yourdomain.com` | is an alias of `dev.yourdomain.com` | 43200
+A | `dev.yourdomain.com` | directs to `<server ip>` | 600
 
 ## yam_setup.sh
 
