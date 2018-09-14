@@ -126,18 +126,20 @@ Example usage:
 /bin/bash yam_sync_s3.sh /local/path/ /s3/path/
 ```
 
-## Security
+## A note about security...
 
 ### Sudo User
-yam_setup.sh will create a sudo user. This user has SFTP and SSH access. You have the ability in yam_secure.sh to disable `root` logins and setup SSH keys - please do this!
+yam_setup.sh will create a sudo user. This user has SFTP and SSH access. You have the ability in yam_secure.sh to disable the `root` user, password logins and setup SSH keys - please do this!
 
-By default, bash history is disabled and password fields during yam_setup.sh, yam_secure.sh and yam_manage.sh are hidden, however it may be still possible for somebody with access to your server to view this information.
+By default, bash history is disabled and password fields during yam_setup.sh, yam_secure.sh and yam_manage.sh are hidden, however it may be still possible for somebody with access to your server already to view this information.
 
-### MYSQL, Firewall and User Access...
+### MYSQL & Firewall
 During setup, MYSQL will run through a manual secure installation process.
 
 yam_setup.sh installs fail2ban which works with UFW to block IP addresses from attacking your server.
 
-### Standard Users
+### Standard User Access
 
-Standard users have access to SFTP but not SSH and are contained in their own home folder via chroot. Access to troublesome PHP functions has been restricted. A unique username and database is used on a per project basis. All development websites are password protected by default and issued an automatic SSL.
+Standard users have access to SFTP but not SSH and are contained to their own home folder via chroot. Access to troublesome PHP functions has been restricted. A unique username and database name is used on a per project basis. All development websites are password protected by default and issued an automatic SSL.
+
+If in doubt, do not install.
