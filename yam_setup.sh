@@ -914,6 +914,8 @@ EOF
 
 EOF
 
+        echo "${COLOUR_WHITE}Setup complete.${COLOUR_RESTORE}"
+
     else
         break
     fi
