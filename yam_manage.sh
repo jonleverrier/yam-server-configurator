@@ -104,7 +104,7 @@ fi
 # Load install basesite function
 installBasesite() {
     if ask "Are you sure you want to inject MODX into an existing website?"; then
-        read -p "Existing project name to install MODX : " PROJECT_NAME
+        read -p "Existing project name : " PROJECT_NAME
         read -p "Existing project owner : " PROJECT_OWNER
         read -s -p "Existing project MYSQL password : " PASSWORD_MYSQL
         echo
@@ -1229,10 +1229,10 @@ EOF
 copyVirtualhost() {
     if ask "Are you sure you want to copy a development website?"; then
         read -p "Copy project  : " COPY_PROJECT
-        read -p "Copy project owner  : " COPY_USER
+        read -p "Copy project user  : " COPY_USER
         read -p "New project  : " NEW_PROJECT
-        read -p "New project owner  : " NEW_USER
-        read -s -p "New project owner password  : " NEW_PASSWORD_OWNER
+        read -p "New project user  : " NEW_USER
+        read -s -p "New project user password  : " NEW_PASSWORD_OWNER
         echo
         read -s -p "New project MYSQL password  : " NEW_PASSWORD_MYSQL
         echo
@@ -1720,7 +1720,7 @@ addDomain() {
     if ask "Are you sure you want to add a domain to a website?"; then
         read -p "Domain name  : " ADD_DOMAIN
         read -p "Existing project  : " ADD_PROJECT
-        read -p "Existing owner of project  : " ADD_USER
+        read -p "Existing user of project  : " ADD_USER
         echo '------------------------------------------------------------------------'
         echo 'Adding ${ADD_DOMAIN} to ${ADD_PROJECT}'
         echo '------------------------------------------------------------------------'
@@ -1808,7 +1808,7 @@ EOF
 # Load addUserPasswordDirectory function
 addUserPasswordDirectory() {
     if ask "Are you sure you want to add a new user to a password protected directory?"; then
-        read -p "User folder to edit  : " USER_FOLDER
+        read -p "User home folder to edit  : " USER_FOLDER
         read -p "Username  : " USERNAME
         read -s -p "Password  : " PASSWORD
         echo
@@ -1829,7 +1829,7 @@ addUserPasswordDirectory() {
 securePasswordDirectory() {
     if ask "Are you sure you want to toggle password directory?"; then
         read -p "Project name  : " PROJECT
-        read -p "Owner  : " OWNER
+        read -p "User  : " OWNER
         echo '------------------------------------------------------------------------'
         echo 'Checking password directory...'
         echo '------------------------------------------------------------------------'
@@ -1853,7 +1853,7 @@ securePasswordDirectory() {
 # Load delete user function
 deleteUser() {
     if ask "Are you sure you want to delete a user? This will delete the users home folder and MYSQL access"; then
-        read -p "Enter the system user to delete  : " USER
+        read -p "User to delete  : " USER
         read -s -p "Confirm root MYSQL password  : " PASSWORD_MYSQL_ROOT
         echo
         echo '------------------------------------------------------------------------'
