@@ -144,6 +144,7 @@ setupServer() {
         wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_manage.sh
         wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_secure.sh
 
+        # lock down files to root user only 
         chmod -R 700 /usr/local/bin/yam_backup_local.sh
         chmod -R 700 /usr/local/bin/yam_backup_s3.sh
         chmod -R 700 /usr/local/bin/yam_backup_system.sh
