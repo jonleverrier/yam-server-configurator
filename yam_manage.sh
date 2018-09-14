@@ -25,9 +25,9 @@ YAM_BASESITE_DB=$(echo -en 'yam_db_yam_alphasite')
 YAM_DATABASE_DB=$(echo -en 'yam_db')
 YAM_DATABASE_USER=$(echo -en 'yam_dbuser')
 
-# initial generic password for protected directories. this will be overriden
+# initial password for protected directories. can be overriden
 # after setup
-YAM_PASSWORD_GENERIC=$(echo -en '1q2w3e4r')
+YAM_PASSWORD_GENERIC=$(openssl rand -base64 24)
 
 # S3 backup settings
 YAM_SERVER_NAME=$(echo -en 'yam-avalon-ams3-01')
