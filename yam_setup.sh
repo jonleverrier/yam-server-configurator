@@ -126,7 +126,7 @@ setupServer() {
         echo "${COLOUR_WHITE}>> Configuring packages...${COLOUR_RESTORE}"
         DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o Dpkg::Options::="--force-confdef" --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-change-held-packages --allow-unauthenticated;
 
-        # Setup PPA
+        # Install packages
         apt-get update
         add-apt-repository -y ppa:certbot/certbot
         apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install software-properties-common apache2-utils whois apache2-utils whois php-imagick htop zip unzip s3cmd nmap
