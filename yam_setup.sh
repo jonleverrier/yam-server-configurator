@@ -717,7 +717,7 @@ EOF
 
         # Install MYSQL
         echo "${COLOUR_WHITE}>> Installing MariaDB...${COLOUR_RESTORE}"
-        apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages tzdata mariadb-server
+        apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages mariadb-server
 
         # Configure MYSQL
         # Do a manual mysql_secure_installation
