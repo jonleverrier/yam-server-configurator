@@ -84,13 +84,13 @@ You will then be prompted to choose from the following options:
 
 Make sure you check these files for variables that may need customising.
 
-Whilst yam_setup.sh installs Amazon s3cmd, you'll have to run `s3cmd --configure` in order to add your Amazon S3 credentials before using these utility scripts.
+Whilst yam_setup.sh installs Amazon s3cmd, you'll have to run `s3cmd --configure` in order to add your Amazon S3 credentials before your backups will begin to sync.
 
 ### yam_backup_local.sh
 
 To be used with cron, or run manually from the command line.
 
-Example usage; backup websites that live in /home/jamesbond/:
+Example usage; backup all websites that live in /home/jamesbond/:
 ```
 /bin/bash yam_backup_local.sh jamesbond
 ```
@@ -128,4 +128,16 @@ Example usage:
 
 ## Security
 
-Some example text
+### Sudo User
+yam_setup.sh will create a sudo user. This user has SFTP and SSH access. You have the ability in yam_secure.sh to disable `root` logins and setup SSH keys - please do this!
+
+By default, bash history is disabled and password fields during yam_setup.sh, yam_secure.sh and yam_manage.sh are hidden, however it may be still possible for somebody with access to your server to view this information.
+
+### MYSQL, Firewall and User Access...
+During setup, MYSQL will run through a manual secure installation process.
+
+yam_setup.sh installs fail2ban which works with UFW to block IP addresses from attacking your server.
+
+### Standard Users
+
+Standard users have access to SFTP but not SSH and are contained in their own home folder via chroot. Access to troublesome PHP functions has been restricted. A unique username and database is used on a per project basis.
