@@ -129,7 +129,6 @@ setupServer() {
         # Setup PPA
         apt-get update
         add-apt-repository -y ppa:ondrej/php
-        add-apt-repository -y ppa:nijel/phpmyadmin
         add-apt-repository -y ppa:certbot/certbot
         apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install software-properties-common apache2-utils whois apache2-utils whois php-imagick htop zip unzip s3cmd nmap
         apt-get clean
