@@ -129,11 +129,11 @@ setupServer() {
         DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o Dpkg::Options::="--force-confdef" --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-change-held-packages --allow-unauthenticated;
 
         # Setup PPA
+        apt-get update
         add-apt-repository -y ppa:ondrej/php
         add-apt-repository -y ppa:nijel/phpmyadmin
         add-apt-repository -y ppa:certbot/certbot
         apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install software-properties-common apache2-utils whois apache2-utils whois php-imagick htop zip unzip s3cmd nmap
-        apt-get update
         apt-get clean
         apt-get purge -y snapd
         curl -sSL https://agent.digitalocean.com/install.sh | sh
