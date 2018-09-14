@@ -109,7 +109,7 @@ setupServer() {
         echo '------------------------------------------------------------------------'
         echo 'Setting up a new Ubuntu server'
         echo '------------------------------------------------------------------------'
-        echo 'This will install NGINX, PHP7.1 FPM, MariaDB and core packages'
+        echo 'This will install a LEMP stack plus core packages'
         echo ''
 
         # Adjusting server settings ...
