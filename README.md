@@ -1,5 +1,5 @@
 # yam-server-configurator
-Setup an Ubutnu 16.04.4 x64 or 18.04 VPS from Digital Ocean. Host and manage multiple MODX websites running on a LEMP stack.
+Setup an Ubutnu 16.04.4 or 18.04 x64 VPS from Digital Ocean. Host and manage multiple MODX websites running on a LEMP stack.
 
 ## Before you begin...
 
@@ -84,7 +84,7 @@ You will then be prompted to choose from the following options:
 
 Make sure you check these files for variables that may need customising.
 
-Whilst yam_setup.sh installs Amazon s3cmd, you'll have to run s3cmd setup yourself before using the utility scripts. It's very quick todo, hence not adding it to the build script.
+Whilst yam_setup.sh installs Amazon s3cmd, you'll have to run `s3cmd --configure` in order to add your Amazon S3 credentials before using these utility scripts.
 
 ### yam_backup_local.sh
 
@@ -128,4 +128,4 @@ Example usage:
 
 ## Security
 
-Some example text 
+Some example text
