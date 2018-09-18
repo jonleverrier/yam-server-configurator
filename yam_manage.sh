@@ -116,7 +116,7 @@ installBasesite() {
         read -p "URL to packages zip : " URL_PACKAGES
         read -p "URL to components zip : " URL_COMPONENTS
         echo '------------------------------------------------------------------------'
-        echo 'Injecting MODX into /home/${PROJECT_OWNER}/public/${PROJECT_NAME}'
+        echo 'Injecting MODX into /home/$PROJECT_OWNER/public/$PROJECT_NAME'
         echo '------------------------------------------------------------------------'
 
         # if the website exists, continue...
@@ -1722,7 +1722,7 @@ addDomain() {
         read -p "Existing project  : " ADD_PROJECT
         read -p "Existing user of project  : " ADD_USER
         echo '------------------------------------------------------------------------'
-        echo 'Adding ${ADD_DOMAIN} to ${ADD_PROJECT}'
+        echo 'Adding $ADD_DOMAIN to $ADD_PROJECT'
         echo '------------------------------------------------------------------------'
 
         # if the project exists...
