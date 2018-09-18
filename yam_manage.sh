@@ -1813,7 +1813,7 @@ addUserPasswordDirectory() {
         read -s -p "Password  : " PASSWORD
         echo
         echo '------------------------------------------------------------------------'
-        echo 'Adding new user...'
+        echo 'Adding new user $USERNAME'
         echo '------------------------------------------------------------------------'
 
         htpasswd -b /home/${USER_FOLDER}/.htpasswd ${USERNAME} ${PASSWORD}
