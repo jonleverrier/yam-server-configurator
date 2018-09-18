@@ -128,6 +128,8 @@ Example usage:
 
 ## A note about security...
 
+These scripts attempt to setup and secure your server above and beyond simple installation of PHP, NGINX and MYSQL.
+
 ### Sudo User
 yam_setup.sh will create a sudo user. This user has SFTP and SSH access. You have the ability in yam_secure.sh to disable the `root` user, password logins and setup SSH keys - please do this!
 
