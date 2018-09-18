@@ -248,7 +248,7 @@ http {
     # hide what version of NGINX the server is running
     server_tokens off;
 
-    server_names_hash_bucket_size 64;
+    server_names_hash_bucket_size 512;
 
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
