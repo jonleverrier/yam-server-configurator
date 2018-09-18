@@ -346,6 +346,7 @@ EOF
             echo "${COLOUR_CYAN}-- removing installation files...${COLOUR_RESTORE}"
             rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
             rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
+            rm -rf /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/setup
 
             # Set permissions, just incase...
             echo "${COLOUR_CYAN}-- adjusting permissions...${COLOUR_RESTORE}"
