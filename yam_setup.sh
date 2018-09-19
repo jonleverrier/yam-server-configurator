@@ -785,32 +785,6 @@ php_value[session.cookie_httponly] = 1
 EOF
         fi
 
-        if [ -f /etc/php/7.1/fpm/pool.d/default.conf ]; then
-            echo "${COLOUR_CYAN}-- pool configuration for default already exists. Skipping...${COLOUR_RESTORE}"
-        else
-            cat > /etc/php/7.1/fpm/pool.d/default.conf << EOF
-[default]
-user = ${USER_SUDO}
-group = ${USER_SUDO}
-listen = /var/run/php/php7.1-fpm-default.sock
-listen.owner = www-data
-listen.group = www-data
-php_admin_value[disable_functions] = exec,passthru,shell_exec,system
-pm = ondemand
-pm.max_children = 20
-pm.process_idle_timeout = 10s
-pm.max_requests = 200
-chdir = /
-php_value[date.timezone] = ${YAM_DATEFORMAT_TIMEZONE}
-php_value[cgi.fix_pathinfo] = 0
-php_value[memory_limit] = 256M
-php_value[upload_max_filesize] = 100M
-php_value[default_socket_timeout] = 120
-php_value[session.cookie_secure] = 1
-php_value[session.cookie_httponly] = 1
-EOF
-        fi
-
         systemctl restart php7.1-fpm
 
         # Installing phpMyAdmin
