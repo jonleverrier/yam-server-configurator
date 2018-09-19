@@ -195,7 +195,7 @@ EOF
 
         # setup log rotation
         cat > /etc/logrotate.d/${USER_SUDO} << EOF
-/home/$USER/logs/nginx/*.log {
+/home/${USER_SUDO}/logs/nginx/*.log {
     daily
     missingok
     rotate 7
