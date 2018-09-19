@@ -127,7 +127,6 @@ setupServer() {
         systemctl stop apport.service
         systemctl disable apport.service
         systemctl mask apport.service
-        apt-get remove -y popularity-contest
 
         # Upgrade system and base packages
         echo "${COLOUR_WHITE}>> Configuring packages...${COLOUR_RESTORE}"
