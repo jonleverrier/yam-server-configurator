@@ -847,7 +847,7 @@ EOF
         ufw allow OpenSSH
         ufw --force enable
 
-        echo "${COLOUR_WHITE}>> Setting up system backup${COLOUR_RESTORE}"
+        echo "${COLOUR_WHITE}>> Setting up backup${COLOUR_RESTORE}"
         # Adding log files
         touch /var/log/cron.log
 
@@ -877,6 +877,16 @@ EOF
 
         cat > /etc/cron.d/backup_server_s3_cron << EOF
 30 3    * * *   root    /usr/local/bin/yam_sync_s3.sh /var/backups/cron/ /servers/backups/${YAM_SERVER_NAME}/var/backups/cron/ >> /var/log/cron.log 2>&1
+
+EOF
+
+        cat > /etc/cron.d/backup_local_${USER_SUDO} << EOF
+30 2    * * *   root    /usr/local/bin/yam_backup_local.sh ${USER_SUDO} >> /var/log/cron.log 2>&1
+
+EOF
+
+        cat > /etc/cron.d/backup_s3_${USER_SUDO} << EOF
+* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh ${USER_SUDO} ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
 
 EOF
 
