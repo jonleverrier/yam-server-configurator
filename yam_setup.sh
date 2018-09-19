@@ -503,12 +503,6 @@ EOF
 # custom headers file loads here if included
 include /etc/nginx/custom.d/_default.d/_default.location.header.*.conf;
 
-# setup php to use FPM
-location ~ \.php$ {
-    include snippets/fastcgi-php.conf;
-    fastcgi_pass unix:/run/php/php7.1-fpm-default.sock;
-}
-
 # custom body file loads here if included
 include /etc/nginx/custom.d/_default.d/_default.location.body.*.conf;
 
