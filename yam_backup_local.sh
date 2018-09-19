@@ -37,10 +37,11 @@ COLOUR_WHITE=$(echo -en '\033[01;37m')
 echo '------------------------------------------------------------------------'
 echo 'Starting backup process for ${USER}'
 echo '------------------------------------------------------------------------'
+echo ''
 
 # if backup folder for user exists skip, else create a folder called backup
 if [ -d "/home/${USER}/backup" ]; then
-    echo `date +"%Y %m %d %T"`
+    echo `date +"%Y-%m-%d %T"`
     echo "Backup folder already exists. Skipping..."
     echo ""
 else
@@ -58,11 +59,11 @@ for d in /home/${USER}/public/*; do
 
       # if .nobackup exists in a directory, skip the backup process
       if [ -e $d/.nobackup ]; then
-          echo `date +"%Y %m %d %T"`
+          echo `date +"%Y-%m-%d %T"`
           echo "Skipping backup for ${d}..."
           echo ""
       else
-          echo `date +"%Y %m %d %T"`
+          echo `date +"%Y-%m-%d %T"`
           echo "Backing up ${d}..."
           echo ""
 
@@ -73,25 +74,25 @@ for d in /home/${USER}/public/*; do
           mkdir -p /home/${USER}/backup/${d##*/}/
 
           # dump database and place it in a tempory dir...
-          echo `date +"%Y %m %d %T"`
+          echo `date +"%Y-%m-%d %T"`
           echo "Dumping database..."
           echo ""
           mysqldump -u root yam_db_${USER}_${d##*/} > /home/${USER}/backup/temp/yam_db_${USER}_${d##*/}.sql
 
           # tar database and entire web folder...
-          echo `date +"%Y %m %d %T"`
+          echo `date +"%Y-%m-%d %T"`
           echo "Compressing database and web folder..."
           echo ""
           tar -czf /home/${USER}/backup/${d##*/}/${USER}-${d##*/}-${YAM_DATEFORMAT_FULL}.tar.gz /home/${USER}/backup/temp /home/${USER}/public/${d##*/}
 
           # clean up data in temp folder...
-          echo `date +"%Y %m %d %T"`
+          echo `date +"%Y-%m-%d %T"`
           echo "Cleaning up temp dir..."
           echo ""
           rm -rf /home/${USER}/backup/temp
 
           # delete old backups...
-          echo `date +"%Y %m %d %T"`
+          echo `date +"%Y-%m-%d %T"`
           echo "Checking for old backups..."
           echo ""
           if [ -d "/home/${USER}/backup/${d##*/}/" ]; then
@@ -104,6 +105,6 @@ for d in /home/${USER}/public/*; do
   fi
 done
 
-echo `date +"%Y %m %d %T"`
+echo `date +"%Y-%m-%d %T"`
 echo "Backup for ${USER} complete."
 echo ""
