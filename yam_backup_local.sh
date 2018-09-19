@@ -82,8 +82,8 @@ for d in /home/${USER}/public/*; do
           # tar database and entire web folder...
           echo `date +"%Y-%m-%d %T"`
           echo "Compressing database and web folder..."
-          echo ""
           tar -czf /home/${USER}/backup/${d##*/}/${USER}-${d##*/}-${YAM_DATEFORMAT_FULL}.tar.gz /home/${USER}/backup/temp /home/${USER}/public/${d##*/}
+          echo ""
 
           # clean up data in temp folder...
           echo `date +"%Y-%m-%d %T"`
