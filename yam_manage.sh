@@ -1720,7 +1720,8 @@ addDomain() {
     if ask "Are you sure you want to add a domain to a website?"; then
         read -p "Domain name  : " ADD_DOMAIN
         read -p "Existing project  : " ADD_PROJECT
-        read -p "Existing user of project  : " ADD_USER
+        read -p "Existing user of project  : " ADD_USERPASSWORD_MYSQL_USER
+        read -s -p "Existing user MYSQL password  : " PASSWORD_MYSQL_USER
         echo '------------------------------------------------------------------------'
         echo 'Adding $ADD_DOMAIN to $ADD_PROJECT'
         echo '------------------------------------------------------------------------'
@@ -1788,8 +1789,29 @@ server {
 
 }
 EOF
-
             systemctl reload nginx
+
+            # Changing paths in db
+            echo "${COLOUR_WHITE}>> Changing paths in database...${COLOUR_RESTORE}"
+            cat > /home/${ADD_USER}/public/${ADD_PROJECT}/db_changepaths.sql << EOF
+UPDATE \`modx_context_setting\` SET \`value\`='${ADD_DOMAIN}' WHERE \`context_key\`='en' AND \`key\`='http_host';
+UPDATE \`modx_context_setting\` SET \`value\`='${ADD_DOMAIN}' WHERE \`context_key\`='fr' AND \`key\`='http_host';
+UPDATE \`modx_context_setting\` SET \`value\`='${ADD_DOMAIN}' WHERE \`context_key\`='es' AND \`key\`='http_host';
+UPDATE \`modx_context_setting\` SET \`value\`='${ADD_DOMAIN}' WHERE \`context_key\`='pdf' AND \`key\`='http_host';
+
+UPDATE \`modx_context_setting\` SET \`value\`='https://${ADD_DOMAIN}/' WHERE \`context_key\`='en' AND \`key\`='site_url';
+UPDATE \`modx_context_setting\` SET \`value\`='https://${ADD_DOMAIN}/fr/' WHERE \`context_key\`='fr' AND \`key\`='site_url';
+UPDATE \`modx_context_setting\` SET \`value\`='https://${ADD_DOMAIN}/es/' WHERE \`context_key\`='es' AND \`key\`='site_url';
+UPDATE \`modx_context_setting\` SET \`value\`='https://${ADD_DOMAIN}/pdf/' WHERE \`context_key\`='pdf' AND \`key\`='site_url';
+EOF
+
+            echo "${COLOUR_CYAN}-- Importing db_changepaths.sql...${COLOUR_RESTORE}"
+            mysql -u ${YAM_DATABASE_USER}_${ADD_USER}_${ADD_PROJECT} -p$PASSWORD_MYSQL_USER ${YAM_DATABASE_DB}_${ADD_USER}_${ADD_PROJECT} < /home/${ADD_USER}/public/${ADD_PROJECT}/db_changepaths.sql
+
+            # Clean up database
+            echo "${COLOUR_CYAN}-- Removing database installation files...${COLOUR_RESTORE}"
+            rm /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
+
             echo "Done."
 
         else
