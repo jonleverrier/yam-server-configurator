@@ -122,6 +122,13 @@ setupServer() {
         mkdir -p /etc/skel/logs/nginx
         mkdir -p /etc/skel/public
 
+        # Privacy tweaks
+        sed -i "s/enabled=1/enabled=0/" /etc/default/apport
+        systemctl stop apport.service
+        systemctl disable apport.service
+        systemctl mask apport.service
+        apt-get remove -y popularity-contest
+
         # Upgrade system and base packages
         echo "${COLOUR_WHITE}>> Configuring packages...${COLOUR_RESTORE}"
         DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o Dpkg::Options::="--force-confdef" --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-change-held-packages --allow-unauthenticated;
