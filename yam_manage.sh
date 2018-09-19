@@ -1720,7 +1720,7 @@ addDomain() {
     if ask "Are you sure you want to add a domain to a website?"; then
         read -p "Domain name  : " ADD_DOMAIN
         read -p "Existing project  : " ADD_PROJECT
-        read -p "Existing user of project  : " ADD_USERPASSWORD_MYSQL_USER
+        read -p "Existing user of project  : " ADD_USER
         read -s -p "Existing user MYSQL password  : " PASSWORD_MYSQL_USER
         echo '------------------------------------------------------------------------'
         echo 'Adding $ADD_DOMAIN to $ADD_PROJECT'
