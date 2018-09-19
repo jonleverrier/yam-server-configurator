@@ -86,6 +86,15 @@ Make sure you check these files for variables that may need customising.
 
 Whilst yam_setup.sh installs Amazon s3cmd, you'll have to run `s3cmd --configure` in order to add your Amazon S3 credentials before your backups will begin to sync.
 
+### yam_update.sh
+
+This will update and download all YAM scripts from the master branch.
+
+Example usage:
+```
+/bin/bash yam_update.sh
+```
+
 ### yam_backup_local.sh
 
 To be used with cron, or run manually from the command line.
