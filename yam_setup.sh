@@ -129,6 +129,46 @@ setupServer() {
         systemctl mask apport.service
         apt-get remove -y popularity-contest
 
+        # Install auditing system
+        apt-get install -y auditd
+        cat > /etc/audit/rules.d/audit.rules << EOF
+## First rule - delete all
+-D
+
+## Increase the buffers to survive stress events.
+## Make this bigger for busy systems
+-b 8192
+
+## This determine how long to wait in burst of events
+--backlog_wait_time 0
+
+## Set failure mode to syslog
+-f 1
+
+## Watch files
+-w /etc/hosts -p wa -k file_change_hosts
+-w /etc/host.conf -p wa -k file_change_hostconf
+-w /etc/nginx/nginx.conf -p wa -k file_change_nginxconf
+-w /etc/host.conf -p wa -k file_change_hostconf
+-w /etc/php/7.1/fpm/php.ini -p wa -k file_change_phpini
+-w /etc/fail2ban/jail.local -p wa -k file_change_jaillocal
+-w /etc/ssh/sshd_config -p wa -k file_change_sshdconfig
+
+## Watch directories
+-w /etc/sudoers.d/ -p rwa -k directory_sudoers
+-w /etc/cron.d/ -p rwa -k directory_cron
+-w /etc/nginx/conf.d/ -p rwa -k directory_nginxconf
+-w /etc/ssh/ -p rwa -k directory_ssh
+
+## Monitor changes and executions within /tmp
+-w /tmp/ -p wa -k file_write_tmp
+-w /tmp/ -p x -k file_exec_tmp
+
+## Monitor administrator access to /home directories
+-a always,exit -F dir=/home/ -F uid=0 -C auid!=obj_uid -k user_admin_home
+EOF
+        service auditd restart
+
         # Upgrade system and base packages
         echo "${COLOUR_WHITE}>> Configuring packages...${COLOUR_RESTORE}"
         DEBIAN_FRONTEND=noninteractive apt-get upgrade -q -y -u  -o Dpkg::Options::="--force-confdef" --allow-downgrades --allow-remove-essential --allow-change-held-packages --allow-change-held-packages --allow-unauthenticated;
