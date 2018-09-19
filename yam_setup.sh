@@ -142,6 +142,7 @@ setupServer() {
         wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_sync_s3.sh
         wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_manage.sh
         wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_secure.sh
+        wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_update.sh
 
         # lock down files to root user only
         chmod -R 700 /usr/local/bin/yam_backup_local.sh
@@ -151,6 +152,7 @@ setupServer() {
         chmod -R 700 /usr/local/bin/yam_setup.sh
         chmod -R 700 /usr/local/bin/yam_manage.sh
         chmod -R 700 /usr/local/bin/yam_secure.sh
+        chmod -R 700 /usr/local/bin/yam_update.sh
 
         echo "${COLOUR_WHITE}>> Setting up user...${COLOUR_RESTORE}"
 
