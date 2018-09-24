@@ -1279,7 +1279,7 @@ EOF
                     echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
                 else
                     cat > /etc/cron.d/backup_local_${NEW_USER} << EOF
-30 2    * * *   root    /usr/local/bin/yam_backup_local.sh ${NEW_OWNER} >> /var/log/cron.log 2>&1
+30 2    * * *   root    /usr/local/bin/yam_backup_local.sh ${NEW_USER} >> /var/log/cron.log 2>&1
 
 EOF
                 fi
@@ -1287,7 +1287,7 @@ EOF
                     echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
                 else
                     cat > /etc/cron.d/backup_s3_${NEW_USER} << EOF
-* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh ${NEW_OWNER} ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
+* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh ${NEW_USER} ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
 
 EOF
                 fi
