@@ -366,6 +366,23 @@ EOF
 EOF
             fi
 
+            echo "${COLOUR_CYAN}-- Setting up log rotation ${COLOUR_RESTORE}"
+            if [ -f /etc/logrotate.d/${NEW_USER} ]; then
+                echo "${COLOUR_CYAN}-- Log rotation already exists. Skipping...${COLOUR_RESTORE}"
+            else
+                cat > /etc/logrotate.d/${NEW_USER} << EOF
+/home/${NEW_USER}/logs/nginx/*.log {
+daily
+missingok
+rotate 7
+compress
+size 5M
+notifempty
+create 0640 www-data www-data
+sharedscripts
+}
+EOF
+
             # Set permissions, just incase...
             echo "${COLOUR_CYAN}-- adjusting permissions...${COLOUR_RESTORE}"
             rm -rf /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/cache
