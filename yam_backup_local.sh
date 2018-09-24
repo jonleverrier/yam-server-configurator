@@ -65,7 +65,6 @@ for d in /home/${USER}/public/*; do
       else
           echo `date +"%Y-%m-%d %T"`
           echo "${USER} - Backing up ${d}..."
-          echo ""
 
           # creating tempory dir for database dump
           mkdir -p /home/${USER}/backup/temp/
@@ -74,25 +73,18 @@ for d in /home/${USER}/public/*; do
           mkdir -p /home/${USER}/backup/${d##*/}/
 
           # dump database and place it in a tempory dir...
-          echo `date +"%Y-%m-%d %T"`
           echo "${USER} - Dumping database..."
-          echo ""
           mysqldump -u root yam_db_${USER}_${d##*/} > /home/${USER}/backup/temp/yam_db_${USER}_${d##*/}.sql
 
           # tar database and entire web folder...
-          echo `date +"%Y-%m-%d %T"`
           echo "${USER} - Compressing database and web folder..."
           tar -czf /home/${USER}/backup/${d##*/}/${USER}-${d##*/}-${YAM_DATEFORMAT_FULL}.tar.gz /home/${USER}/backup/temp /home/${USER}/public/${d##*/}
-          echo ""
 
           # clean up data in temp folder...
-          echo `date +"%Y-%m-%d %T"`
           echo "${USER} - Cleaning up temp dir..."
-          echo ""
           rm -rf /home/${USER}/backup/temp
 
           # delete old backups...
-          echo `date +"%Y-%m-%d %T"`
           echo "${USER} - Checking for old backups..."
           echo ""
           if [ -d "/home/${USER}/backup/${d##*/}/" ]; then
