@@ -34,10 +34,10 @@ COLOUR_RESTORE=$(echo -en '\033[0m')
 COLOUR_CYAN=$(echo -en '\033[00;36m')
 COLOUR_WHITE=$(echo -en '\033[01;37m')
 
-echo '------------------------------------------------------------------------'
-echo 'Starting backup process for ${USER}'
-echo '------------------------------------------------------------------------'
-echo ''
+echo "------------------------------------------------------------------------"
+echo "Starting backup process for ${USER}"
+echo "------------------------------------------------------------------------"
+echo ""
 
 # if backup folder for user exists skip, else create a folder called backup
 if [ -d "/home/${USER}/backup" ]; then
