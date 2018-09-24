@@ -41,7 +41,7 @@ echo ""
 
 # if backup folder for user exists skip, else create a folder called backup
 if [ -d "/home/${USER}/backup" ]; then
-    echo `date +"%Y-%m-%d %T"`
+    echo `"${USER}" - date +"%Y-%m-%d %T"`
     echo "Backup folder already exists. Skipping..."
     echo ""
 else
