@@ -9,7 +9,7 @@
 #+ Issues:      https://github.com/jonleverrier/yam-server-configurator/issues
 #+ License:     GPL v3.0
 #+ OS:          Ubuntu 16.0.4, 18.04
-#+ Release:     0.0.1
+#+ Release:     1.0.0
 #+----------------------------------------------------------------------------+
 
 # To be used with cron, or run manually from the command line.
