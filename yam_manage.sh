@@ -348,6 +348,24 @@ EOF
             rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
             rm -rf /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/setup
 
+            echo "${COLOUR_CYAN}-- Adding cron job for backups${COLOUR_RESTORE}"
+            if [ -f /etc/cron.d/backup_local_${PROJECT_OWNER} ]; then
+                echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
+            else
+                cat > /etc/cron.d/backup_local_${NEW_USER} << EOF
+30 2    * * *   root    /usr/local/bin/yam_backup_local.sh ${PROJECT_OWNER} >> /var/log/cron.log 2>&1
+
+EOF
+            fi
+            if [ -f /etc/cron.d/backup_s3_${NEW_USER} ]; then
+                echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
+            else
+                cat > /etc/cron.d/backup_s3_${NEW_USER} << EOF
+* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh ${PROJECT_OWNER} ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
+
+EOF
+            fi
+
             # Set permissions, just incase...
             echo "${COLOUR_CYAN}-- adjusting permissions...${COLOUR_RESTORE}"
             rm -rf /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/core/cache
