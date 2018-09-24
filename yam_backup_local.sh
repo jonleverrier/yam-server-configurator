@@ -41,8 +41,8 @@ echo ""
 
 # if backup folder for user exists skip, else create a folder called backup
 if [ -d "/home/${USER}/backup" ]; then
-    echo `date +"%Y-%m-%d %T - ${USER}"`
-    echo "Backup folder already exists. Skipping..."
+    echo `date +"%Y-%m-%d %T"`
+    echo "${USER} - Backup folder already exists. Skipping..."
     echo ""
 else
     # make backup dir for user
@@ -60,11 +60,11 @@ for d in /home/${USER}/public/*; do
       # if .nobackup exists in a directory, skip the backup process
       if [ -e $d/.nobackup ]; then
           echo `date +"%Y-%m-%d %T"`
-          echo "Skipping backup for ${d}..."
+          echo "${USER} - Skipping backup for ${d}..."
           echo ""
       else
           echo `date +"%Y-%m-%d %T"`
-          echo "Backing up ${d}..."
+          echo "${USER} - Backing up ${d}..."
           echo ""
 
           # creating tempory dir for database dump
@@ -75,25 +75,25 @@ for d in /home/${USER}/public/*; do
 
           # dump database and place it in a tempory dir...
           echo `date +"%Y-%m-%d %T"`
-          echo "Dumping database..."
+          echo "${USER} - Dumping database..."
           echo ""
           mysqldump -u root yam_db_${USER}_${d##*/} > /home/${USER}/backup/temp/yam_db_${USER}_${d##*/}.sql
 
           # tar database and entire web folder...
           echo `date +"%Y-%m-%d %T"`
-          echo "Compressing database and web folder..."
+          echo "${USER} - Compressing database and web folder..."
           tar -czf /home/${USER}/backup/${d##*/}/${USER}-${d##*/}-${YAM_DATEFORMAT_FULL}.tar.gz /home/${USER}/backup/temp /home/${USER}/public/${d##*/}
           echo ""
 
           # clean up data in temp folder...
           echo `date +"%Y-%m-%d %T"`
-          echo "Cleaning up temp dir..."
+          echo "${USER} - Cleaning up temp dir..."
           echo ""
           rm -rf /home/${USER}/backup/temp
 
           # delete old backups...
           echo `date +"%Y-%m-%d %T"`
-          echo "Checking for old backups..."
+          echo "${USER} - Checking for old backups..."
           echo ""
           if [ -d "/home/${USER}/backup/${d##*/}/" ]; then
               find /home/${USER}/backup/${d##*/}/* -daystart -mtime ${YAM_BACKUP_DURATION} -exec rm {} \;
