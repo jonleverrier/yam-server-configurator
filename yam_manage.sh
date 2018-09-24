@@ -512,7 +512,7 @@ EOF
                     echo "${COLOUR_CYAN}-- Cron for s3 backup already exists. Skipping...${COLOUR_RESTORE}"
                 else
                     cat > /etc/cron.d/backup_s3_${USER} << EOF
-* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh $USER ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
+* 3    * * *   root    /usr/local/bin/yam_backup_s3.sh ${USER} ${YAM_SERVER_NAME} >> /var/log/cron.log 2>&1
 
 EOF
                 fi
