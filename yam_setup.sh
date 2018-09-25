@@ -9,7 +9,7 @@
 #+ Issues:      https://github.com/jonleverrier/yam-server-configurator/issues
 #+ License:     GPL v3.0
 #+ OS:          Ubuntu 16.0.4, 18.04
-#+ Release:     1.0.0
+#+ Release:     1.1.0
 #+----------------------------------------------------------------------------+
 
 # Change these settings below before running the script for the first time
