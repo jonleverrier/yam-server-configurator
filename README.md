@@ -88,9 +88,9 @@ Whilst yam_setup.sh installs Amazon s3cmd, you'll have to run `s3cmd --configure
 
 ### yam_update.sh
 
-This will update and download all YAM scripts from the master branch.
+This will update and download all YAM scripts from a specified branch.
 
-Example usage:
+Example usage (recommended):
 ```
 /bin/bash yam_update.sh master
 ```
