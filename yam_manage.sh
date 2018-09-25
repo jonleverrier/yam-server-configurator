@@ -388,6 +388,7 @@ create 0640 www-data www-data
 sharedscripts
 }
 EOF
+            fi
 
             # Set permissions, just incase...
             echo "${COLOUR_CYAN}-- adjusting permissions...${COLOUR_RESTORE}"
