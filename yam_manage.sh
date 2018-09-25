@@ -348,6 +348,12 @@ EOF
             rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
             rm -rf /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/setup
 
+            # Add default development robots.txt
+            cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/robots.txt << EOF
+User-agent: *
+Disallow: /
+EOF
+
             echo "${COLOUR_CYAN}-- Adding cron job for backups${COLOUR_RESTORE}"
             if [ -f /etc/cron.d/backup_local_${PROJECT_OWNER} ]; then
                 echo "${COLOUR_CYAN}-- Cron for local backup already exists. Skipping...${COLOUR_RESTORE}"
@@ -1026,6 +1032,12 @@ EOF
             chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/manager/config.core.php
             chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/connectors/config.core.php
             chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/config.core.php
+
+            # Add default development robots.txt
+            cat > /home/${USER}/public/${PROJECT_NAME}/robots.txt << EOF
+User-agent: *
+Disallow: /
+EOF
 
             # Change permissions
             chown -R ${USER}:${USER} /home/${USER}/public/${PROJECT_NAME}
