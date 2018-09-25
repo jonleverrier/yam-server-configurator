@@ -92,7 +92,7 @@ This will update and download all YAM scripts from the master branch.
 
 Example usage:
 ```
-/bin/bash yam_update.sh
+/bin/bash yam_update.sh master
 ```
 
 ### yam_backup_local.sh
