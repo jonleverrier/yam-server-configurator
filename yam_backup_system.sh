@@ -31,6 +31,7 @@ echo "Starting backup process for system"
 echo "------------------------------------------------------------------------"
 echo ""
 
+echo `date +"%Y-%m-%d %T"`
 # if backup folder exists skip, else add folder
 if [ -d "/var/backups/nginx" ]; then
     echo "System - Backup folder already exists for /var/backups/nginx"
@@ -72,31 +73,37 @@ else
 fi
 
 # tar nginx folder...
+echo ""
 echo `date +"%Y-%m-%d %T"`
 echo "${COLOUR_CYAN}System - Compressing nginx conf folder ${COLOUR_RESTORE}"
 tar -czf /var/backups/nginx/nginxconf-${YAM_DATEFORMAT_FULL}.tar.gz /etc/nginx
 
 # tar letsencrypt folder...
+echo ""
 echo `date +"%Y-%m-%d %T"`
 echo "${COLOUR_CYAN}System - Compressing letsencrypt folder ${COLOUR_RESTORE}"
 tar -czf /var/backups/letsencrypt/letsencrypt-${YAM_DATEFORMAT_FULL}.tar.gz /etc/letsencrypt
 
 # tar mysql folder...
+echo ""
 echo `date +"%Y-%m-%d %T"`
 echo "${COLOUR_CYAN}System - Compressing mysql folder ${COLOUR_RESTORE}"
 tar -czf /var/backups/mysql/mysql-${YAM_DATEFORMAT_FULL}.tar.gz /var/lib/mysql
 
 # tar ssh folder...
+echo ""
 echo `date +"%Y-%m-%d %T"`
 echo "${COLOUR_CYAN}System - Compressing ssh folder ${COLOUR_RESTORE}"
 tar -czf /var/backups/ssh/ssh-${YAM_DATEFORMAT_FULL}.tar.gz /etc/ssh
 
 # tar ssh folder...
+echo ""
 echo `date +"%Y-%m-%d %T"`
 echo "${COLOUR_CYAN}System - Compressing cron folder ${COLOUR_RESTORE}"
 tar -czf /var/backups/cron/cron-${YAM_DATEFORMAT_FULL}.tar.gz /etc/cron.d
 
 # delete old backups...
+echo ""
 echo `date +"%Y-%m-%d %T"`
 echo "${COLOUR_CYAN}System - Checking for old backups to delete ${COLOUR_RESTORE}"
 if [ -d "/var/backups/nginx/" ]; then
