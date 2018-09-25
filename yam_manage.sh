@@ -1859,6 +1859,15 @@ EOF
             echo "${COLOUR_CYAN}-- Removing database installation files...${COLOUR_RESTORE}"
             rm /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
 
+            # Add live robots.txt file
+            echo "${COLOUR_WHITE}>> Adding live robots.txt file...${COLOUR_RESTORE}"
+            cat > /home/${USER}/public/${PROJECT_NAME}/robots.txt << EOF
+Sitemap: https://${ADD_DOMAIN}/sitemap.xml
+
+User-agent: *
+Allow: /assets/template/i/
+EOF
+
             echo "Done."
 
         else
