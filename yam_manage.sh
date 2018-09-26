@@ -1984,13 +1984,13 @@ EOF
             fi
 
             if [ -d "/etc/letsencrypt/live/${DEL_PROJECT_URL}" ]; then
-                rm /etc/letsencrypt/live/${DEL_PROJECT_URL}
+                rm -rf /etc/letsencrypt/live/${DEL_PROJECT_URL}
             else
                 echo "${COLOUR_CYAN}---- No live cert to delete. skipping...${COLOUR_RESTORE}"
             fi
 
             if [ -d "/etc/letsencrypt/archive/${DEL_PROJECT_URL}" ]; then
-                rm /etc/letsencrypt/archive/${DEL_PROJECT_URL}
+                rm -rf /etc/letsencrypt/archive/${DEL_PROJECT_URL}
             else
                 echo "${COLOUR_CYAN}---- No archive cert to delete. skipping...${COLOUR_RESTORE}"
             fi
