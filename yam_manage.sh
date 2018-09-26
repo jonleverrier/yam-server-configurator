@@ -1288,7 +1288,7 @@ copyVirtualhost() {
                 adduser --disabled-password --gecos "" ${NEW_USER}
                 PASSWORD=$(mkpasswd ${NEW_PASSWORD_OWNER})
                 usermod --password ${PASSWORD} ${NEW_USER}
-                chown root:root /home/${USER}
+                chown root:root /home/${NEW_USER}
 
                 echo "${COLOUR_CYAN}-- Added new user ${COLOUR_RESTORE}"
 
