@@ -1978,19 +1978,19 @@ EOF
 
             echo "${COLOUR_CYAN}-- deleting SSL certificates ${COLOUR_RESTORE}"
             if [ -d "/etc/letsencrypt/renewal/${DEL_PROJECT_URL}.conf" ]; then
-                rm -rf /etc/letsencrypt/renewal/${DEL_PROJECT_URL}.conf
+                rm /etc/letsencrypt/renewal/${DEL_PROJECT_URL}.conf
             else
                 echo "${COLOUR_CYAN}---- No renewal cert to delete. skipping...${COLOUR_RESTORE}"
             fi
 
             if [ -d "/etc/letsencrypt/live/${DEL_PROJECT_URL}" ]; then
-                rm -rf /etc/letsencrypt/archive/${DEL_PROJECT_URL}
+                rm /etc/letsencrypt/live/${DEL_PROJECT_URL}
             else
                 echo "${COLOUR_CYAN}---- No live cert to delete. skipping...${COLOUR_RESTORE}"
             fi
 
             if [ -d "/etc/letsencrypt/archive/${DEL_PROJECT_URL}" ]; then
-                rm -rf /etc/letsencrypt/archive/${DEL_PROJECT_URL}
+                rm /etc/letsencrypt/archive/${DEL_PROJECT_URL}
             else
                 echo "${COLOUR_CYAN}---- No archive cert to delete. skipping...${COLOUR_RESTORE}"
             fi
