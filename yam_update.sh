@@ -14,6 +14,13 @@
 
 BRANCH=$1
 
+# Display warning if no inline variables are set
+if [ -z "$1" ]; then
+    echo "WARNING: No branch was specified."
+    echo ""
+    exit 1
+fi
+
 echo '------------------------------------------------------------------------'
 echo 'Updating YAM scripts...'
 echo '------------------------------------------------------------------------'
