@@ -9,8 +9,10 @@
 #+ Issues:      https://github.com/jonleverrier/yam-server-configurator/issues
 #+ License:     GPL v3.0
 #+ OS:          Ubuntu 16.0.4, 18.04
-#+ Release:     1.0.0
+#+ Release:     1.1.0
 #+----------------------------------------------------------------------------+
+
+BRANCH=$1
 
 echo '------------------------------------------------------------------------'
 echo 'Updating YAM scripts...'
@@ -19,14 +21,14 @@ echo '------------------------------------------------------------------------'
 cd /usr/local/bin
 
 # Install yam utilities
-wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_local.sh
-wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_s3.sh
-wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_backup_system.sh
-wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_sync_s3.sh
-wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_manage.sh
-wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_secure.sh
-wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_setup.sh
-wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/master/yam_update.sh
+wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_backup_local.sh
+wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_backup_s3.sh
+wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_backup_system.sh
+wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_sync_s3.sh
+wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_manage.sh
+wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_secure.sh
+wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_setup.sh
+wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_update.sh
 
 # lock down files to root user only
 chmod -R 700 /usr/local/bin/yam_backup_local.sh

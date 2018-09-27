@@ -9,7 +9,7 @@
 #+ Issues:      https://github.com/jonleverrier/yam-server-configurator/issues
 #+ License:     GPL v3.0
 #+ OS:          Ubuntu 16.0.4, 18.04
-#+ Release:     1.0.0
+#+ Release:     1.1.0
 #+----------------------------------------------------------------------------+
 
 # Change these settings below before running the script for the first time
@@ -180,10 +180,10 @@ installBasesite() {
 \$database_server = '127.0.0.1';
 \$database_user = '${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME}';
 \$database_password = '${PASSWORD_MYSQL}';
-\$database_connection_charset = 'utf8';
+\$database_connection_charset = 'utf8mb4';
 \$dbase = '${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME}';
 \$table_prefix = 'modx_';
-\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME};charset=utf8';
+\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME};charset=utf8mb4';
 \$config_options = array (
 );
 \$driver_options = array (
@@ -347,6 +347,12 @@ EOF
             rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/${URL_DATABASE##*/}
             rm /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/db_changepaths.sql
             rm -rf /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/setup
+
+            # Add default development robots.txt
+            cat > /home/${PROJECT_OWNER}/public/${PROJECT_NAME}/robots.txt << EOF
+User-agent: *
+Disallow: /
+EOF
 
             echo "${COLOUR_CYAN}-- Adding cron job for backups${COLOUR_RESTORE}"
             if [ -f /etc/cron.d/backup_local_${PROJECT_OWNER} ]; then
@@ -896,10 +902,10 @@ EOF
 \$database_server = '127.0.0.1';
 \$database_user = '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}';
 \$database_password = '${PASSWORD_MYSQL_USER}';
-\$database_connection_charset = 'utf8';
+\$database_connection_charset = 'utf8mb4';
 \$dbase = '${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME}';
 \$table_prefix = 'modx_';
-\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME};charset=utf8';
+\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME};charset=utf8mb4';
 \$config_options = array (
 );
 \$driver_options = array (
@@ -1027,6 +1033,12 @@ EOF
             chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/manager/config.core.php
             chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/connectors/config.core.php
             chmod -R 644 /home/${USER}/public/${PROJECT_NAME}/config.core.php
+
+            # Add default development robots.txt
+            cat > /home/${USER}/public/${PROJECT_NAME}/robots.txt << EOF
+User-agent: *
+Disallow: /
+EOF
 
             # Change permissions
             chown -R ${USER}:${USER} /home/${USER}/public/${PROJECT_NAME}
@@ -1601,10 +1613,10 @@ EOF
 \$database_server = '127.0.0.1';
 \$database_user = '${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT}';
 \$database_password = '${NEW_PASSWORD_MYSQL}';
-\$database_connection_charset = 'utf8';
+\$database_connection_charset = 'utf8mb4';
 \$dbase = '${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT}';
 \$table_prefix = 'modx_';
-\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT};charset=utf8';
+\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT};charset=utf8mb4';
 \$config_options = array (
 );
 \$driver_options = array (
@@ -1847,6 +1859,15 @@ EOF
             # Clean up database
             echo "${COLOUR_CYAN}-- Removing database installation files...${COLOUR_RESTORE}"
             rm /home/${USER}/public/${PROJECT_NAME}/db_changepaths.sql
+
+            # Add live robots.txt file
+            echo "${COLOUR_WHITE}>> Adding live robots.txt file...${COLOUR_RESTORE}"
+            cat > /home/${USER}/public/${PROJECT_NAME}/robots.txt << EOF
+Sitemap: https://${ADD_DOMAIN}/sitemap.xml
+
+User-agent: *
+Allow: /assets/template/i/
+EOF
 
             echo "Done."
 
