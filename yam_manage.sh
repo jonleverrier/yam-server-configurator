@@ -180,10 +180,10 @@ installBasesite() {
 \$database_server = '127.0.0.1';
 \$database_user = '${YAM_DATABASE_USER}_${PROJECT_OWNER}_${PROJECT_NAME}';
 \$database_password = '${PASSWORD_MYSQL}';
-\$database_connection_charset = 'utf8';
+\$database_connection_charset = 'utf8mb4';
 \$dbase = '${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME}';
 \$table_prefix = 'modx_';
-\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME};charset=utf8';
+\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${PROJECT_OWNER}_${PROJECT_NAME};charset=utf8mb4';
 \$config_options = array (
 );
 \$driver_options = array (
@@ -902,10 +902,10 @@ EOF
 \$database_server = '127.0.0.1';
 \$database_user = '${YAM_DATABASE_USER}_${USER}_${PROJECT_NAME}';
 \$database_password = '${PASSWORD_MYSQL_USER}';
-\$database_connection_charset = 'utf8';
+\$database_connection_charset = 'utf8mb4';
 \$dbase = '${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME}';
 \$table_prefix = 'modx_';
-\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME};charset=utf8';
+\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${USER}_${PROJECT_NAME};charset=utf8mb4';
 \$config_options = array (
 );
 \$driver_options = array (
@@ -1613,10 +1613,10 @@ EOF
 \$database_server = '127.0.0.1';
 \$database_user = '${YAM_DATABASE_USER}_${NEW_USER}_${NEW_PROJECT}';
 \$database_password = '${NEW_PASSWORD_MYSQL}';
-\$database_connection_charset = 'utf8';
+\$database_connection_charset = 'utf8mb4';
 \$dbase = '${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT}';
 \$table_prefix = 'modx_';
-\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT};charset=utf8';
+\$database_dsn = 'mysql:host=127.0.0.1;dbname=${YAM_DATABASE_DB}_${NEW_USER}_${NEW_PROJECT};charset=utf8mb4';
 \$config_options = array (
 );
 \$driver_options = array (
