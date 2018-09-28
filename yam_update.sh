@@ -36,6 +36,7 @@ wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/$
 wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_secure.sh
 wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_setup.sh
 wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_update.sh
+wget -N https://raw.githubusercontent.com/jonleverrier/yam-server-configurator/${BRANCH}/yam_teleport.sh
 
 # lock down files to root user only
 chmod -R 700 /usr/local/bin/yam_backup_local.sh
@@ -46,5 +47,6 @@ chmod -R 700 /usr/local/bin/yam_setup.sh
 chmod -R 700 /usr/local/bin/yam_manage.sh
 chmod -R 700 /usr/local/bin/yam_secure.sh
 chmod -R 700 /usr/local/bin/yam_update.sh
+chmod -R 700 /usr/local/bin/yam_teleport.sh
 
 echo 'Done.'
