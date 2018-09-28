@@ -86,6 +86,21 @@ Make sure you check these files for variables that may need customising.
 
 Whilst yam_setup.sh installs Amazon s3cmd, you'll have to run `s3cmd --configure` in order to add your Amazon S3 credentials before your backups will begin to sync.
 
+### yam_teleport.sh
+
+This wrapper for [Teleport](https://github.com/modxcms/teleport) will allow you to:
+
+1.  Install Teleport
+2.  Profile a website
+3.  Extract a website
+4.  Inject a website
+5.  Quit
+
+Example usage:
+```
+/bin/bash yam_teleport.sh
+```
+
 ### yam_update.sh
 
 This will update and download all YAM scripts from a specified branch.
