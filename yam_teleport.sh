@@ -96,6 +96,7 @@ teleportProfile() {
         echo '------------------------------------------------------------------------'
         echo ''
 
+        cd ~/teleport/
         php teleport.phar --action=Profile --name="${TELEPORT_LABEL_NAME}" --code=${TELEPORT_LABEL_CODE} --core_path=${TELEPORT_PATH_CORE} --config_key=config
 
         echo 'Profile complete.'
@@ -115,7 +116,8 @@ teleportExtract() {
         echo '------------------------------------------------------------------------'
         echo ''
 
-        php ~/teleport/teleport.phar --action=Extract --profile=profile/${TELEPORT_LABEL_NAME}.profile.json --tpl=phar://teleport.phar/tpl/complete.tpl.json
+        cd ~/teleport/
+        php teleport.phar --action=Extract --profile=profile/${TELEPORT_LABEL_NAME}.profile.json --tpl=phar://teleport.phar/tpl/complete.tpl.json
 
         echo 'Extraction complete.'
 
@@ -137,7 +139,8 @@ teleportInject() {
         echo '------------------------------------------------------------------------'
         echo ''
 
-        php ~/teleport/teleport.phar --action=Inject --profile=profile/${TELEPORT_LABEL_NAME}.profile.json --source=workspace/${TELEPORT_LABEL_PACKAGE}
+        cd ~/teleport/
+        php teleport.phar --action=Inject --profile=profile/${TELEPORT_LABEL_NAME}.profile.json --source=workspace/${TELEPORT_LABEL_PACKAGE}
 
         # Change permissions
         chown -R ${TELEPORT_LABEL_OWNER}:${TELEPORT_LABEL_OWNER} /home/${TELEPORT_LABEL_OWNER}/public/${TELEPORT_LABEL_PROJECT}
