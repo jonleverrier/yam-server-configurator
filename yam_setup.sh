@@ -344,7 +344,7 @@ http {
 
     gzip on;
     gzip_vary on;
-    gzip_comp_level 5;
+    gzip_comp_level 6;
     gzip_min_length  256;
     gzip_disable "msie6";
     gzip_proxied expired no-cache no-store private auth;
