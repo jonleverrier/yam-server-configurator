@@ -1,16 +1,18 @@
-# yam-server-configurator Docs
+# yam-server-configurator Documentation
 
-### [yam_setup.sh](/docs/yam_setup)
-  1. [Setup a fresh Ubuntu server](https://github.com/jonleverrier/yam-server-configurator/blob/master/docs/yam_setup/01.md)
+When you run one of the yam scripts, it will display a menu from which you can choose from. It will also prompt you for details depending on what menu option you choose. These details are documented in the pages below.
 
-### yam_secure.sh
-  1. Setup sudo and root user with keys
-  2. Disable password login
-  3. Enable password login
-  4. Disable root login
-  5. Enable root login
+## [yam_setup.sh](/docs/yam_setup)
+1. [Setup a fresh Ubuntu server](/docs/yam_setup/01.md)
 
-### yam_manage.sh
+## [yam_secure.sh](/docs/yam_secure)
+1. [Setup sudo and root user with keys](/docs/yam_secure/01.md)
+2. [Disable password login](/docs/yam_secure/02.md)
+3. [Enable password login](/docs/yam_secure/03.md)
+4. [Disable root login](/docs/yam_secure/04.md)
+5. [Enable root login](/docs/yam_secure/05.md)
+
+## yam_manage.sh
   1. Add new development website
   2. Install a Basesite
   3. Add new development website with Basesite

@@ -1,5 +1,7 @@
 # yam_setup.sh
 
+This script will install and configure a web server running PHP 7.1 FPM, Maria DB and NGINX. It has been optimised to run MODX Revolution.
+
 ## Before running this script
 
 ### Setup domain and DNS
@@ -46,5 +48,15 @@ Type the following into the command line to configure the Amazon s3cmd plugin. T
 s3cmd --configure
 ```
 
-### yam_setup.sh
-  1. Setup a fresh Ubuntu server
+## How to run the script
+
+Type the following command to load the script:
+```
+/bin/bash yam_manage.sh
+```
+
+***
+
+### In this section
+#### [yam_setup.sh](/docs/yam_setup)
+  1. [Setup a fresh Ubuntu server](/docs/yam_setup/01.md)
