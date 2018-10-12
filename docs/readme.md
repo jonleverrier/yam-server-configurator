@@ -1,6 +1,6 @@
 # yam-server-configurator Docs
 
-### (yam_setup.sh)[https://github.com/jonleverrier/yam-server-configurator/tree/master/docs/yam_setup]
+### [yam_setup.sh](https://github.com/jonleverrier/yam-server-configurator/tree/master/docs/yam_setup)
   1. Setup a fresh Ubuntu server
 
 ### yam_secure.sh
