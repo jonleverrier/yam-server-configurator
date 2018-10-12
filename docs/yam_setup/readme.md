@@ -60,3 +60,5 @@ Type the following command to load the script:
 ### In this section
 #### [yam_setup.sh](/docs/yam_setup)
   1. [Setup a fresh Ubuntu server](/docs/yam_setup/01.md)
+
+[Back to index](/docs)
