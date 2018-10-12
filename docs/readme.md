@@ -1,14 +1,16 @@
 # Welcome to the yam-server-configurator
 
-* yam_setup.sh
+yam_setup.sh
   1. Setup a fresh Ubuntu server
-* yam_secure.sh
+
+yam_secure.sh
   1. Setup sudo and root user with keys
   2. Disable password login
   3. Enable password login
   4. Disable root login
   5. Enable root login
-* yam_manage.sh
+
+yam_manage.sh
   1. Add new development website
   2. Install a Basesite
   3. Add new development website with Basesite
