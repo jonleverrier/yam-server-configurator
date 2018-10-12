@@ -12,14 +12,14 @@ When you run one of the yam scripts, it will display a menu from which you can c
 4. [Disable root login](/docs/yam_secure/04.md)
 5. [Enable root login](/docs/yam_secure/05.md)
 
-## yam_manage.sh
-  1. Add new development website
-  2. Install a Basesite
-  3. Add new development website with Basesite
-  4. Package up website for injection
-  5. Copy development website
-  6. Map domain to development website
-  7. Add user to password directory
-  8. Toggle password directory
-  9. Delete user
-  10. Delete website
+## [yam_manage.sh](/docs/yam_manage)
+1. [Add new development website](/docs/yam_manage/01.md)
+2. [Install a Basesite](/docs/yam_manage/02.md)
+3. [Add new development website with Basesite](/docs/yam_manage/03.md)
+4. [Package up website for injection](/docs/yam_manage/04.md)
+5. [Copy development website](/docs/yam_manage/05.md)
+6. [Map domain to development website](/docs/yam_manage/06.md)
+7. [Add user to password directory](/docs/yam_manage/07.md)
+8. T[oggle password directory](/docs/yam_manage/08.md)
+9. [Delete user](/docs/yam_manage/09.md)
+10. [Delete website](/docs/yam_manage/10.md)
